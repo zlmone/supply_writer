@@ -1,0 +1,68 @@
+QDialog {
+    background-color: #404040;
+}
+
+QPushButton {
+    border: none;
+    border-radius: 4px;
+    color: #FFFFFF;
+    padding: 6px;
+    background-color: #808080;
+    min-width: 45px;
+}
+QPushButton:hover {
+    border: none;
+    background-color: #000000;
+}
+QPushButton:pressed {
+    border: none;
+    background-color: #000000;
+}
+QLabel {
+    font: default;
+    color: #FFFFFF;
+}
+QGroupBox {
+    font: bold 15px;
+    color: #FFFFFF;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+}
+QRadioButton {
+    font: 12px;
+    color: #FFFFFF;
+}
+QCheckBox {
+    font: 12px;
+    color: #FFFFFF;
+}
+QCheckBox::indicator:checked {
+    border-style: outset;
+    border-width: 1px;
+    color: #000000;
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(128, 128, 128, 255), stop:1 rgba(80, 80, 80, 255));
+}
+QCheckBox::indicator:unchecked {
+    border-style: outset;
+    border-width: 1px;
+    border-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(0, 113, 255, 255), stop:1 rgba(91, 171, 252, 255));
+    color: #000000;
+}
+QRadioButton {
+    color: #ffffff;
+    padding: 1px;
+}
+QRadioButton::indicator:checked {
+    border: 1px solid grey;
+    border-radius: 6px;
+    border-style: outset;
+    color: #000000;
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(128, 128, 128, 255), stop:1 rgba(80, 80, 80, 255));
+}
+QRadioButton::indicator:unchecked {
+    border: 1px solid white;
+    border-radius: 6px;
+    border-style: outset;
+    color: #000000;
+    background-color: #ffffff;
+}
