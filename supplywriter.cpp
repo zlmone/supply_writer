@@ -72,6 +72,8 @@ void SupplyWriter::clear_newuser_page()
     ui->label_26->clear();
 
     ui->lineEdit_8->setFocus();
+    ui->Confirm->setEnabled(true);
+    ui->Return->setEnabled(true);
     ui->Confirm->setDefault(true);
 }
 
@@ -85,6 +87,8 @@ void SupplyWriter::clear_renewpwd_page()
     ui->label_31->clear();
 
     ui->lineEdit_15->setFocus();
+    ui->pushButton_2->setEnabled(true);
+    ui->pushButton_3->setEnabled(true);
     ui->pushButton_3->setDefault(true);
 }
 
@@ -109,6 +113,8 @@ void SupplyWriter::clear_resetpwd_page1()
     ui->label_40->clear();
 
     ui->lineEdit_20->setFocus();
+    ui->pushButton_9->setEnabled(true);
+    ui->pushButton_10->setEnabled(true);
     ui->pushButton_10->setDefault(true);
 }
 
