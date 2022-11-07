@@ -251,11 +251,14 @@ void SupplyWriter::resetpwd_page_init()
 
     pixmap.load(":/images/logo.png");
     ui->label_33->setPixmap(pixmap);
+    ui->label_43->setPixmap(pixmap);
 
     QFont font1("Microsoft YaHei", 15, 70);
     ui->label_35->setFont(font1);
+    ui->label_39->setFont(font1);
     QFont font2("Microsoft YaHei", 11, 60);
     ui->label_34->setFont(font2);
+    ui->label_38->setFont(font2);
 
     ui->lineEdit_20->setEchoMode(QLineEdit::Password);
     ui->lineEdit_21->setEchoMode(QLineEdit::Password);
