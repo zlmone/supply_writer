@@ -11,11 +11,9 @@ QPushButton {
     min-width: 45px;
 }
 QPushButton:hover {
-    border: none;
     background-color: #000000;
 }
 QPushButton:pressed {
-    border: none;
     background-color: #000000;
 }
 QLabel {

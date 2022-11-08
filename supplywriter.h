@@ -129,6 +129,7 @@ private:
     QPalette palette;
     QPixmap pixmap;
     QIcon icon;
+
     bool status;
     int year;
     int month;
