@@ -25,18 +25,6 @@ QT_END_NAMESPACE
 #define DATABASE_NAME   "public"
 #define TABLE_NAME      "supplyinfo"
 
-//鼓组件型号前缀
-static QString DRUM_PREFIX[] =
-{
-    "DL",
-};
-
-//粉盒型号前缀
-static QString TONER_PREFIX[] =
-{
-    "TL",
-};
-
 class SupplyWriter : public QDialog
 {
     Q_OBJECT
@@ -98,6 +86,7 @@ private slots:
     void on_pushButton_9_clicked();
     void on_pushButton_10_clicked();
     void on_checkBox_stateChanged(int state);
+    void on_lineEdit_2_textChanged(const QString &arg1);
 
 signals:
     void sendChipInfo(struct cgprintech_supply_info_readback* info);
@@ -111,9 +100,7 @@ protected:
 
 private:
     QValidator *validator;
-    QValidator *validator2;
-    QButtonGroup* BtnGroup1;
-    QButtonGroup* BtnGroup2;
+    QButtonGroup* BtnGroup[2];
     bool is_drag = false;
     QPoint mouse_start_point;
     QPoint window_start_point;
@@ -162,6 +149,8 @@ private:
     void hex_dump(const unsigned char *src, size_t length);
     void Sleep(int msec);
 
+    bool check_modelid_valid(QString modelid);
+    bool check_serialno_valid(QString serialno);
     bool checkIpValid(int version, QString ip);
     int checkIPversion(QString IP);
     bool check_server_status(const QString serverIP, const int port);

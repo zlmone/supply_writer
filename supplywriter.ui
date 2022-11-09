@@ -1004,7 +1004,7 @@
                 <item row="1" column="0">
                  <widget class="QPushButton" name="QuerySqlButton">
                   <property name="toolTip">
-                   <string>根据序列号查询数据库中耗材信息</string>
+                   <string>根据输入的序列号查询数据库中耗材信息</string>
                   </property>
                   <property name="text">
                    <string>查询</string>
@@ -1030,7 +1030,7 @@
                 <item row="1" column="1">
                  <widget class="QPushButton" name="DeleteSqlButton">
                   <property name="toolTip">
-                   <string>根据序列号删除数据库中记录</string>
+                   <string>根据输入的序列号删除数据库中记录</string>
                   </property>
                   <property name="text">
                    <string>删除</string>
@@ -1182,7 +1182,7 @@
                 <item row="0" column="1">
                  <widget class="QPushButton" name="pushButton_5">
                   <property name="toolTip">
-                   <string>将耗材信息发送下位机，由下位机写入耗材芯片</string>
+                   <string>将耗材信息发送到治具，由治具写入耗材芯片</string>
                   </property>
                   <property name="text">
                    <string>写入</string>
@@ -1195,7 +1195,7 @@
                 <item row="1" column="0">
                  <widget class="QPushButton" name="pushButton_7">
                   <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;读出耗材芯片信息，根据输入的耗材型号前2个字符判断，DL为读取硒鼓，TL为读取粉盒&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   <string>读出耗材芯片信息，根据输入的耗材型号前2个字符判断，DL为读取硒鼓，TL为读取粉盒</string>
                   </property>
                   <property name="text">
                    <string>读出</string>
@@ -1257,17 +1257,23 @@
       <item>
        <widget class="QLabel" name="label_23">
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;辰光融信耗材写入工具&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>辰光融信 耗材写入工具</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_22">
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;用户注册&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>用户注册</string>
         </property>
         <property name="textFormat">
          <enum>Qt::RichText</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
@@ -1423,7 +1429,7 @@
       <item>
        <widget class="QLabel" name="label_29">
         <property name="text">
-         <string>辰光融信耗材写入工具</string>
+         <string>辰光融信 耗材写入工具</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -1599,7 +1605,7 @@
         <item>
          <widget class="QLabel" name="label_34">
           <property name="text">
-           <string>辰光融信耗材写入工具</string>
+           <string>辰光融信 耗材写入工具</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -1752,7 +1758,7 @@
         <item>
          <widget class="QLabel" name="label_38">
           <property name="text">
-           <string>辰光融信耗材写入工具</string>
+           <string>辰光融信 耗材写入工具</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>

@@ -56,6 +56,14 @@ void SupplyWriter::clear_main_page()
     ui->lineEdit_14->clear();
     ui->lineEdit_1->clear();
 
+    ui->total_page_radio->setChecked(1);
+    ui->lineEdit_6->setEnabled(1);
+    ui->lineEdit_7->setEnabled(false);
+
+    ui->beyond_printpage_radio->setChecked(1);
+    ui->lineEdit_11->setEnabled(1);
+    ui->lineEdit_12->setEnabled(false);
+
     ui->label_2->clear();
     ui->label_13->clear();
     ui->label_44->setText(ui->username->text());
@@ -155,7 +163,7 @@ void SupplyWriter::main_page_init()
     this->status = false;
     tcpSocket = new QTcpSocket(this);
 
-    QRegExp rx("[0-9]{1,}");
+    QRegExp rx("^[1-9][0-9]{1,}$");
     validator = new QRegExpValidator(rx, this);
     ui->lineEdit_6->setValidator(validator);
     ui->lineEdit_7->setValidator(validator);
@@ -163,23 +171,18 @@ void SupplyWriter::main_page_init()
     ui->lineEdit_12->setValidator(validator);
     ui->lineEdit_13->setValidator(validator);
 
-    QRegExp rx2("^[A-Za-z0-9]+$");
-    validator2 = new QRegExpValidator(rx2, this);
-    ui->lineEdit_2->setValidator(validator2);
-    ui->lineEdit_3->setValidator(validator2);
+    BtnGroup[0] = new QButtonGroup;
+    BtnGroup[1] = new QButtonGroup;
 
-    BtnGroup1 = new QButtonGroup;
-    BtnGroup2 = new QButtonGroup;
-
-    BtnGroup1->addButton(ui->total_page_radio, 0);
-    BtnGroup1->addButton(ui->total_dot_radio, 1);
-    BtnGroup1->setExclusive(true);
+    BtnGroup[0]->addButton(ui->total_page_radio, 0);
+    BtnGroup[0]->addButton(ui->total_dot_radio, 1);
+    BtnGroup[0]->setExclusive(true);
     ui->total_page_radio->setChecked(true);
     ui->lineEdit_7->setEnabled(false);
 
-    BtnGroup2->addButton(ui->beyond_printpage_radio, 0);
-    BtnGroup2->addButton(ui->beyond_printdot_radio, 1);
-    BtnGroup2->setExclusive(true);
+    BtnGroup[1]->addButton(ui->beyond_printpage_radio, 0);
+    BtnGroup[1]->addButton(ui->beyond_printdot_radio, 1);
+    BtnGroup[1]->setExclusive(true);
     ui->beyond_printpage_radio->setChecked(true);
     ui->lineEdit_12->setEnabled(false);
 
@@ -288,6 +291,7 @@ SupplyWriter::SupplyWriter(QWidget *parent)
     this->resetpwd_page_init();
 }
 
+// NOT USED
 void SupplyWriter::set_dialog_style()
 {
     palette.setColor(QPalette::Window, QColor(218, 176, 154));
@@ -310,10 +314,9 @@ void SupplyWriter::set_dialog_style()
 SupplyWriter::~SupplyWriter()
 {
     delete ui;
-    delete BtnGroup1;
-    delete BtnGroup2;
+    delete BtnGroup[0];
+    delete BtnGroup[1];
     delete validator;
-    delete validator2;
     delete tcpSocket;
 }
 
@@ -465,7 +468,13 @@ bool SupplyWriter::check_input_valid()
             return 0;
     }
 
-    return 1;
+    if (check_modelid_valid(ui->lineEdit_2->text()) == 0)
+        return false;
+
+    if (check_serialno_valid(ui->lineEdit_3->text()) == 0)
+        return false;
+
+    return true;
 }
 
 void SupplyWriter::Sleep(int msec)
@@ -892,14 +901,6 @@ void SupplyWriter::fill_supplyinfo_data()
         return;
     }
 
-    //耗材型号必须为 DL- 或 TL- 开头的字符串
-    if ((strncasecmp(ui->lineEdit_2->text().toLatin1().data(), "DL", 2) != 0) &&
-        (strncasecmp(ui->lineEdit_2->text().toLatin1().data(), "TL", 2) != 0))
-    {
-        this->status = true;
-        return;
-    }
-
     memcpy(&supply_info.model_id, ui->lineEdit_2->text().toLatin1().data(), ui->lineEdit_2->text().length());
     memcpy(&supply_info.serial_no, ui->lineEdit_3->text().toLatin1().data(), ui->lineEdit_3->text().length());
 //    memcpy(&supply_info.marketing_area, ui->comboBox->currentText().toLatin1().data(), ui->comboBox->currentText().length());
@@ -944,8 +945,8 @@ void SupplyWriter::on_pushButton_7_clicked()
     if (this->status)
         return;
 
-    if ((strncasecmp(ui->lineEdit_2->text().toLatin1().data(), "TL", 2) != 0) &&
-        (strncasecmp(ui->lineEdit_2->text().toLatin1().data(), "DL", 2) != 0))
+    if ((strncmp(ui->lineEdit_2->text().toLatin1().data(), "TL", 2) != 0) &&
+        (strncmp(ui->lineEdit_2->text().toLatin1().data(), "DL", 2) != 0))
     {
         ui->label_2->setText("<font color=red>请输入耗材型号以便读取！</font>");
         return;
@@ -955,6 +956,26 @@ void SupplyWriter::on_pushButton_7_clicked()
     this->sendData(serverIP, TCP_PORT, OP_READ_INFO, NULL, 0);
 
     return;
+}
+
+bool SupplyWriter::check_modelid_valid(QString modelid)
+{
+    QRegExp rx3("^[TD]L-34[01][UHL]?$");
+    if (!rx3.exactMatch(modelid))
+    {
+        return false;
+    }
+    return true;
+}
+
+bool SupplyWriter::check_serialno_valid(QString serialno)
+{
+    QRegExp rx4("^CGL?[0-9]{10}CGRX[ABCDFGHJKLMNPQRSTWXYZ][1-9A-C][0-9]{5}$");
+    if (!rx4.exactMatch(serialno))
+    {
+        return false;
+    }
+    return true;
 }
 
 //检查IP地址是否合法
@@ -1391,4 +1412,26 @@ void SupplyWriter::on_checkBox_stateChanged(int state)
     {
         this->set_style_sheet("light.qss");
     }
+}
+
+void SupplyWriter::on_lineEdit_2_textChanged(const QString &arg1)
+{
+    if (arg1.length() < 6)
+        return;
+
+    QRegExp rx2("^TL-34[01]{1}$");
+    if (rx2.exactMatch(arg1))
+    {
+        ui->lineEdit_6->setText("3000");
+        return;
+    }
+
+    QRegExp rx1("^TL-34[01]{1}L$");
+    if (rx1.exactMatch(arg1))
+    {
+        ui->lineEdit_6->setText("1500");
+        return;
+    }
+
+    ui->lineEdit_6->setText("");
 }
