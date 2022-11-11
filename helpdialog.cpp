@@ -3,6 +3,9 @@
 
 #include "helpdialog.h"
 #include "ui_helpdialog.h"
+#include "supplywriter.h"
+
+extern SupplyWriter* writer;
 
 HelpDialog::HelpDialog(QWidget *parent) :
     QDialog(parent),
@@ -16,6 +19,8 @@ HelpDialog::HelpDialog(QWidget *parent) :
 
     this->setWindowTitle("耗材写入工具 帮助");
     ui->pushButton->setDefault(true);
+
+    connect(writer, SIGNAL(sendThemeMode(int)), this, SLOT(get_theme_id(int)));
 
     ui->textBrowser->setOpenLinks(true);
     ui->textBrowser->setOpenExternalLinks(true);

@@ -462,10 +462,10 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="13,11">
       <property name="spacing">
-       <number>16</number>
+       <number>12</number>
       </property>
       <property name="leftMargin">
-       <number>8</number>
+       <number>12</number>
       </property>
       <property name="topMargin">
        <number>4</number>
@@ -612,7 +612,7 @@
           <item row="8" column="0">
            <widget class="QLabel" name="label_7">
             <property name="text">
-             <string>类型</string>
+             <string>售卖类型</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -763,7 +763,7 @@
           <item row="2" column="1">
            <widget class="QComboBox" name="comboBox">
             <property name="toolTip">
-             <string>耗材销售国家或地区</string>
+             <string>选择耗材销售国家或地区</string>
             </property>
            </widget>
           </item>
@@ -773,15 +773,23 @@
           <item row="8" column="1">
            <widget class="QComboBox" name="comboBox_2">
             <property name="toolTip">
-             <string/>
+             <string>选择耗材随（打印）机售出还是作为独立商品售出</string>
             </property>
            </widget>
           </item>
           <item row="6" column="1">
-           <widget class="QComboBox" name="comboBox_3"/>
+           <widget class="QComboBox" name="comboBox_3">
+            <property name="toolTip">
+             <string>选择耗材厂商名称</string>
+            </property>
+           </widget>
           </item>
           <item row="7" column="1">
-           <widget class="QComboBox" name="comboBox_4"/>
+           <widget class="QComboBox" name="comboBox_4">
+            <property name="toolTip">
+             <string>选择耗材商标</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -1193,15 +1201,25 @@
                  </widget>
                 </item>
                 <item row="1" column="0">
-                 <widget class="QPushButton" name="pushButton_7">
+                 <widget class="QPushButton" name="ReadTonerInfo">
                   <property name="toolTip">
-                   <string>读出耗材芯片信息，根据输入的耗材型号前2个字符判断，DL为读取硒鼓，TL为读取粉盒</string>
+                   <string>读出治具上粉盒芯片信息</string>
                   </property>
                   <property name="text">
-                   <string>读出</string>
+                   <string>读取粉盒</string>
                   </property>
                   <property name="autoDefault">
                    <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QPushButton" name="ReadDrumInfo">
+                  <property name="toolTip">
+                   <string>读出治具上鼓组件芯片信息</string>
+                  </property>
+                  <property name="text">
+                   <string>读取硒鼓</string>
                   </property>
                  </widget>
                 </item>

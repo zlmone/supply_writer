@@ -11,7 +11,6 @@
 #include <QMouseEvent>
 #include <QPalette>
 #include <QSettings>
-#include <QValidator>
 
 #include "common.h"
 #include "readback.h"
@@ -56,7 +55,8 @@ private slots:
     void on_InsertSqlButton_clicked();
     void on_pushButton_5_clicked();
     void on_CloseButton_clicked();
-    void on_pushButton_7_clicked();
+    void on_ReadTonerInfo_clicked();
+    void on_ReadDrumInfo_clicked();
     void on_DeleteSqlButton_clicked();
     void on_QuerySqlButton_clicked();
     void on_HelpButton_clicked();
@@ -87,6 +87,7 @@ private slots:
     void on_pushButton_10_clicked();
     void on_checkBox_stateChanged(int state);
     void on_lineEdit_2_textChanged(const QString &arg1);
+    void on_lineEdit_3_textChanged(const QString &arg1);
 
 signals:
     void sendChipInfo(struct cgprintech_supply_info_readback* info);
@@ -99,7 +100,6 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
 
 private:
-    QValidator *validator;
     QButtonGroup* BtnGroup[2];
     bool is_drag = false;
     QPoint mouse_start_point;

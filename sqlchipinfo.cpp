@@ -2,6 +2,9 @@
 
 #include "sqlchipinfo.h"
 #include "ui_sqlchipinfo.h"
+#include "supplywriter.h"
+
+extern SupplyWriter* writer;
 
 SqlChipInfo::SqlChipInfo(QWidget *parent) :
     QDialog(parent),
@@ -15,6 +18,10 @@ SqlChipInfo::SqlChipInfo(QWidget *parent) :
 
     ui->lineEdit->setReadOnly(true);
     ui->pushButton->setDefault(true);
+
+    connect(writer, SIGNAL(sendThemeMode(int)), this, SLOT(get_theme_id(int)));
+    connect(writer, SIGNAL(sendSqlInfo(struct cgprintech_supply_sqlinfo*)),
+            this, SLOT(recvSqlInfo(struct cgprintech_supply_sqlinfo*)));
 }
 
 SqlChipInfo::~SqlChipInfo()

@@ -6,6 +6,8 @@
 
 #include "supplywriter.h"
 
+SupplyWriter* writer;
+
 int main(int argc, char **argv)
 {
     QApplication a(argc, argv);
@@ -20,6 +22,7 @@ int main(int argc, char **argv)
     setting.setValue("desc", "supply writer user info");
 
     SupplyWriter w;
+    writer = &w;
     w.show();
 
     return a.exec();

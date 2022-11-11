@@ -6,6 +6,9 @@
 // 服务端监听的端口号
 #define TCP_PORT   8899
 
+#define _TONER_CHIP_ADDR    0x2c
+#define _DRUM_CHIP_ADDR     0x28
+
 typedef unsigned char  uint8_t;
 typedef unsigned short uint16_t;
 typedef unsigned int   uint32_t;
@@ -13,7 +16,8 @@ typedef unsigned int   uint32_t;
 //上位机发送给下位机的命令
 enum {
     OP_WRITE_INFO,     //上位机写入耗材信息
-    OP_READ_INFO,      //上位机读取耗材信息
+    OP_READ_TONER_INFO,      //上位机读取粉盒耗材信息
+    OP_READ_DRUM_INFO,   //读取硒鼓芯片信息
 };
 
 //下位机返回码

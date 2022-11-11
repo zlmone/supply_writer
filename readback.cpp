@@ -2,6 +2,9 @@
 
 #include "readback.h"
 #include "ui_readback.h"
+#include "supplywriter.h"
+
+extern SupplyWriter* writer;
 
 ReadBack::ReadBack(QWidget *parent) :
     QDialog(parent),
@@ -15,6 +18,10 @@ ReadBack::ReadBack(QWidget *parent) :
 
     ui->lineEdit->setReadOnly(true);
     ui->pushButton_7->setDefault(true);
+
+    connect(writer, SIGNAL(sendThemeMode(int)), this, SLOT(get_theme_id(int)));
+    connect(writer, SIGNAL(sendChipInfo(struct cgprintech_supply_info_readback*)),
+            this, SLOT(show_ChipInfo(struct cgprintech_supply_info_readback*)));
 //    this->set_dialog_style();
 }
 

@@ -13,14 +13,14 @@ class ReadBack;
 
 static QString _type[] =
 {
-    "原厂生产",
-    "授权生产"
+    "随机",
+    "贩卖"
 };
 
 static QString supply_type[] =
 {
-    "O",    //原厂生产
-    "M",    //授权生产
+    "I",    //随机
+    "M",    //贩卖
 };
 
 static QString Market_Area[] =

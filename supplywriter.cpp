@@ -58,17 +58,17 @@ void SupplyWriter::clear_main_page()
 
     ui->total_page_radio->setChecked(1);
     ui->lineEdit_6->setEnabled(1);
-    ui->lineEdit_7->setEnabled(false);
+    ui->lineEdit_7->setEnabled(0);
 
     ui->beyond_printpage_radio->setChecked(1);
     ui->lineEdit_11->setEnabled(1);
-    ui->lineEdit_12->setEnabled(false);
+    ui->lineEdit_12->setEnabled(0);
 
     ui->label_2->clear();
     ui->label_13->clear();
     ui->label_44->setText(ui->username->text());
 
-    ui->lineEdit_2->setFocus();
+    ui->lineEdit_3->setFocus();
 }
 
 void SupplyWriter::clear_newuser_page()
@@ -163,13 +163,12 @@ void SupplyWriter::main_page_init()
     this->status = false;
     tcpSocket = new QTcpSocket(this);
 
-    QRegExp rx("^[1-9][0-9]{1,}$");
-    validator = new QRegExpValidator(rx, this);
-    ui->lineEdit_6->setValidator(validator);
-    ui->lineEdit_7->setValidator(validator);
-    ui->lineEdit_11->setValidator(validator);
-    ui->lineEdit_12->setValidator(validator);
-    ui->lineEdit_13->setValidator(validator);
+    ui->lineEdit_2->setFocusPolicy(Qt::NoFocus);
+    ui->lineEdit_6->setFocusPolicy(Qt::NoFocus);
+    ui->lineEdit_7->setFocusPolicy(Qt::NoFocus);
+    ui->lineEdit_11->setFocusPolicy(Qt::NoFocus);
+    ui->lineEdit_12->setFocusPolicy(Qt::NoFocus);
+    ui->lineEdit_13->setFocusPolicy(Qt::NoFocus);
 
     BtnGroup[0] = new QButtonGroup;
     BtnGroup[1] = new QButtonGroup;
@@ -186,18 +185,10 @@ void SupplyWriter::main_page_init()
     ui->beyond_printpage_radio->setChecked(true);
     ui->lineEdit_12->setEnabled(false);
 
-    ui->lineEdit_2->setFocus();
     this->init_market_area();
-
     ui->dateEdit->setDate(QDate::currentDate());
 
-    this->setTabOrder(ui->lineEdit_2, ui->lineEdit_3);
-    this->setTabOrder(ui->lineEdit_3, ui->lineEdit_6);
-    this->setTabOrder(ui->lineEdit_6, ui->lineEdit_7);
-    this->setTabOrder(ui->lineEdit_7, ui->lineEdit_11);
-    this->setTabOrder(ui->lineEdit_11, ui->lineEdit_12);
-    this->setTabOrder(ui->lineEdit_12, ui->lineEdit_13);
-    this->setTabOrder(ui->lineEdit_13, ui->lineEdit_14);
+    this->setTabOrder(ui->lineEdit_3, ui->lineEdit_14);
     this->setTabOrder(ui->lineEdit_14, ui->lineEdit);
     this->setTabOrder(ui->lineEdit, ui->lineEdit_4);
     this->setTabOrder(ui->lineEdit_4, ui->lineEdit_5);
@@ -316,7 +307,6 @@ SupplyWriter::~SupplyWriter()
     delete ui;
     delete BtnGroup[0];
     delete BtnGroup[1];
-    delete validator;
     delete tcpSocket;
 }
 
@@ -550,17 +540,14 @@ void SupplyWriter::dataReceived()
             {
                 ui->label_2->setText("<font color=green>写入成功！</font>");
             }
-            else if (((RespInfo*)resp)->cmd == OP_READ_INFO)
+            else if (((RespInfo*)resp)->cmd == OP_READ_TONER_INFO ||
+                     ((RespInfo*)resp)->cmd == OP_READ_DRUM_INFO)
             {
                 ui->label_2->setText("<font color=green>读取成功！</font>");
                 //展示读取到的信息
 //                this->print_chip_info((struct cgprintech_supply_info_readback*)(resp + sizeof(RespInfo)));
 
                 ReadBack *readback = new ReadBack();
-
-                connect(this, SIGNAL(sendThemeMode(int)), readback, SLOT(get_theme_id(int)));
-                connect(this, SIGNAL(sendChipInfo(struct cgprintech_supply_info_readback*)),
-                        readback, SLOT(show_ChipInfo(struct cgprintech_supply_info_readback*)));
 
                 emit sendChipInfo((struct cgprintech_supply_info_readback*)(resp + sizeof(RespInfo)));
                 emit sendThemeMode(this->theme_state);
@@ -575,7 +562,8 @@ void SupplyWriter::dataReceived()
             {
                 ui->label_2->setText("<font color=red>写入失败！</font>");
             }
-            else if (((RespInfo*)resp)->cmd == OP_READ_INFO)
+            else if (((RespInfo*)resp)->cmd == OP_READ_TONER_INFO ||
+                     ((RespInfo*)resp)->cmd == OP_READ_DRUM_INFO)
             {
                 ui->label_2->setText("<font color=red>读取失败！</font>");
             }
@@ -602,18 +590,18 @@ bool SupplyWriter::sendData(QString serverIP, int port, int cmd, void* data, int
     if (data)
     {
         if (strncasecmp(((struct cgprintech_supply_info*)data)->model_id, "TL", 2) == 0)
-            ((MsgHdr*)writeinfo)->i2c_addr = 0x2c;
+            ((MsgHdr*)writeinfo)->i2c_addr = _TONER_CHIP_ADDR;
         else if (strncasecmp(((struct cgprintech_supply_info*)data)->model_id, "DL", 2) == 0)
-            ((MsgHdr*)writeinfo)->i2c_addr = 0x28;
+            ((MsgHdr*)writeinfo)->i2c_addr = _DRUM_CHIP_ADDR;
 
         memcpy(writeinfo + sizeof(MsgHdr), data, data_len);
     }
     else
     {
-        if (strncasecmp(ui->lineEdit_2->text().toLocal8Bit().data(), "TL", 2) == 0)
-            ((MsgHdr*)writeinfo)->i2c_addr = 0x2c;
-        else if (strncasecmp(ui->lineEdit_2->text().toLocal8Bit().data(), "DL", 2) == 0)
-            ((MsgHdr*)writeinfo)->i2c_addr = 0x28;
+        if (cmd == OP_READ_TONER_INFO)
+            ((MsgHdr*)writeinfo)->i2c_addr = _TONER_CHIP_ADDR;
+        else if (cmd == OP_READ_DRUM_INFO)
+            ((MsgHdr*)writeinfo)->i2c_addr = _DRUM_CHIP_ADDR;
     }
 
     tcpSocket->write((const char*)&writeinfo, sizeof(writeinfo));
@@ -861,10 +849,6 @@ void SupplyWriter::on_QuerySqlButton_clicked()
 
     SqlChipInfo *sqlinfo = new SqlChipInfo();
 
-    connect(this, SIGNAL(sendThemeMode(int)), sqlinfo, SLOT(get_theme_id(int)));
-    connect(this, SIGNAL(sendSqlInfo(struct cgprintech_supply_sqlinfo*)),
-            sqlinfo, SLOT(recvSqlInfo(struct cgprintech_supply_sqlinfo*)));
-
     emit sendThemeMode(theme_state);
     emit sendSqlInfo(&ChipInfo);
 
@@ -938,23 +922,27 @@ void SupplyWriter::fill_supplyinfo_data()
     this->status = false;
 }
 
-//耗材信息回读
-void SupplyWriter::on_pushButton_7_clicked()
+//粉盒耗材信息回读
+void SupplyWriter::on_ReadTonerInfo_clicked()
 {
     this->on_pushButton_1_clicked();
     if (this->status)
         return;
 
-    if ((strncmp(ui->lineEdit_2->text().toLatin1().data(), "TL", 2) != 0) &&
-        (strncmp(ui->lineEdit_2->text().toLatin1().data(), "DL", 2) != 0))
-    {
-        ui->label_2->setText("<font color=red>请输入耗材型号以便读取！</font>");
+    //1.发送读取耗材信息命令
+    this->sendData(serverIP, TCP_PORT, OP_READ_TONER_INFO, NULL, 0);
+    return;
+}
+
+//鼓组件芯片信息回读
+void SupplyWriter::on_ReadDrumInfo_clicked()
+{
+    this->on_pushButton_1_clicked();
+    if (this->status)
         return;
-    }
 
     //1.发送读取耗材信息命令
-    this->sendData(serverIP, TCP_PORT, OP_READ_INFO, NULL, 0);
-
+    this->sendData(serverIP, TCP_PORT, OP_READ_DRUM_INFO, NULL, 0);
     return;
 }
 
@@ -1035,7 +1023,7 @@ int SupplyWriter::checkIPversion(QString IP)
 //返回false表示离线，返回true表示在线
 bool SupplyWriter::check_server_status(const QString serverIP, const int port)
 {
-    tcpSocket = new QTcpSocket(this);
+//    tcpSocket = new QTcpSocket(this);
     this->server_status = false;
 
     connect(tcpSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
@@ -1069,28 +1057,28 @@ void SupplyWriter::on_total_page_radio_clicked()
 {
     ui->lineEdit_6->setEnabled(true);
     ui->lineEdit_7->setEnabled(false);
-    ui->lineEdit_6->setFocus();
+//    ui->lineEdit_6->setFocus();
 }
 
 void SupplyWriter::on_total_dot_radio_clicked()
 {
     ui->lineEdit_6->setEnabled(false);
     ui->lineEdit_7->setEnabled(true);
-    ui->lineEdit_7->setFocus();
+//    ui->lineEdit_7->setFocus();
 }
 
 void SupplyWriter::on_beyond_printpage_radio_clicked()
 {
     ui->lineEdit_11->setEnabled(true);
     ui->lineEdit_12->setEnabled(false);
-    ui->lineEdit_11->setFocus();
+//    ui->lineEdit_11->setFocus();
 }
 
 void SupplyWriter::on_beyond_printdot_radio_clicked()
 {
     ui->lineEdit_11->setEnabled(false);
     ui->lineEdit_12->setEnabled(true);
-    ui->lineEdit_12->setFocus();
+//    ui->lineEdit_12->setFocus();
 }
 
 //关闭对话框
@@ -1103,7 +1091,6 @@ void SupplyWriter::on_CloseButton_clicked()
 void SupplyWriter::on_HelpButton_clicked()
 {
     HelpDialog* help = new HelpDialog();
-    connect(this, SIGNAL(sendThemeMode(int)), help, SLOT(get_theme_id(int)));
     emit sendThemeMode(this->theme_state);
     help->show();
 }
@@ -1417,12 +1404,8 @@ void SupplyWriter::on_checkBox_stateChanged(int state)
 void SupplyWriter::on_lineEdit_2_textChanged(const QString &arg1)
 {
     if (arg1.length() < 6)
-        return;
-
-    QRegExp rx2("^TL-34[01]{1}$");
-    if (rx2.exactMatch(arg1))
     {
-        ui->lineEdit_6->setText("3000");
+        ui->lineEdit_6->setText("");
         return;
     }
 
@@ -1433,5 +1416,104 @@ void SupplyWriter::on_lineEdit_2_textChanged(const QString &arg1)
         return;
     }
 
+    QRegExp rx0("^TL-34[01]{1}$");
+    if (rx0.exactMatch(arg1))
+    {
+        ui->lineEdit_6->setText("3000");
+        return;
+    }
+
+    QRegExp rx2("^TL-34[01]{1}H$");
+    if (rx2.exactMatch(arg1))
+    {
+        ui->lineEdit_6->setText("5500");
+        return;
+    }
+
+    QRegExp rx3("^TL-340U$");
+    if (rx3.exactMatch(arg1))
+    {
+        ui->lineEdit_6->setText("15000");
+        return;
+    }
+
+    QRegExp rxd0("^DL-34[01]{1}$");
+    if (rxd0.exactMatch(arg1))
+    {
+        ui->lineEdit_6->setText("30000");
+        return;
+    }
+
     ui->lineEdit_6->setText("");
+}
+
+void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
+{
+    if (arg1.mid(0, 3).compare("CGL", Qt::CaseSensitive) == 0)
+        ui->comboBox_2->setCurrentIndex(0);
+    else
+        ui->comboBox_2->setCurrentIndex(1);
+
+    ui->lineEdit_11->setText("0");
+    ui->lineEdit_13->setText("0");
+
+    if (arg1.contains("L2090000045", Qt::CaseSensitive) ||
+        arg1.contains("0301000259", Qt::CaseSensitive))
+    {
+        ui->lineEdit_2->setText("TL-341L");
+        return;
+    }
+
+    if (arg1.contains("L2090000046", Qt::CaseSensitive) ||
+        arg1.contains("0301000260", Qt::CaseSensitive))
+    {
+        ui->lineEdit_2->setText("TL-341");
+        return;
+    }
+
+    if (arg1.contains("0301000261", Qt::CaseSensitive) == true)
+    {
+        ui->lineEdit_2->setText("TL-341H");
+        return;
+    }
+
+    if (arg1.contains("L2090000052", Qt::CaseSensitive) ||
+        arg1.contains("0301000224", Qt::CaseSensitive))
+    {
+        ui->lineEdit_2->setText("TL-340L");
+        return;
+    }
+
+    if (arg1.contains("L2090000053", Qt::CaseSensitive) ||
+        arg1.contains("0301000223", Qt::CaseSensitive))
+    {
+        ui->lineEdit_2->setText("TL-340");
+        return;
+    }
+
+    if (arg1.contains("0301000225", Qt::CaseSensitive) == true)
+    {
+        ui->lineEdit_2->setText("TL-340H");
+        return;
+    }
+
+    if (arg1.contains("0301000226", Qt::CaseSensitive) == true)
+    {
+        ui->lineEdit_2->setText("TL-340U");
+        return;
+    }
+
+    if (arg1.contains("L2090000049", Qt::CaseSensitive) ||
+        arg1.contains("0204000131", Qt::CaseSensitive))
+    {
+        ui->lineEdit_2->setText("DL-340");
+        return;
+    }
+
+    if (arg1.contains("L2090000051", Qt::CaseSensitive) ||
+        arg1.contains("0204000258", Qt::CaseSensitive))
+    {
+        ui->lineEdit_2->setText("DL-341");
+        return;
+    }
 }
