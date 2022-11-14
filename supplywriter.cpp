@@ -20,12 +20,8 @@ void SupplyWriter::init_market_area()
 {
     int kk;
 
-    for (kk = 0; kk < 6; kk++)
-        ui->comboBox->addItem(Market_Area[kk]);
-
     for (kk = 0; kk < 2; kk++)
     {
-        ui->comboBox_2->addItem(_type[kk]);
         ui->comboBox_3->addItem(_trademark[kk]);
         ui->comboBox_4->addItem(_trademark[kk]);
     }
@@ -55,14 +51,6 @@ void SupplyWriter::clear_main_page()
     ui->lineEdit_13->clear();
     ui->lineEdit_14->clear();
     ui->lineEdit_1->clear();
-
-    ui->total_page_radio->setChecked(1);
-    ui->lineEdit_6->setEnabled(1);
-    ui->lineEdit_7->setEnabled(0);
-
-    ui->beyond_printpage_radio->setChecked(1);
-    ui->lineEdit_11->setEnabled(1);
-    ui->lineEdit_12->setEnabled(0);
 
     ui->label_2->clear();
     ui->label_13->clear();
@@ -169,21 +157,6 @@ void SupplyWriter::main_page_init()
     ui->lineEdit_11->setFocusPolicy(Qt::NoFocus);
     ui->lineEdit_12->setFocusPolicy(Qt::NoFocus);
     ui->lineEdit_13->setFocusPolicy(Qt::NoFocus);
-
-    BtnGroup[0] = new QButtonGroup;
-    BtnGroup[1] = new QButtonGroup;
-
-    BtnGroup[0]->addButton(ui->total_page_radio, 0);
-    BtnGroup[0]->addButton(ui->total_dot_radio, 1);
-    BtnGroup[0]->setExclusive(true);
-    ui->total_page_radio->setChecked(true);
-    ui->lineEdit_7->setEnabled(false);
-
-    BtnGroup[1]->addButton(ui->beyond_printpage_radio, 0);
-    BtnGroup[1]->addButton(ui->beyond_printdot_radio, 1);
-    BtnGroup[1]->setExclusive(true);
-    ui->beyond_printpage_radio->setChecked(true);
-    ui->lineEdit_12->setEnabled(false);
 
     this->init_market_area();
     ui->dateEdit->setDate(QDate::currentDate());
@@ -305,8 +278,8 @@ void SupplyWriter::set_dialog_style()
 SupplyWriter::~SupplyWriter()
 {
     delete ui;
-    delete BtnGroup[0];
-    delete BtnGroup[1];
+//    delete BtnGroup[0];
+//    delete BtnGroup[1];
     delete tcpSocket;
 }
 
@@ -435,28 +408,6 @@ bool SupplyWriter::check_input_valid()
         ui->lineEdit_3->text().length() == 0 ||
         ui->lineEdit_13->text().length() == 0)
         return 0;
-
-    if (ui->total_page_radio->isChecked())
-    {
-        if (ui->lineEdit_6->text().length() == 0)
-            return 0;
-    }
-    else
-    {
-        if (ui->lineEdit_7->text().length() == 0)
-            return 0;
-    }
-
-    if (ui->beyond_printpage_radio->isChecked())
-    {
-        if (ui->lineEdit_11->text().length() == 0)
-            return 0;
-    }
-    else
-    {
-        if (ui->lineEdit_12->text().length() == 0)
-            return 0;
-    }
 
     if (check_modelid_valid(ui->lineEdit_2->text()) == 0)
         return false;
@@ -887,29 +838,13 @@ void SupplyWriter::fill_supplyinfo_data()
 
     memcpy(&supply_info.model_id, ui->lineEdit_2->text().toLatin1().data(), ui->lineEdit_2->text().length());
     memcpy(&supply_info.serial_no, ui->lineEdit_3->text().toLatin1().data(), ui->lineEdit_3->text().length());
-//    memcpy(&supply_info.marketing_area, ui->comboBox->currentText().toLatin1().data(), ui->comboBox->currentText().length());
     memcpy(&supply_info.manufacturer, ui->comboBox_3->currentText().toLatin1().data(), ui->comboBox_3->currentText().length());
     memcpy(&supply_info.trade_mark, ui->comboBox_4->currentText().toLatin1().data(), ui->comboBox_4->currentText().length());
-    memcpy(&supply_info.marketing_area, marketing_area[ui->comboBox->currentIndex()].toLatin1().data(), 2);
-    memcpy(&supply_info.type, supply_type[ui->comboBox_2->currentIndex()].toLatin1().data(), 1);
+    memcpy(&supply_info.marketing_area, ui->lineEdit_7->text().toLatin1().data(), 2);
+    memcpy(&supply_info.type, ui->lineEdit_13->text().toLatin1().data(), 1);
 
-    if (ui->total_page_radio->isChecked())
-    {
-        Pack32(supply_info.pages, ui->lineEdit_6->text().toUInt());
-    }
-    else
-    {
-        Pack32(supply_info.dots, ui->lineEdit_7->text().toUInt());
-    }
-
-    if (ui->beyond_printpage_radio->isChecked())
-    {
-        Pack16(supply_info.beyond_pages, ui->lineEdit_11->text().toUInt());
-    }
-    else
-    {
-        Pack16(supply_info.beyond_percent, ui->lineEdit_12->text().toUInt());
-    }
+    Pack32(supply_info.pages, ui->lineEdit_6->text().toUInt());
+    Pack16(supply_info.beyond_pages, ui->lineEdit_11->text().toUInt());
     Pack16(supply_info.free_pages, ui->lineEdit_13->text().toUInt());
 
     year = ui->dateEdit->date().year();
@@ -958,7 +893,7 @@ bool SupplyWriter::check_modelid_valid(QString modelid)
 
 bool SupplyWriter::check_serialno_valid(QString serialno)
 {
-    QRegExp rx4("^CGL?[0-9]{10}CGRX[ABCDFGHJKLMNPQRSTWXYZ][1-9A-C][0-9]{5}$");
+    QRegExp rx4("^CGL?[0-9]{10}CGRX[ABCDFGHJKLMNPQRSTWXYZ][1-9A-C][1-9A-V][0-9]{4}$");
     if (!rx4.exactMatch(serialno))
     {
         return false;
@@ -1051,34 +986,6 @@ void SupplyWriter::on_AboutButton_clicked()
     QMessageBox::about(this, tr("关于 耗材写入工具"), info);
 
     return;
-}
-
-void SupplyWriter::on_total_page_radio_clicked()
-{
-    ui->lineEdit_6->setEnabled(true);
-    ui->lineEdit_7->setEnabled(false);
-//    ui->lineEdit_6->setFocus();
-}
-
-void SupplyWriter::on_total_dot_radio_clicked()
-{
-    ui->lineEdit_6->setEnabled(false);
-    ui->lineEdit_7->setEnabled(true);
-//    ui->lineEdit_7->setFocus();
-}
-
-void SupplyWriter::on_beyond_printpage_radio_clicked()
-{
-    ui->lineEdit_11->setEnabled(true);
-    ui->lineEdit_12->setEnabled(false);
-//    ui->lineEdit_11->setFocus();
-}
-
-void SupplyWriter::on_beyond_printdot_radio_clicked()
-{
-    ui->lineEdit_11->setEnabled(false);
-    ui->lineEdit_12->setEnabled(true);
-//    ui->lineEdit_12->setFocus();
 }
 
 //关闭对话框
@@ -1408,6 +1315,7 @@ void SupplyWriter::on_lineEdit_2_textChanged(const QString &arg1)
         ui->lineEdit_6->setText("");
         return;
     }
+    ui->lineEdit_7->setText("CN");
 
     QRegExp rx1("^TL-34[01]{1}L$");
     if (rx1.exactMatch(arg1))
@@ -1450,12 +1358,14 @@ void SupplyWriter::on_lineEdit_2_textChanged(const QString &arg1)
 void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
 {
     if (arg1.mid(0, 3).compare("CGL", Qt::CaseSensitive) == 0)
-        ui->comboBox_2->setCurrentIndex(0);
+        ui->lineEdit_13->setText("I");
+    else if (arg1.mid(0, 2).compare("CG", Qt::CaseSensitive) == 0)
+        ui->lineEdit_13->setText("M");
     else
-        ui->comboBox_2->setCurrentIndex(1);
+        ui->lineEdit_13->setText("");
 
     ui->lineEdit_11->setText("0");
-    ui->lineEdit_13->setText("0");
+    ui->lineEdit_12->setText("0");
 
     if (arg1.contains("L2090000045", Qt::CaseSensitive) ||
         arg1.contains("0301000259", Qt::CaseSensitive))
@@ -1516,4 +1426,14 @@ void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
         ui->lineEdit_2->setText("DL-341");
         return;
     }
+
+    ui->lineEdit_2->setText("");
+}
+
+void SupplyWriter::on_ClearSupplyInfo_clicked()
+{
+    ui->lineEdit_3->clear();
+    ui->lineEdit_3->setFocus();
+    ui->lineEdit_11->setText("");
+    ui->lineEdit_12->setText("");
 }

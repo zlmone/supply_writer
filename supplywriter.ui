@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>690</width>
+    <width>720</width>
     <height>540</height>
    </rect>
   </property>
@@ -21,7 +21,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>690</width>
+     <width>720</width>
      <height>540</height>
     </rect>
    </property>
@@ -47,7 +47,7 @@
       <rect>
        <x>380</x>
        <y>70</y>
-       <width>310</width>
+       <width>340</width>
        <height>400</height>
       </rect>
      </property>
@@ -56,10 +56,10 @@
        <number>12</number>
       </property>
       <property name="leftMargin">
-       <number>35</number>
+       <number>40</number>
       </property>
       <property name="rightMargin">
-       <number>35</number>
+       <number>40</number>
       </property>
       <item>
        <widget class="QLabel" name="logo_label">
@@ -250,7 +250,7 @@
       <rect>
        <x>380</x>
        <y>480</y>
-       <width>310</width>
+       <width>340</width>
        <height>55</height>
       </rect>
      </property>
@@ -327,7 +327,7 @@
       <item>
        <widget class="QLabel" name="label_19">
         <property name="text">
-         <string>辰光融信 版权所有 2022 V1.6  by youshun</string>
+         <string>辰光融信 版权所有 2022 V1.8.0  by youshun</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -343,7 +343,7 @@
       <rect>
        <x>0</x>
        <y>495</y>
-       <width>690</width>
+       <width>720</width>
        <height>36</height>
       </rect>
      </property>
@@ -456,11 +456,11 @@
       <rect>
        <x>0</x>
        <y>15</y>
-       <width>690</width>
+       <width>720</width>
        <height>460</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="13,11">
+     <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="17,13">
       <property name="spacing">
        <number>12</number>
       </property>
@@ -506,290 +506,284 @@
         <property name="checkable">
          <bool>false</bool>
         </property>
-        <widget class="QWidget" name="layoutWidget">
+        <widget class="QWidget" name="verticalLayoutWidget_9">
          <property name="geometry">
           <rect>
            <x>10</x>
            <y>20</y>
-           <width>340</width>
-           <height>401</height>
+           <width>371</width>
+           <height>381</height>
           </rect>
          </property>
-         <layout class="QGridLayout" name="gridLayout" rowstretch="1,1,1,1,1,1,1,1,1,1,1,1" columnstretch="4,7" rowminimumheight="1,1,1,1,1,1,1,1,1,1,1,1" columnminimumwidth="3,7">
-          <property name="sizeConstraint">
-           <enum>QLayout::SetMinimumSize</enum>
-          </property>
-          <property name="leftMargin">
-           <number>8</number>
-          </property>
-          <property name="topMargin">
-           <number>8</number>
-          </property>
-          <property name="rightMargin">
+         <layout class="QVBoxLayout" name="verticalLayout_10">
+          <property name="spacing">
            <number>8</number>
           </property>
           <property name="bottomMargin">
-           <number>8</number>
+           <number>0</number>
           </property>
-          <property name="horizontalSpacing">
-           <number>12</number>
-          </property>
-          <property name="verticalSpacing">
-           <number>8</number>
-          </property>
-          <item row="9" column="1">
-           <widget class="QLineEdit" name="lineEdit_11">
-            <property name="maxLength">
-             <number>3</number>
+          <item>
+           <layout class="QGridLayout" name="gridLayout" rowstretch="1,1,1,1,1,1,1,1,1,1" columnstretch="1,3" rowminimumheight="1,1,1,1,1,1,1,1,1,1" columnminimumwidth="1,2">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetDefaultConstraint</enum>
             </property>
-            <property name="placeholderText">
-             <string>耗尽后超出打印页数</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="0">
-           <widget class="QRadioButton" name="beyond_printpage_radio">
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
-            </property>
-            <property name="text">
-             <string>超出打印页数</string>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-            <property name="autoRepeat">
-             <bool>false</bool>
-            </property>
-            <property name="autoExclusive">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="0">
-           <widget class="QLabel" name="label_8">
-            <property name="text">
-             <string>商标</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="lineEdit_3">
-            <property name="maxLength">
-             <number>31</number>
-            </property>
-            <property name="placeholderText">
-             <string>耗材序列号</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QLabel" name="label_6">
-            <property name="layoutDirection">
-             <enum>Qt::LeftToRight</enum>
-            </property>
-            <property name="text">
-             <string>厂商名称</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="lineEdit_2">
-            <property name="maxLength">
-             <number>15</number>
-            </property>
-            <property name="placeholderText">
-             <string>耗材型号</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0">
-           <widget class="QLabel" name="label_7">
-            <property name="text">
-             <string>售卖类型</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_12">
-            <property name="text">
-             <string>序列号</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QLineEdit" name="lineEdit_6">
-            <property name="maxLength">
+            <property name="leftMargin">
              <number>8</number>
             </property>
-            <property name="placeholderText">
-             <string>出厂容量（页数）</string>
-            </property>
-           </widget>
-          </item>
-          <item row="11" column="1">
-           <widget class="QLineEdit" name="lineEdit_13">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maxLength">
-             <number>3</number>
-            </property>
-            <property name="placeholderText">
-             <string>前N页打印不计数</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QRadioButton" name="total_page_radio">
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
-            </property>
-            <property name="text">
-             <string>容量（总页数）</string>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-            <property name="autoRepeat">
-             <bool>false</bool>
-            </property>
-            <property name="autoExclusive">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="10" column="1">
-           <widget class="QLineEdit" name="lineEdit_12">
-            <property name="maxLength">
-             <number>2</number>
-            </property>
-            <property name="placeholderText">
-             <string>耗尽后超出打印比例</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QRadioButton" name="total_dot_radio">
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
-            </property>
-            <property name="text">
-             <string>容量（总点数）</string>
-            </property>
-            <property name="autoExclusive">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>销售国家或地区</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="10" column="0">
-           <widget class="QRadioButton" name="beyond_printdot_radio">
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
-            </property>
-            <property name="text">
-             <string>超出打印比例</string>
-            </property>
-            <property name="autoExclusive">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QLineEdit" name="lineEdit_7">
-            <property name="maxLength">
+            <property name="topMargin">
              <number>8</number>
             </property>
-            <property name="placeholderText">
-             <string>出厂容量（点数）</string>
+            <property name="rightMargin">
+             <number>8</number>
             </property>
-           </widget>
+            <property name="bottomMargin">
+             <number>8</number>
+            </property>
+            <property name="horizontalSpacing">
+             <number>12</number>
+            </property>
+            <property name="verticalSpacing">
+             <number>8</number>
+            </property>
+            <item row="6" column="0">
+             <widget class="QLabel" name="label_8">
+              <property name="text">
+               <string>商标</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="lineEdit_3">
+              <property name="maxLength">
+               <number>31</number>
+              </property>
+              <property name="placeholderText">
+               <string>耗材序列号</string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>不计数页数</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="1">
+             <widget class="QLineEdit" name="lineEdit_11">
+              <property name="maxLength">
+               <number>3</number>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+              <property name="placeholderText">
+               <string>耗尽后超出打印页数</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QComboBox" name="comboBox_4">
+              <property name="toolTip">
+               <string>选择耗材商标</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>销售国家或地区</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_6">
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+              <property name="text">
+               <string>厂商名称</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_11">
+              <property name="text">
+               <string>生产日期</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="lineEdit_2">
+              <property name="maxLength">
+               <number>15</number>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+              <property name="placeholderText">
+               <string>耗材型号</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="label_7">
+              <property name="text">
+               <string>售卖类型</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QComboBox" name="comboBox_3">
+              <property name="toolTip">
+               <string>选择耗材厂商名称</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_47">
+              <property name="text">
+               <string>容量（总页数）</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>型号</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_12">
+              <property name="text">
+               <string>序列号</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QDateEdit" name="dateEdit"/>
+            </item>
+            <item row="8" column="0">
+             <widget class="QLabel" name="label_49">
+              <property name="text">
+               <string>超出打印页数</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="lineEdit_7">
+              <property name="text">
+               <string>CN</string>
+              </property>
+              <property name="maxLength">
+               <number>32</number>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLineEdit" name="lineEdit_6">
+              <property name="maxLength">
+               <number>32</number>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="1">
+             <widget class="QLineEdit" name="lineEdit_12">
+              <property name="maxLength">
+               <number>3</number>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+              <property name="placeholderText">
+               <string>前N页打印不计入总页数，用于工厂测试</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QLineEdit" name="lineEdit_13">
+              <property name="maxLength">
+               <number>32</number>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+              <property name="placeholderText">
+               <string>售卖类型，随机售卖还是独立贩卖</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>型号</string>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_12">
+            <property name="topMargin">
+             <number>0</number>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <property name="rightMargin">
+             <number>8</number>
             </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_11">
-            <property name="text">
-             <string>生产日期</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="11" column="0">
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>不计数页数</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QComboBox" name="comboBox">
-            <property name="toolTip">
-             <string>选择耗材销售国家或地区</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QDateEdit" name="dateEdit"/>
-          </item>
-          <item row="8" column="1">
-           <widget class="QComboBox" name="comboBox_2">
-            <property name="toolTip">
-             <string>选择耗材随（打印）机售出还是作为独立商品售出</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1">
-           <widget class="QComboBox" name="comboBox_3">
-            <property name="toolTip">
-             <string>选择耗材厂商名称</string>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="1">
-           <widget class="QComboBox" name="comboBox_4">
-            <property name="toolTip">
-             <string>选择耗材商标</string>
-            </property>
-           </widget>
+            <item>
+             <spacer name="horizontalSpacer_18">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="ClearSupplyInfo">
+              <property name="toolTip">
+               <string>清空耗材信息</string>
+              </property>
+              <property name="text">
+               <string>清空</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -1242,7 +1236,7 @@
       <rect>
        <x>380</x>
        <y>70</y>
-       <width>310</width>
+       <width>340</width>
        <height>380</height>
       </rect>
      </property>
@@ -1251,13 +1245,13 @@
        <number>12</number>
       </property>
       <property name="leftMargin">
-       <number>35</number>
+       <number>40</number>
       </property>
       <property name="topMargin">
        <number>0</number>
       </property>
       <property name="rightMargin">
-       <number>35</number>
+       <number>40</number>
       </property>
       <property name="bottomMargin">
        <number>0</number>
@@ -1420,7 +1414,7 @@
       <rect>
        <x>380</x>
        <y>70</y>
-       <width>310</width>
+       <width>340</width>
        <height>380</height>
       </rect>
      </property>
@@ -1429,10 +1423,10 @@
        <number>12</number>
       </property>
       <property name="leftMargin">
-       <number>35</number>
+       <number>40</number>
       </property>
       <property name="rightMargin">
-       <number>35</number>
+       <number>40</number>
       </property>
       <item>
        <widget class="QLabel" name="label_28">
@@ -1586,7 +1580,7 @@
       <rect>
        <x>380</x>
        <y>0</y>
-       <width>310</width>
+       <width>340</width>
        <height>540</height>
       </rect>
      </property>
@@ -1596,7 +1590,7 @@
         <rect>
          <x>0</x>
          <y>70</y>
-         <width>310</width>
+         <width>340</width>
          <height>360</height>
         </rect>
        </property>
@@ -1605,10 +1599,10 @@
          <number>12</number>
         </property>
         <property name="leftMargin">
-         <number>35</number>
+         <number>40</number>
         </property>
         <property name="rightMargin">
-         <number>35</number>
+         <number>40</number>
         </property>
         <item>
          <widget class="QLabel" name="label_33">
@@ -1749,7 +1743,7 @@
         <rect>
          <x>0</x>
          <y>70</y>
-         <width>310</width>
+         <width>340</width>
          <height>340</height>
         </rect>
        </property>
@@ -1758,10 +1752,10 @@
          <number>12</number>
         </property>
         <property name="leftMargin">
-         <number>35</number>
+         <number>40</number>
         </property>
         <property name="rightMargin">
-         <number>35</number>
+         <number>40</number>
         </property>
         <item>
          <widget class="QLabel" name="label_43">

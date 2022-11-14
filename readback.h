@@ -10,7 +10,7 @@
 namespace Ui {
 class ReadBack;
 }
-
+#if 0
 static QString _type[] =
 {
     "随机",
@@ -42,7 +42,7 @@ static QString marketing_area[] =
     "BR",
     "IN",
 };
-
+#endif
 static QString _trademark[] =
 {
     "Cgprintech",

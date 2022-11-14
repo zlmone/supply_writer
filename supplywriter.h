@@ -65,11 +65,6 @@ private slots:
     void slotDisconnected();
     void dataReceived();
 
-    void on_total_page_radio_clicked();
-    void on_total_dot_radio_clicked();
-    void on_beyond_printpage_radio_clicked();
-    void on_beyond_printdot_radio_clicked();
-
     void on_CreateUser_clicked();
     void on_ResetPassword_clicked();
     void on_ModifyPassword_clicked();
@@ -85,9 +80,11 @@ private slots:
     void on_pushButton_8_clicked();
     void on_pushButton_9_clicked();
     void on_pushButton_10_clicked();
+
     void on_checkBox_stateChanged(int state);
     void on_lineEdit_2_textChanged(const QString &arg1);
     void on_lineEdit_3_textChanged(const QString &arg1);
+    void on_ClearSupplyInfo_clicked();
 
 signals:
     void sendChipInfo(struct cgprintech_supply_info_readback* info);
@@ -100,7 +97,6 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
 
 private:
-    QButtonGroup* BtnGroup[2];
     bool is_drag = false;
     QPoint mouse_start_point;
     QPoint window_start_point;
