@@ -9,6 +9,8 @@
 #include <QSqlRecord>
 #include <QRegExpValidator>
 #include <QCryptographicHash>
+#include <QPainter>
+#include <QTimer>
 
 #include "sqlchipinfo.h"
 #include "supplywriter.h"
@@ -275,11 +277,57 @@ void SupplyWriter::set_dialog_style()
     this->setPalette(palette);
 }
 
+void SupplyWriter::paintEvent(QPaintEvent *event)
+{
+    //设置水印透明度
+//    setWindowOpacity(1.0);
+
+    QFont font("Microsoft YaHei", 14, 20, true);
+
+    // 水印的尺寸
+    int watermark_width = 180;
+    int watermark_height = 120;
+    //旋转角度
+    int watermark_inclination_angle = 30.0;
+
+    QString content = QString("辰光融信\n%1\t%2").arg(ui->username->text()).arg(QDate::currentDate().toString("yyyy-MM-dd"));
+
+    //逆时针旋转
+    qreal ang = -watermark_inclination_angle;
+
+    int width = this->width();
+    int height = this->height();
+
+    int x_step = watermark_width;
+    int y_step = watermark_height;
+
+    //水印写多少行
+    int row_count = width / y_step;
+    //水印写多少列 因为旋转了，如果不多加会导致水印缺少一块
+    int col_count = height / x_step + 10;
+
+    for (int r = 0; r < row_count; r++)
+    {
+        for (int c = 0; c < col_count; c++)
+        {
+            QPainter p(this);
+            p.setFont(font);
+            p.setPen("#808080");
+            p.translate(x_step * c, y_step * r);
+            p.rotate(ang);
+            p.drawText(QRect(0, 0, watermark_width, watermark_height), Qt::TextWordWrap, content);
+        }
+    }
+}
+
+void SupplyWriter::slotUpdateWaterMark()
+{
+    this->repaint();
+}
+
 SupplyWriter::~SupplyWriter()
 {
     delete ui;
-//    delete BtnGroup[0];
-//    delete BtnGroup[1];
     delete tcpSocket;
 }
 

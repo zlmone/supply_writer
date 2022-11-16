@@ -3,6 +3,7 @@
 #include <QStyle>
 #include <QStyleFactory>
 #include <QTextCodec>
+#include <QTimer>
 
 #include "supplywriter.h"
 
@@ -23,6 +24,7 @@ int main(int argc, char **argv)
 
     SupplyWriter w;
     writer = &w;
+    QTimer::singleShot(600000, writer, SLOT(slotUpdateWaterMark()));
     w.show();
 
     return a.exec();

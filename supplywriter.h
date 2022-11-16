@@ -11,6 +11,7 @@
 #include <QMouseEvent>
 #include <QPalette>
 #include <QSettings>
+#include <QPaintEvent>
 
 #include "common.h"
 #include "readback.h"
@@ -44,7 +45,6 @@ public:
     void clear_renewpwd_page();
     void clear_resetpwd_page0();
     void clear_resetpwd_page1();
-
     void set_dialog_style();
 
 private slots:
@@ -85,6 +85,7 @@ private slots:
     void on_lineEdit_2_textChanged(const QString &arg1);
     void on_lineEdit_3_textChanged(const QString &arg1);
     void on_ClearSupplyInfo_clicked();
+    void slotUpdateWaterMark();
 
 signals:
     void sendChipInfo(struct cgprintech_supply_info_readback* info);
@@ -95,6 +96,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
+    void paintEvent(QPaintEvent *event);
 
 private:
     bool is_drag = false;
