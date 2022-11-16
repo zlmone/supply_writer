@@ -661,7 +661,7 @@ void SupplyWriter::on_pushButton_1_clicked()
     serverIPversion = this->checkIPversion(serverIP);
     if (serverIPversion == 0)
     {
-        ui->label_2->setText("<font color=red>下位机 IP 地址错误！</font>");
+        ui->label_2->setText("<font color=red>治具 IP 地址错误！</font>");
         status = true;
         return;
     }
@@ -669,7 +669,7 @@ void SupplyWriter::on_pushButton_1_clicked()
     if (!checkIpValid(this->serverIPversion, serverIP))
     {
 //        QMessageBox::warning(this, tr("错误"), tr("下位机 IP 地址错误！"), QMessageBox::Ok);
-        ui->label_2->setText("<font color=red>下位机 IP 地址错误！</font>");
+        ui->label_2->setText("<font color=red>治具 IP 地址错误！</font>");
         status = true;
         return;
     }
@@ -677,14 +677,14 @@ void SupplyWriter::on_pushButton_1_clicked()
     if (check_server_status(serverIP, TCP_PORT) == false)
     {
 //        QMessageBox::warning(this, tr("错误"), tr("下位机设备离线！"), QMessageBox::Ok);
-        ui->label_2->setText("<font color=red>下位机设备离线！</font>");
+        ui->label_2->setText("<font color=red>治具设备离线！</font>");
         status = true;
         return;
     }
     else
     {
 //        qDebug() << serverIP << "在线" << endl;
-        ui->label_2->setText("<font color=green>下位机连接正常！</font>");
+        ui->label_2->setText("<font color=green>治具连接正常！</font>");
     }
     status = false;
 }
@@ -976,7 +976,7 @@ bool SupplyWriter::check_server_status(const QString serverIP, const int port)
 //关于按钮
 void SupplyWriter::on_AboutButton_clicked()
 {
-    QDate date = QDate::fromString("20221024", "yyyyMMdd");
+    QDate date = QDate::fromString("20221118", "yyyyMMdd");
 
     QString info = QString("软件版本：1.8.0\n"
                            "编译时间：%1\n"
