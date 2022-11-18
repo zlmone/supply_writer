@@ -25,6 +25,9 @@ QT_END_NAMESPACE
 #define DATABASE_NAME   "public"
 #define TABLE_NAME      "supplyinfo"
 
+#define _SUCCESS_STATUS  false
+#define _FAILED_STATUS   true
+
 class SupplyWriter : public QDialog
 {
     Q_OBJECT
@@ -50,10 +53,8 @@ public:
 private slots:
     void on_ConcurrentButton_clicked();
     void on_pushButton_4_clicked();
-    void on_pushButton_1_clicked();
     void on_AboutButton_clicked();
     void on_InsertSqlButton_clicked();
-    void on_pushButton_5_clicked();
     void on_CloseButton_clicked();
     void on_ReadTonerInfo_clicked();
     void on_ReadDrumInfo_clicked();
@@ -82,9 +83,9 @@ private slots:
     void on_pushButton_10_clicked();
 
     void on_checkBox_stateChanged(int state);
+    void on_lineEdit_1_textChanged(const QString &arg1);
     void on_lineEdit_2_textChanged(const QString &arg1);
     void on_lineEdit_3_textChanged(const QString &arg1);
-    void on_ClearSupplyInfo_clicked();
     void slotUpdateWaterMark();
 
 signals:
@@ -110,16 +111,15 @@ private:
     QString login_user;
     QString resetpwd_username;
     QSettings setting;
-
     QPalette palette;
     QPixmap pixmap;
     QIcon icon;
 
-    bool status;
     int year;
     int month;
     int day;
-    bool server_status;
+    bool pipe_status = _FAILED_STATUS;
+    bool server_status = _FAILED_STATUS;
 
     QString serverIP;
     int serverIPversion;
@@ -130,12 +130,14 @@ private:
     QString password;
     QString datasource;
 
-    QTcpSocket *tcpSocket;
+    QTcpSocket *tcpSocket = NULL;
     QSqlDatabase db;
     QSqlQuery query;
     struct cgprintech_supply_info supply_info;
 
 private:
+    void check_connect_fixture();
+    void write_supplyinfo2chip();
     void set_style_sheet(QString filename);
     void init_market_area();
     bool check_input_valid();
@@ -154,7 +156,7 @@ private:
     bool check_server_status(const QString serverIP, const int port);
 
     void fill_supplyinfo_data();
-    bool sendData(QString serverIP, int port, int cmd, void* data, int data_len);
+    bool sendData(int cmd, void* data, int data_len);
 
     void print_chip_info(struct cgprintech_supply_info_readback* supply_info);
 };

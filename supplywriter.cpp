@@ -150,8 +150,7 @@ void SupplyWriter::login_page_init()
 //耗材信息页面初始化
 void SupplyWriter::main_page_init()
 {
-    this->status = false;
-    tcpSocket = new QTcpSocket(this);
+//    this->pipe_status = false;
 
     ui->lineEdit_2->setFocusPolicy(Qt::NoFocus);
     ui->lineEdit_6->setFocusPolicy(Qt::NoFocus);
@@ -279,24 +278,24 @@ void SupplyWriter::set_dialog_style()
 
 void SupplyWriter::paintEvent(QPaintEvent *event)
 {
-    //设置水印透明度
+    //设置窗口的透明度
 //    setWindowOpacity(1.0);
 
-    QFont font("Microsoft YaHei", 14, 20, true);
+    QFont font("Microsoft YaHei", 13, 10, true);
 
     // 水印的尺寸
-    int watermark_width = 180;
+    int watermark_width = 200;
     int watermark_height = 120;
     //旋转角度
     int watermark_inclination_angle = 30.0;
 
-    QString content = QString("辰光融信\n%1\t%2").arg(ui->username->text()).arg(QDate::currentDate().toString("yyyy-MM-dd"));
+    QString content = QString("辰光融信CGPRINTECH\n%1\t%2").arg(ui->username->text()).arg(QDate::currentDate().toString("yyyy-MM-dd"));
 
     //逆时针旋转
     qreal ang = -watermark_inclination_angle;
 
-    int width = this->width();
-    int height = this->height();
+    int width = this->width() * 1.5;
+    int height = this->height() * 1.5;
 
     int x_step = watermark_width;
     int y_step = watermark_height;
@@ -304,7 +303,7 @@ void SupplyWriter::paintEvent(QPaintEvent *event)
     //水印写多少行
     int row_count = width / y_step;
     //水印写多少列 因为旋转了，如果不多加会导致水印缺少一块
-    int col_count = height / x_step + 10;
+    int col_count = height / x_step;
 
     for (int r = 0; r < row_count; r++)
     {
@@ -312,23 +311,27 @@ void SupplyWriter::paintEvent(QPaintEvent *event)
         {
             QPainter p(this);
             p.setFont(font);
-            p.setPen("#808080");
+            p.setPen("#a0a0a0");
             p.translate(x_step * c, y_step * r);
             p.rotate(ang);
             p.drawText(QRect(0, 0, watermark_width, watermark_height), Qt::TextWordWrap, content);
         }
     }
+    QRect rect = event->rect();
+    rect.setRect(0, 0, 720, 540);
 }
 
 void SupplyWriter::slotUpdateWaterMark()
 {
-    this->repaint();
+    this->repaint(0, 0, 720, 540);
 }
 
 SupplyWriter::~SupplyWriter()
 {
     delete ui;
-    delete tcpSocket;
+
+    if (tcpSocket)
+        delete tcpSocket;
 }
 
 void SupplyWriter::mousePressEvent(QMouseEvent *event)
@@ -476,13 +479,14 @@ void SupplyWriter::Sleep(int msec)
 
 void SupplyWriter::slotConnected()
 {
-//    qDebug() << "connected";
-    this->server_status = true;
+//    qDebug() << "Connected";
+    this->server_status = _SUCCESS_STATUS;
 }
 
 void SupplyWriter::slotDisconnected()
 {
 //    qDebug() << "Disconnected";
+    tcpSocket->close();
 }
 
 void SupplyWriter::print_chip_info(struct cgprintech_supply_info_readback *supply_info)
@@ -530,6 +534,7 @@ void SupplyWriter::dataReceived()
         datagram.resize(tcpSocket->bytesAvailable());
         tcpSocket->read(datagram.data(), datagram.size());
         memcpy(&resp, datagram.data(), length);
+//        tcpSocket->close();
 //        qDebug() << ((MsgHdr*)resp)->cmd << " " << ((MsgHdr*)resp)->len << " " << ((MsgHdr*)resp)->ret;
 //        qDebug() << "cmd=" << ((RespInfo*)resp)->cmd << " ret=" << ((RespInfo*)resp)->ret;
 
@@ -537,12 +542,22 @@ void SupplyWriter::dataReceived()
         {
             if (((RespInfo*)resp)->cmd == OP_WRITE_INFO)
             {
-                ui->label_2->setText("<font color=green>写入成功！</font>");
+                ui->label_2->setText("<p style=\"color:green;font-weight:bold\">信息写入成功！</p>");
+                ui->label_45->setText("<p style=\"color:green;font-size:45px;font-weight:bold\">√</p>");
+                this->Sleep(3000);
+                ui->lineEdit_3->setText("");
+                ui->lineEdit_3->setFocus();
+                ui->label_45->setText("");
             }
             else if (((RespInfo*)resp)->cmd == OP_READ_TONER_INFO ||
                      ((RespInfo*)resp)->cmd == OP_READ_DRUM_INFO)
             {
-                ui->label_2->setText("<font color=green>读取成功！</font>");
+                if (((RespInfo*)resp)->cmd == OP_READ_TONER_INFO)
+                    ui->label_2->setText("<p style=\"color:green;font-weight:bold\">粉盒信息读取成功！</p>");
+                else if (((RespInfo*)resp)->cmd == OP_READ_DRUM_INFO)
+                    ui->label_2->setText("<p style=\"color:green;font-weight:bold\">鼓组件信息读取成功！</p>");
+
+                ui->label_45->setText("<p style=\"color:green;font-size:45px;font-weight:bold\">√</p>");
                 //展示读取到的信息
 //                this->print_chip_info((struct cgprintech_supply_info_readback*)(resp + sizeof(RespInfo)));
 
@@ -552,29 +567,39 @@ void SupplyWriter::dataReceived()
                 emit sendThemeMode(this->theme_state);
 
                 readback->show();
+                this->Sleep(3000);
+                ui->label_45->setText("");
             }
-            this->status = false;
+            this->pipe_status = _SUCCESS_STATUS;
         }
         else
         {
             if (((RespInfo*)resp)->cmd == OP_WRITE_INFO)
             {
-                ui->label_2->setText("<font color=red>写入失败！</font>");
+                ui->label_2->setText("<p style=\"color:red;font-weight:bold\">信息写入失败！</p>");
+                ui->label_45->setText("<p style=\"color:red;font-size:45px;font-weight:bold\">×</p>");
             }
             else if (((RespInfo*)resp)->cmd == OP_READ_TONER_INFO ||
                      ((RespInfo*)resp)->cmd == OP_READ_DRUM_INFO)
             {
-                ui->label_2->setText("<font color=red>读取失败！</font>");
+                if (((RespInfo*)resp)->cmd == OP_READ_TONER_INFO)
+                    ui->label_2->setText("<p style=\"color:red;font-weight:bold\">粉盒信息读取失败！</p>");
+                else if (((RespInfo*)resp)->cmd == OP_READ_DRUM_INFO)
+                    ui->label_2->setText("<p style=\"color:red;font-weight:bold\">鼓组件信息读取失败！</p>");
+
+                ui->label_45->setText("<p style=\"color:red;font-size:45px;font-weight:bold\">×</p>");
             }
-            this->status = true;
+            this->pipe_status = _FAILED_STATUS;
+            this->Sleep(3000);
+            ui->label_45->setText("");
         }
 
-        tcpSocket->close();
         break;
     }
 }
 
-bool SupplyWriter::sendData(QString serverIP, int port, int cmd, void* data, int data_len)
+//bool SupplyWriter::sendData(QString serverIP, int port, int cmd, void* data, int data_len)
+bool SupplyWriter::sendData(int cmd, void* data, int data_len)
 {
     uint8_t writeinfo[sizeof(MsgHdr) + data_len];
 
@@ -582,7 +607,12 @@ bool SupplyWriter::sendData(QString serverIP, int port, int cmd, void* data, int
     connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
     connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(dataReceived()));
 
-    tcpSocket->connectToHost(serverIP, port);
+//    qDebug() << tcpSocket->isOpen();
+    if (tcpSocket->isOpen() == true)
+    {
+        tcpSocket->close();
+    }
+    tcpSocket->connectToHost(serverIP, TCP_PORT);
 
     ((MsgHdr*)writeinfo)->cmd = cmd;
     ((MsgHdr*)writeinfo)->len = data_len;
@@ -615,8 +645,7 @@ bool SupplyWriter::sendData(QString serverIP, int port, int cmd, void* data, int
 void SupplyWriter::on_ConcurrentButton_clicked()
 {
     //检查下位机状态
-    this->on_pushButton_1_clicked();
-    if (status)
+    if (server_status == _FAILED_STATUS)
     {
 //        qDebug() << "下位机检查失败！";
         return;
@@ -624,15 +653,15 @@ void SupplyWriter::on_ConcurrentButton_clicked()
 
     //检查数据库状态
     this->on_pushButton_4_clicked();
-    if (status)
+    if (pipe_status)
     {
 //        qDebug() << "数据库检查失败！";
         return;
     }
 
     //写入耗材
-    this->on_pushButton_5_clicked();
-    if (status)
+    this->write_supplyinfo2chip();
+    if (pipe_status)
     {
 //        qDebug() << "写入耗材失败！";
         return;
@@ -640,7 +669,7 @@ void SupplyWriter::on_ConcurrentButton_clicked()
 
     //写入数据库
     this->on_InsertSqlButton_clicked();
-    if (status)
+    if (pipe_status)
     {
 //        qDebug() << "写入数据库失败！";
         return;
@@ -658,16 +687,16 @@ void SupplyWriter::on_pushButton_4_clicked()
     this->databaseIPversion = checkIPversion(databaseIP);
     if (databaseIPversion == 0)
     {
-        ui->label_13->setText("<font color=red>数据库 IP 地址错误！</font>");
-        status = true;
+        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">数据库 IP 地址错误！</p>");
+        pipe_status = true;
         return;
     }
 
     if (!checkIpValid(databaseIPversion, databaseIP))
     {
 //        QMessageBox::warning(this, tr("错误"), tr("数据库 IP 地址错误！"), QMessageBox::Ok);
-        ui->label_13->setText("<font color=red>数据库 IP 地址错误！</font>");
-        status = true;
+        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">数据库 IP 地址错误！</p>");
+        pipe_status = true;
         return;
     }
 
@@ -679,8 +708,8 @@ void SupplyWriter::on_pushButton_4_clicked()
 
     if (db.isValid() == false)
     {
-        ui->label_13->setText("<font color=red>无效的数据库句柄！</font>");
-        status = true;
+        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">无效的数据库句柄！</p>");
+        pipe_status = true;
         return;
     }
     db.setHostName(databaseIP);
@@ -689,52 +718,16 @@ void SupplyWriter::on_pushButton_4_clicked()
     db.setPassword(password);
 
     if (db.open()) {
-        ui->label_13->setText("<font color=green>数据库连接成功！</font>");
-        status = false;
+        ui->label_13->setText("<p style=\"color:green;font-weight:bold\">数据库连接成功！</p>");
+        pipe_status = false;
         return;
     }
     else {
-        ui->label_13->setText("<font color=red>数据库连接失败！</font>");
+        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">数据库连接失败！</p>");
 //        qDebug()<<"error open database because"<<db.lastError().text();
-        status = true;
+        pipe_status = true;
         return;
     }
-}
-
-//下位机连接测试
-void SupplyWriter::on_pushButton_1_clicked()
-{
-    serverIP = ui->lineEdit_1->text();
-
-    serverIPversion = this->checkIPversion(serverIP);
-    if (serverIPversion == 0)
-    {
-        ui->label_2->setText("<font color=red>治具 IP 地址错误！</font>");
-        status = true;
-        return;
-    }
-
-    if (!checkIpValid(this->serverIPversion, serverIP))
-    {
-//        QMessageBox::warning(this, tr("错误"), tr("下位机 IP 地址错误！"), QMessageBox::Ok);
-        ui->label_2->setText("<font color=red>治具 IP 地址错误！</font>");
-        status = true;
-        return;
-    }
-
-    if (check_server_status(serverIP, TCP_PORT) == false)
-    {
-//        QMessageBox::warning(this, tr("错误"), tr("下位机设备离线！"), QMessageBox::Ok);
-        ui->label_2->setText("<font color=red>治具设备离线！</font>");
-        status = true;
-        return;
-    }
-    else
-    {
-//        qDebug() << serverIP << "在线" << endl;
-        ui->label_2->setText("<font color=green>治具连接正常！</font>");
-    }
-    status = false;
 }
 
 //写入数据库
@@ -743,15 +736,15 @@ void SupplyWriter::on_InsertSqlButton_clicked()
     bool ret = false;
 
     this->on_pushButton_4_clicked();
-    if (status)
+    if (pipe_status)
     {
         return;
     }
 
     this->fill_supplyinfo_data();
-    if (status)
+    if (pipe_status)
     {
-        ui->label_13->setText("<font color=red>耗材信息不完整！</font>");
+        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">耗材信息不完整！</p>");
         return;
     }
 
@@ -781,14 +774,14 @@ void SupplyWriter::on_InsertSqlButton_clicked()
     ret = query.exec();
     if (ret)
     {
-        ui->label_13->setText("<font color=green>写入数据正常！</font>");
-        this->status = true;
+        ui->label_13->setText("<p style=\"color:green;font-weight:bold\">写入数据成功！</p>");
+        this->pipe_status = true;
     }
     else
     {
-        ui->label_13->setText("<font color=red>写入数据失败！</font>");
+        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">写入数据失败！</p>");
         qDebug() << query.lastError().driverText() << QString(QObject::tr("插入失败"));
-        this->status = false;
+        this->pipe_status = false;
     }
 }
 
@@ -798,7 +791,7 @@ void SupplyWriter::on_QuerySqlButton_clicked()
     int num = 0;
 
     this->on_pushButton_4_clicked();
-    if (status)
+    if (pipe_status)
     {
         return;
     }
@@ -841,10 +834,10 @@ void SupplyWriter::on_QuerySqlButton_clicked()
 
     if (num == 0)
     {
-        ui->label_13->setText("<font color=red>查询数据失败！</font>");
+        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">查询数据失败！</p>");
         return;
     }
-    ui->label_13->setText("<font color=green>查询数据成功！</font>");
+    ui->label_13->setText("<p style=\"color:green;font-weight:bold\">查询数据成功！</p>");
 
     SqlChipInfo *sqlinfo = new SqlChipInfo();
 
@@ -855,20 +848,20 @@ void SupplyWriter::on_QuerySqlButton_clicked()
 }
 
 //写入耗材
-void SupplyWriter::on_pushButton_5_clicked()
+void SupplyWriter::write_supplyinfo2chip()
 {
     this->fill_supplyinfo_data();
-    if (this->status)
+    if (this->pipe_status)
     {
-        ui->label_2->setText("<font color=red>耗材信息不正确！</font>");
+        ui->label_2->setText("<p style=\"color:red;font-weight:bold\">耗材信息不正确！</p>");
         return;
     }
 
-    this->on_pushButton_1_clicked();
-    if (this->status)
+    if (this->server_status == _FAILED_STATUS)
         return;
 
-    this->sendData(serverIP, TCP_PORT, OP_WRITE_INFO, &supply_info, CGPRINTECH_SUPPLY_INFO_LEN);
+    pipe_status = _SUCCESS_STATUS;
+    this->sendData(OP_WRITE_INFO, &supply_info, CGPRINTECH_SUPPLY_INFO_LEN);
 }
 
 void SupplyWriter::fill_supplyinfo_data()
@@ -880,7 +873,7 @@ void SupplyWriter::fill_supplyinfo_data()
 
     if (check_input_valid() == 0)
     {
-        this->status = true;
+        this->pipe_status = true;
         return;
     }
 
@@ -902,30 +895,29 @@ void SupplyWriter::fill_supplyinfo_data()
     this->StringToHex(date, supply_info.product_date, &len);
 
 //    this->hex_dump((unsigned char*)&supply_info, sizeof(struct cgprintech_supply_info));
-    this->status = false;
+    this->pipe_status = false;
 }
 
 //粉盒耗材信息回读
 void SupplyWriter::on_ReadTonerInfo_clicked()
 {
-    this->on_pushButton_1_clicked();
-    if (this->status)
+    if (this->server_status == _FAILED_STATUS)
         return;
 
     //1.发送读取耗材信息命令
-    this->sendData(serverIP, TCP_PORT, OP_READ_TONER_INFO, NULL, 0);
+    this->sendData(OP_READ_TONER_INFO, NULL, 0);
     return;
 }
 
 //鼓组件芯片信息回读
 void SupplyWriter::on_ReadDrumInfo_clicked()
 {
-    this->on_pushButton_1_clicked();
-    if (this->status)
+//    qDebug() << server_status;
+    if (this->server_status == _FAILED_STATUS)
         return;
 
     //1.发送读取耗材信息命令
-    this->sendData(serverIP, TCP_PORT, OP_READ_DRUM_INFO, NULL, 0);
+    this->sendData(OP_READ_DRUM_INFO, NULL, 0);
     return;
 }
 
@@ -954,14 +946,11 @@ bool SupplyWriter::checkIpValid(int version, QString ip)
 {
     if (version == 4)
     {
-        QRegExp rx2("^(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5])\\."
-                "(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5])\\."
-                "(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5])\\."
-                "(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5])$");
-        if(!rx2.exactMatch(ip))
+        QRegExp rx2("^((25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.){3}(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)$");
+        if(rx2.exactMatch(ip))
         {
-            //ip地址非法
-            return false;
+            //ip地址合法
+            return true;
         }
     }
     else if (version == 6)
@@ -982,14 +971,14 @@ bool SupplyWriter::checkIpValid(int version, QString ip)
                     "((:[\\da-fA-F]{1,4}){1,4}|:)$|^([\\da-fA-F]{1,4}:){3}"
                     "((:[\\da-fA-F]{1,4}){1,3}|:)$|^([\\da-fA-F]{1,4}:){4}"
                     "((:[\\da-fA-F]{1,4}){1,2}|:)$|^([\\da-fA-F]{1,4}:){5}:([\\da-fA-F]{1,4})?$|^([\\da-fA-F]{1,4}:){6}:$");
-        if(!rx2.exactMatch(ip))
+        if(rx2.exactMatch(ip))
         {
-            //ip地址非法
-            return false;
+            //ip地址合法
+            return true;
         }
     }
 
-    return true;
+    return false;
 }
 
 //检测IP地址的版本
@@ -1006,8 +995,8 @@ int SupplyWriter::checkIPversion(QString IP)
 //返回false表示离线，返回true表示在线
 bool SupplyWriter::check_server_status(const QString serverIP, const int port)
 {
-//    tcpSocket = new QTcpSocket(this);
-    this->server_status = false;
+    tcpSocket = new QTcpSocket(this);
+    this->server_status = _FAILED_STATUS;
 
     connect(tcpSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
 //    connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
@@ -1015,8 +1004,8 @@ bool SupplyWriter::check_server_status(const QString serverIP, const int port)
 
     tcpSocket->connectToHost(serverIP, port);
 
+    this->Sleep(100);
     tcpSocket->close();
-    this->Sleep(10);
 
     return this->server_status;
 }
@@ -1054,7 +1043,7 @@ void SupplyWriter::on_HelpButton_clicked()
 void SupplyWriter::on_DeleteSqlButton_clicked()
 {
     this->on_pushButton_4_clicked();
-    if (status)
+    if (pipe_status)
     {
         return;
     }
@@ -1064,7 +1053,7 @@ void SupplyWriter::on_DeleteSqlButton_clicked()
     query = QSqlQuery(this->db);
     query.exec(sqlcmd);
 
-    ui->label_13->setText("<font color=green>删除数据库记录成功！</font>");
+    ui->label_13->setText("<p style=\"color:green;font-weight:bold\">删除数据库记录成功！</p>");
 }
 
 //登录进入耗材信息界面，更新最近使用日期
@@ -1073,7 +1062,7 @@ void SupplyWriter::on_LoginButton_clicked()
     if (ui->username->text().length() == 0 ||
         ui->password->text().length() == 0)
     {
-        ui->label_21->setText("<font color=red>用户名或密码不能为空！</font>");
+        ui->label_21->setText("<p style=\"color:red;font-weight:bold\">用户名或密码不能为空！</p>");
         return;
     }
 
@@ -1085,13 +1074,13 @@ void SupplyWriter::on_LoginButton_clicked()
     setting.beginGroup(strmd5_username);
     if (setting.value("name").toString().compare(strmd5_username, Qt::CaseInsensitive) != 0)
     {
-        ui->label_21->setText("<font color=red>该用户不存在！</font>");
+        ui->label_21->setText("<p style=\"color:red;font-weight:bold\">该用户不存在！</p>");
         setting.endGroup();
         return;
     }
     if (setting.value("pwd").toString().compare(strmd5_password, Qt::CaseInsensitive) != 0)
     {
-        ui->label_21->setText("<font color=red>密码不正确！</font>");
+        ui->label_21->setText("<p style=\"color:red;font-weight:bold\">密码不正确！</p>");
         setting.endGroup();
         return;
     }
@@ -1122,6 +1111,7 @@ void SupplyWriter::on_ExitButton_clicked()
 //创建用户
 void SupplyWriter::on_CreateUser_clicked()
 {
+    ui->username->clear();
     ui->stackedWidget->setCurrentIndex(2);
     this->clear_newuser_page();
 }
@@ -1129,6 +1119,7 @@ void SupplyWriter::on_CreateUser_clicked()
 //进入重置密码页面
 void SupplyWriter::on_ResetPassword_clicked()
 {
+    ui->username->clear();
     ui->stackedWidget->setCurrentIndex(4);
     ui->stackedWidget_2->setCurrentIndex(0);
     this->clear_resetpwd_page0();
@@ -1137,6 +1128,7 @@ void SupplyWriter::on_ResetPassword_clicked()
 //修改密码
 void SupplyWriter::on_ModifyPassword_clicked()
 {
+    ui->username->clear();
     ui->stackedWidget->setCurrentIndex(3);
     this->clear_renewpwd_page();
 }
@@ -1157,12 +1149,12 @@ void SupplyWriter::on_Confirm_clicked()
         ui->lineEdit_9->text().length() == 0 ||
         ui->lineEdit_10->text().length() == 0)
     {
-        ui->label_26->setText("<font color=red>用户名或密码不能为空！</font>");
+        ui->label_26->setText("<p style=\"color:red;font-weight:bold\">用户名或密码不能为空！</p>");
         return;
     }
     if (ui->lineEdit_9->text().compare(ui->lineEdit_10->text(), Qt::CaseSensitive) != 0)
     {
-        ui->label_26->setText("<font color=red>输入密码不一致！</font>");
+        ui->label_26->setText("<p style=\"color:red;font-weight:bold\">输入密码不一致！</p>");
         return;
     }
     QString strmd5_username = QCryptographicHash::hash(ui->lineEdit_8->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
@@ -1181,7 +1173,7 @@ void SupplyWriter::on_Confirm_clicked()
     setting.beginGroup(strmd5_username);
     if (setting.value("name").toString().compare(strmd5_username, Qt::CaseInsensitive) == 0)
     {
-        ui->label_26->setText("<font color=red>该用户已存在，不能重复创建！</font>");
+        ui->label_26->setText("<p style=\"color:red;font-weight:bold\">该用户已存在，不能重复创建！</p>");
         setting.endGroup();
         return;
     }
@@ -1191,7 +1183,7 @@ void SupplyWriter::on_Confirm_clicked()
     setting.setValue("recent", strmd5_recently);
     setting.endGroup();
 
-    ui->label_26->setText("<font color=green>注册成功，将在 3 秒后返回登录页面</font>");
+    ui->label_26->setText("<p style=\"color:green;font-weight:bold\">注册成功，将在 3 秒后返回登录页面</p>");
     ui->Confirm->setDisabled(true);
     ui->Return->setDisabled(true);
     this->Sleep(3000);
@@ -1214,13 +1206,13 @@ void SupplyWriter::on_pushButton_3_clicked()
         ui->lineEdit_17->text().length() == 0 ||
         ui->lineEdit_18->text().length() == 0)
     {
-        ui->label_31->setText("<font color=red>输入信息不能为空！</font>");
+        ui->label_31->setText("<p style=\"color:red;font-weight:bold\">输入信息不能为空！</p>");
         return;
     }
 
     if (ui->lineEdit_17->text().compare(ui->lineEdit_18->text(), Qt::CaseSensitive) != 0)
     {
-        ui->label_31->setText("<font color=red>密码不一致</font>");
+        ui->label_31->setText("<p style=\"color:red;font-weight:bold\">密码不一致</p>");
         return;
     }
 
@@ -1231,14 +1223,14 @@ void SupplyWriter::on_pushButton_3_clicked()
     setting.beginGroup(strmd5_username);
     if (setting.value("name").toString().compare(strmd5_username, Qt::CaseInsensitive) != 0)
     {
-        ui->label_31->setText("<font color=red>该用户不存在！</font>");
+        ui->label_31->setText("<p style=\"color:red;font-weight:bold\">该用户不存在！</p>");
         setting.endGroup();
         return;
     }
 
     if (setting.value("pwd").toString().compare(strmd5_password, Qt::CaseInsensitive) != 0)
     {
-        ui->label_31->setText("<font color=red>原密码不正确！</font>");
+        ui->label_31->setText("<p style=\"color:red;font-weight:bold\">原密码不正确！</p>");
         setting.endGroup();
         return;
     }
@@ -1246,7 +1238,7 @@ void SupplyWriter::on_pushButton_3_clicked()
     setting.setValue("pwd", strmd5_newpwd);
     setting.endGroup();
 
-    ui->label_31->setText("<font color=green>密码修改成功，将在 3 秒后返回登录页面</font>");
+    ui->label_31->setText("<p style=\"color:green;font-weight:bold\">密码修改成功，将在 3 秒后返回登录页面</p>");
     ui->pushButton_2->setDisabled(true);
     ui->pushButton_3->setDisabled(true);
     this->Sleep(3000);
@@ -1266,7 +1258,7 @@ void SupplyWriter::on_pushButton_8_clicked()
 {
     if (ui->lineEdit_19->text().length() == 0)
     {
-        ui->label_41->setText("<font color=red>用户名不能为空！</font>");
+        ui->label_41->setText("<p style=\"color:red;font-weight:bold\">用户名不能为空！</p>");
         return;
     }
 
@@ -1275,7 +1267,7 @@ void SupplyWriter::on_pushButton_8_clicked()
     setting.beginGroup(resetpwd_username);
     if (setting.value("name").toString().compare(resetpwd_username, Qt::CaseInsensitive) != 0)
     {
-        ui->label_41->setText("<font color=red>该用户不存在！</font>");
+        ui->label_41->setText("<p style=\"color:red;font-weight:bold\">该用户不存在！</p>");
         setting.endGroup();
         return;
     }
@@ -1288,14 +1280,14 @@ void SupplyWriter::on_pushButton_8_clicked()
 //    qDebug() << strmd5_recently;
     if (setting.value("origin").toString().compare(strmd5_register, Qt::CaseInsensitive) != 0)
     {
-        ui->label_41->setText("<font color=red>账户注册日期不正确，验证失败！</font>");
+        ui->label_41->setText("<p style=\"color:red;font-weight:bold\">账户注册日期不正确，验证失败！</p>");
         setting.endGroup();
         return;
     }
 
     if (setting.value("recent").toString().compare(strmd5_recently, Qt::CaseInsensitive) != 0)
     {
-        ui->label_41->setText("<font color=red>账户最近使用日期不正确，验证失败！</font>");
+        ui->label_41->setText("<p style=\"color:red;font-weight:bold\">账户最近使用日期不正确，验证失败！</p>");
         setting.endGroup();
         return;
     }
@@ -1319,13 +1311,13 @@ void SupplyWriter::on_pushButton_10_clicked()
     if (ui->lineEdit_20->text().length() == 0 ||
         ui->lineEdit_21->text().length() == 0)
     {
-        ui->label_40->setText("<font color=red>密码不能为空！</font>");
+        ui->label_40->setText("<p style=\"color:red;font-weight:bold\">密码不能为空！</p>");
         return;
     }
 
     if (ui->lineEdit_20->text().compare(ui->lineEdit_21->text(), Qt::CaseSensitive) != 0)
     {
-        ui->label_40->setText("<font color=red>输入密码不一致！</font>");
+        ui->label_40->setText("<p style=\"color:red;font-weight:bold\">输入密码不一致！</p>");
         return;
     }
 
@@ -1335,7 +1327,7 @@ void SupplyWriter::on_pushButton_10_clicked()
     setting.setValue("pwd", strmd5_password);
     setting.endGroup();
 
-    ui->label_40->setText("<font color=green>密码重置成功，将在 3 秒后返回登录页面</font>");
+    ui->label_40->setText("<p style=\"color:green;font-weight:bold\">密码重置成功，将在 3 秒后返回登录页面</p>");
     ui->pushButton_9->setDisabled(true);
     ui->pushButton_10->setDisabled(true);
     this->Sleep(3000);
@@ -1365,35 +1357,36 @@ void SupplyWriter::on_lineEdit_2_textChanged(const QString &arg1)
     }
     ui->lineEdit_7->setText("CN");
 
-    QRegExp rx1("^TL-34[01]{1}L$");
-    if (rx1.exactMatch(arg1))
+    QRegExp rxt1("^TL-34[01]{1}L$");
+    QRegExp rxt0("^TL-34[01]{1}$");
+    QRegExp rxt2("^TL-34[01]{1}H$");
+    QRegExp rxt3("^TL-340U$");
+    QRegExp rxd0("^DL-34[01]{1}$");
+
+    if (rxt1.exactMatch(arg1))
     {
         ui->lineEdit_6->setText("1500");
         return;
     }
 
-    QRegExp rx0("^TL-34[01]{1}$");
-    if (rx0.exactMatch(arg1))
+    if (rxt0.exactMatch(arg1))
     {
         ui->lineEdit_6->setText("3000");
         return;
     }
 
-    QRegExp rx2("^TL-34[01]{1}H$");
-    if (rx2.exactMatch(arg1))
+    if (rxt2.exactMatch(arg1))
     {
         ui->lineEdit_6->setText("5500");
         return;
     }
 
-    QRegExp rx3("^TL-340U$");
-    if (rx3.exactMatch(arg1))
+    if (rxt3.exactMatch(arg1))
     {
         ui->lineEdit_6->setText("15000");
         return;
     }
 
-    QRegExp rxd0("^DL-34[01]{1}$");
     if (rxd0.exactMatch(arg1))
     {
         ui->lineEdit_6->setText("30000");
@@ -1405,6 +1398,8 @@ void SupplyWriter::on_lineEdit_2_textChanged(const QString &arg1)
 
 void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
 {
+    bool ok_status = false;
+
     if (arg1.mid(0, 3).compare("CGL", Qt::CaseSensitive) == 0)
         ui->lineEdit_13->setText("I");
     else if (arg1.mid(0, 2).compare("CG", Qt::CaseSensitive) == 0)
@@ -1419,69 +1414,112 @@ void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
         arg1.contains("0301000259", Qt::CaseSensitive))
     {
         ui->lineEdit_2->setText("TL-341L");
-        return;
+        ok_status = true;
+        goto THE_END;
     }
 
     if (arg1.contains("L2090000046", Qt::CaseSensitive) ||
         arg1.contains("0301000260", Qt::CaseSensitive))
     {
         ui->lineEdit_2->setText("TL-341");
-        return;
+        ok_status = true;
+        goto THE_END;
     }
 
     if (arg1.contains("0301000261", Qt::CaseSensitive) == true)
     {
         ui->lineEdit_2->setText("TL-341H");
-        return;
+        ok_status = true;
+        goto THE_END;
     }
 
     if (arg1.contains("L2090000052", Qt::CaseSensitive) ||
         arg1.contains("0301000224", Qt::CaseSensitive))
     {
         ui->lineEdit_2->setText("TL-340L");
-        return;
+        ok_status = true;
+        goto THE_END;
     }
 
     if (arg1.contains("L2090000053", Qt::CaseSensitive) ||
         arg1.contains("0301000223", Qt::CaseSensitive))
     {
         ui->lineEdit_2->setText("TL-340");
-        return;
+        ok_status = true;
+        goto THE_END;
     }
 
     if (arg1.contains("0301000225", Qt::CaseSensitive) == true)
     {
         ui->lineEdit_2->setText("TL-340H");
-        return;
+        ok_status = true;
+        goto THE_END;
     }
 
     if (arg1.contains("0301000226", Qt::CaseSensitive) == true)
     {
         ui->lineEdit_2->setText("TL-340U");
-        return;
+        ok_status = true;
+        goto THE_END;
     }
 
     if (arg1.contains("L2090000049", Qt::CaseSensitive) ||
         arg1.contains("0204000131", Qt::CaseSensitive))
     {
         ui->lineEdit_2->setText("DL-340");
-        return;
+        ok_status = true;
+        goto THE_END;
     }
 
     if (arg1.contains("L2090000051", Qt::CaseSensitive) ||
         arg1.contains("0204000258", Qt::CaseSensitive))
     {
         ui->lineEdit_2->setText("DL-341");
-        return;
+        ok_status = true;
+        goto THE_END;
     }
 
-    ui->lineEdit_2->setText("");
+THE_END:
+    if (ok_status)
+    {
+        if (ui->lineEdit_1->text().length() && check_serialno_valid(ui->lineEdit_3->text()))
+        {
+            this->write_supplyinfo2chip();
+        }
+    }
+    else
+    {
+        ui->lineEdit_2->setText("");
+    }
 }
 
-void SupplyWriter::on_ClearSupplyInfo_clicked()
+//治具IP地址修改时，检测是否能够连接到治具
+void SupplyWriter::on_lineEdit_1_textChanged(const QString &arg1)
 {
-    ui->lineEdit_3->clear();
-    ui->lineEdit_3->setFocus();
-    ui->lineEdit_11->setText("");
-    ui->lineEdit_12->setText("");
+    if (checkIpValid(checkIPversion(arg1), arg1))
+    {
+        if (tcpSocket)
+        {
+//            qDebug() << "delete tcp socket";
+            tcpSocket->close();
+            delete tcpSocket;
+            tcpSocket = NULL;
+        }
+
+        if (check_server_status(arg1, TCP_PORT) == _FAILED_STATUS)
+        {
+    //        QMessageBox::warning(this, tr("错误"), tr("下位机设备离线！"), QMessageBox::Ok);
+            ui->label_2->setText("<p style=\"color:red;font-weight:bold\">治具设备离线！</p>");
+            pipe_status = true;
+            return;
+        }
+        else
+        {
+    //        qDebug() << serverIP << "在线" << endl;
+            ui->label_2->setText("<p style=\"color:green;font-weight:bold\">治具设备连接正常！</p>");
+            this->serverIP = ui->lineEdit_1->text();
+        }
+    }
+
+    pipe_status = false;
 }
