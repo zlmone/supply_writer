@@ -48,291 +48,290 @@
        <x>380</x>
        <y>70</y>
        <width>340</width>
-       <height>400</height>
+       <height>460</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_9">
-      <property name="spacing">
-       <number>12</number>
-      </property>
-      <property name="leftMargin">
-       <number>40</number>
-      </property>
-      <property name="rightMargin">
-       <number>40</number>
+      <property name="bottomMargin">
+       <number>0</number>
       </property>
       <item>
-       <widget class="QLabel" name="logo_label">
-        <property name="text">
-         <string/>
+       <layout class="QVBoxLayout" name="verticalLayout_11">
+        <property name="spacing">
+         <number>12</number>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
+        <property name="leftMargin">
+         <number>40</number>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_18">
-        <property name="text">
-         <string>欢迎使用</string>
+        <property name="rightMargin">
+         <number>40</number>
         </property>
-        <property name="textFormat">
-         <enum>Qt::AutoText</enum>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_20">
-        <property name="text">
-         <string>辰光融信 耗材写入工具</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_17">
-        <property name="text">
-         <string>登录</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="username">
-        <property name="maxLength">
-         <number>32</number>
-        </property>
-        <property name="placeholderText">
-         <string>请输入用户名</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="password">
-        <property name="maxLength">
-         <number>32</number>
-        </property>
-        <property name="placeholderText">
-         <string>请输入密码</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <spacer name="horizontalSpacer_4">
+         <widget class="QLabel" name="logo_label">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_18">
+          <property name="text">
+           <string>欢迎使用</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::AutoText</enum>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_20">
+          <property name="text">
+           <string>辰光融信 耗材写入工具</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
           <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <enum>Qt::Vertical</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>40</width>
-            <height>20</height>
+            <width>20</width>
+            <height>40</height>
            </size>
           </property>
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="LoginButton">
+         <widget class="QLabel" name="label_17">
           <property name="text">
            <string>登录</string>
           </property>
-          <property name="autoDefault">
-           <bool>false</bool>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="CreateUser">
+         <widget class="QLineEdit" name="username">
+          <property name="maxLength">
+           <number>32</number>
+          </property>
+          <property name="placeholderText">
+           <string>请输入用户名</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="password">
+          <property name="maxLength">
+           <number>32</number>
+          </property>
+          <property name="placeholderText">
+           <string>请输入密码</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="LoginButton">
+            <property name="text">
+             <string>登录</string>
+            </property>
+            <property name="autoDefault">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="CreateUser">
+            <property name="text">
+             <string>创建用户</string>
+            </property>
+            <property name="autoDefault">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_21">
           <property name="text">
-           <string>创建用户</string>
+           <string/>
           </property>
-          <property name="autoDefault">
-           <bool>false</bool>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
         <item>
-         <spacer name="horizontalSpacer_5">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+         <layout class="QHBoxLayout" name="horizontalLayout_11">
+          <property name="topMargin">
+           <number>0</number>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
+          <property name="bottomMargin">
+           <number>0</number>
           </property>
-         </spacer>
+          <item>
+           <spacer name="horizontalSpacer_16">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBox">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>深色模式</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_17">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
       <item>
-       <widget class="QLabel" name="label_21">
-        <property name="text">
-         <string/>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+         <number>12</number>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
+        <property name="leftMargin">
+         <number>10</number>
         </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_11">
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
+        <property name="rightMargin">
+         <number>10</number>
         </property>
         <item>
-         <spacer name="horizontalSpacer_16">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <spacer name="horizontalSpacer_6">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="ExitButton">
+            <property name="text">
+             <string>关闭</string>
+            </property>
+            <property name="autoDefault">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="ModifyPassword">
+            <property name="text">
+             <string>修改密码</string>
+            </property>
+            <property name="autoDefault">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="ResetPassword">
+            <property name="text">
+             <string>重置密码</string>
+            </property>
+            <property name="autoDefault">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
+         <widget class="QLabel" name="label_19">
           <property name="text">
-           <string>深色模式</string>
+           <string>辰光融信 版权所有 2022 V2.0  by youshun</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_17">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="verticalLayoutWidget_8">
-     <property name="geometry">
-      <rect>
-       <x>380</x>
-       <y>480</y>
-       <width>340</width>
-       <height>55</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <property name="spacing">
-       <number>12</number>
-      </property>
-      <property name="leftMargin">
-       <number>10</number>
-      </property>
-      <property name="rightMargin">
-       <number>10</number>
-      </property>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <spacer name="horizontalSpacer_6">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QPushButton" name="ExitButton">
-          <property name="text">
-           <string>退出</string>
-          </property>
-          <property name="autoDefault">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="ModifyPassword">
-          <property name="text">
-           <string>修改密码</string>
-          </property>
-          <property name="autoDefault">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="ResetPassword">
-          <property name="text">
-           <string>重置密码</string>
-          </property>
-          <property name="autoDefault">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_7">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_19">
-        <property name="text">
-         <string>辰光融信 版权所有 2022 V1.8.0  by youshun</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
       </item>
      </layout>
     </widget>
@@ -347,7 +346,7 @@
        <height>36</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,0,0,0,0,0">
+     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,0,0,0">
       <property name="spacing">
        <number>6</number>
       </property>
@@ -401,19 +400,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="ExitLogin">
-        <property name="toolTip">
-         <string>退出登录，返回登录页面</string>
-        </property>
-        <property name="text">
-         <string>退出登录</string>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="AboutButton">
         <property name="text">
          <string>关于</string>
@@ -430,19 +416,6 @@
         </property>
         <property name="text">
          <string>帮助</string>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="ConcurrentButton">
-        <property name="toolTip">
-         <string>将耗材信息同时写入芯片和数据库</string>
-        </property>
-        <property name="text">
-         <string>同时写入</string>
         </property>
         <property name="autoDefault">
          <bool>false</bool>
@@ -511,8 +484,8 @@
           <rect>
            <x>10</x>
            <y>20</y>
-           <width>371</width>
-           <height>361</height>
+           <width>370</width>
+           <height>410</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -762,6 +735,16 @@
             </property>
            </spacer>
           </item>
+          <item>
+           <widget class="QLabel" name="label_48">
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;提示：在数据库和治具配置正常后，才能输入序列号。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </widget>
@@ -797,7 +780,7 @@
              <x>10</x>
              <y>20</y>
              <width>270</width>
-             <height>221</height>
+             <height>230</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4" stretch="4,1,0">
@@ -961,7 +944,7 @@
                </spacer>
               </item>
               <item>
-               <layout class="QGridLayout" name="gridLayout_4" rowstretch="0,0" columnstretch="1,1" columnminimumwidth="1,1">
+               <layout class="QGridLayout" name="gridLayout_4" columnstretch="0">
                 <property name="leftMargin">
                  <number>0</number>
                 </property>
@@ -974,22 +957,6 @@
                 <property name="bottomMargin">
                  <number>0</number>
                 </property>
-                <item row="0" column="0">
-                 <widget class="QPushButton" name="pushButton_4">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="toolTip">
-                   <string>测试数据库环境是否正常</string>
-                  </property>
-                  <property name="text">
-                   <string>连接测试</string>
-                  </property>
-                  <property name="autoDefault">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
                 <item row="1" column="0">
                  <widget class="QPushButton" name="QuerySqlButton">
                   <property name="toolTip">
@@ -1003,20 +970,7 @@
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="1">
-                 <widget class="QPushButton" name="InsertSqlButton">
-                  <property name="toolTip">
-                   <string>将耗材信息写入数据库</string>
-                  </property>
-                  <property name="text">
-                   <string>写入</string>
-                  </property>
-                  <property name="autoDefault">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
+                <item row="2" column="0">
                  <widget class="QPushButton" name="DeleteSqlButton">
                   <property name="toolTip">
                    <string>根据输入的序列号删除数据库中记录</string>
@@ -1064,7 +1018,7 @@
              <x>10</x>
              <y>20</y>
              <width>270</width>
-             <height>151</height>
+             <height>150</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_5" stretch="2,1,0">
@@ -1234,7 +1188,7 @@
        <x>380</x>
        <y>70</y>
        <width>340</width>
-       <height>380</height>
+       <height>400</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -1272,6 +1226,19 @@
          <set>Qt::AlignCenter</set>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_5">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item>
        <widget class="QLabel" name="label_22">
@@ -1412,7 +1379,7 @@
        <x>380</x>
        <y>70</y>
        <width>340</width>
-       <height>380</height>
+       <height>400</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -1444,6 +1411,19 @@
          <set>Qt::AlignCenter</set>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item>
        <widget class="QLabel" name="label_30">
@@ -1588,7 +1568,7 @@
          <x>0</x>
          <y>70</y>
          <width>340</width>
-         <height>360</height>
+         <height>400</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -1620,6 +1600,19 @@
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_7">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
         <item>
          <widget class="QLabel" name="label_35">
@@ -1741,7 +1734,7 @@
          <x>0</x>
          <y>70</y>
          <width>340</width>
-         <height>340</height>
+         <height>400</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -1773,6 +1766,19 @@
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_8">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
         <item>
          <widget class="QLabel" name="label_39">

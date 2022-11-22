@@ -12,9 +12,12 @@
 #include <QPalette>
 #include <QSettings>
 #include <QPaintEvent>
+#include <QImage>
+#include <QThread>
 
 #include "common.h"
 #include "readback.h"
+#include "statemonitor.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -49,12 +52,12 @@ public:
     void clear_resetpwd_page0();
     void clear_resetpwd_page1();
     void set_dialog_style();
+    bool checkIpValid(int version, QString ip);
+    int checkIPversion(QString IP);
+    void Sleep(int msec);
 
 private slots:
-    void on_ConcurrentButton_clicked();
-    void on_pushButton_4_clicked();
     void on_AboutButton_clicked();
-    void on_InsertSqlButton_clicked();
     void on_CloseButton_clicked();
     void on_ReadTonerInfo_clicked();
     void on_ReadDrumInfo_clicked();
@@ -71,7 +74,6 @@ private slots:
     void on_ModifyPassword_clicked();
     void on_LoginButton_clicked();
     void on_ExitButton_clicked();
-    void on_ExitLogin_clicked();
     void on_Return_clicked();
     void on_Confirm_clicked();
 
@@ -88,10 +90,21 @@ private slots:
     void on_lineEdit_3_textChanged(const QString &arg1);
     void slotUpdateWaterMark();
 
+    void on_lineEdit_14_textChanged(const QString &arg1);
+    void on_lineEdit_textChanged(const QString &arg1);
+    void on_lineEdit_4_textChanged(const QString &arg1);
+    void on_lineEdit_5_textChanged(const QString &arg1);
+
+    void slotGetDBStatus(bool _odbc_status);
+    void slotGetFixtureStatus(bool _server_status);
+
 signals:
     void sendChipInfo(struct cgprintech_supply_info_readback* info);
     void sendSqlInfo(struct cgprintech_supply_sqlinfo* info);
     void sendThemeMode(int state);
+    void send_serv_config(QString _db_ip, QString _db_user, QString _db_pwd, QString _db_ds);
+    void send_fixture_config(QString _serv_ip);
+//    void send_pause_signal(bool pause);
 
 protected:
     void mouseMoveEvent(QMouseEvent *event);
@@ -104,6 +117,7 @@ private:
     QPoint mouse_start_point;
     QPoint window_start_point;
     int theme_state = 0;
+    StateMonitor* worker = NULL;
 
 private:
     Ui::SupplyWriter *ui;
@@ -112,20 +126,19 @@ private:
     QString resetpwd_username;
     QSettings setting;
     QPalette palette;
-    QPixmap pixmap;
+    QPixmap pixmap[5];
     QIcon icon;
 
     int year;
     int month;
     int day;
-    bool pipe_status = _FAILED_STATUS;
-    bool server_status = _FAILED_STATUS;
+
+    bool odbc_status = _FAILED_STATUS;    //odbc数据库连接
+    bool server_status = _FAILED_STATUS;  //治具连接
 
     QString serverIP;
-    int serverIPversion;
-    QString databaseIP;
-    int databaseIPversion;
 
+    QString databaseIP;
     QString username;
     QString password;
     QString datasource;
@@ -136,6 +149,12 @@ private:
     struct cgprintech_supply_info supply_info;
 
 private:
+    void create_start_monitor();
+    bool Insert_SupplyInfo_Sql();
+    void open_sql_server();
+    void try_connect_db();
+    QImage adjust_bright(int bright, const QImage& image);
+    void adjust_bright_pixmap(int bright);
     void check_connect_fixture();
     void write_supplyinfo2chip();
     void set_style_sheet(QString filename);
@@ -147,17 +166,12 @@ private:
     unsigned int Unpack32(unsigned char* src);
     unsigned int Unpack16(unsigned char* src);
     void hex_dump(const unsigned char *src, size_t length);
-    void Sleep(int msec);
 
     bool check_modelid_valid(QString modelid);
     bool check_serialno_valid(QString serialno);
-    bool checkIpValid(int version, QString ip);
-    int checkIPversion(QString IP);
     bool check_server_status(const QString serverIP, const int port);
-
     void fill_supplyinfo_data();
     bool sendData(int cmd, void* data, int data_len);
-
     void print_chip_info(struct cgprintech_supply_info_readback* supply_info);
 };
 
