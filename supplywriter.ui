@@ -346,7 +346,7 @@
        <height>36</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,0,0,0">
+     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,0,0,0,0">
       <property name="spacing">
        <number>6</number>
       </property>
@@ -400,7 +400,20 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="toolTip">
+         <string>最小化到右下角托盘栏</string>
+        </property>
+        <property name="text">
+         <string>最小化</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="AboutButton">
+        <property name="toolTip">
+         <string>关于本软件</string>
+        </property>
         <property name="text">
          <string>关于</string>
         </property>
@@ -412,7 +425,7 @@
       <item>
        <widget class="QPushButton" name="HelpButton">
         <property name="toolTip">
-         <string>获取帮助信息</string>
+         <string>获取本软件帮助信息</string>
         </property>
         <property name="text">
          <string>帮助</string>
@@ -738,7 +751,7 @@
           <item>
            <widget class="QLabel" name="label_48">
             <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;提示：在数据库和治具配置正常后，才能输入序列号。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>提示：数据库和治具配置正常后，方能输入序列号。</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>

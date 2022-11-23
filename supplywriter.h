@@ -14,6 +14,7 @@
 #include <QPaintEvent>
 #include <QImage>
 #include <QThread>
+#include <QSystemTrayIcon>
 
 #include "common.h"
 #include "readback.h"
@@ -88,7 +89,7 @@ private slots:
     void on_lineEdit_1_textChanged(const QString &arg1);
     void on_lineEdit_2_textChanged(const QString &arg1);
     void on_lineEdit_3_textChanged(const QString &arg1);
-    void slotUpdateWaterMark();
+//    void slotUpdateWaterMark();
 
     void on_lineEdit_14_textChanged(const QString &arg1);
     void on_lineEdit_textChanged(const QString &arg1);
@@ -97,6 +98,8 @@ private slots:
 
     void slotGetDBStatus(bool _odbc_status);
     void slotGetFixtureStatus(bool _server_status);
+    void on_pushButton_clicked();
+    void on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason);
 
 signals:
     void sendChipInfo(struct cgprintech_supply_info_readback* info);
@@ -104,13 +107,12 @@ signals:
     void sendThemeMode(int state);
     void send_serv_config(QString _db_ip, QString _db_user, QString _db_pwd, QString _db_ds);
     void send_fixture_config(QString _serv_ip);
-//    void send_pause_signal(bool pause);
 
 protected:
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
-    void paintEvent(QPaintEvent *event);
+//    void paintEvent(QPaintEvent *event);
 
 private:
     bool is_drag = false;
@@ -121,7 +123,7 @@ private:
 
 private:
     Ui::SupplyWriter *ui;
-
+    QSystemTrayIcon *trayIcon = NULL;
     QString login_user;
     QString resetpwd_username;
     QSettings setting;

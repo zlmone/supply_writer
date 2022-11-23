@@ -301,7 +301,7 @@ void SupplyWriter::set_dialog_style()
     palette.setColor(QPalette::HighlightedText, Qt::white);
     this->setPalette(palette);
 }
-
+#if 0
 void SupplyWriter::paintEvent(QPaintEvent *event)
 {
     //设置窗口的透明度
@@ -351,7 +351,7 @@ void SupplyWriter::slotUpdateWaterMark()
 {
     this->repaint(0, 0, 720, 540);
 }
-
+#endif
 SupplyWriter::~SupplyWriter()
 {
     if (worker)
@@ -362,6 +362,9 @@ SupplyWriter::~SupplyWriter()
 
     if (tcpSocket)
         delete tcpSocket;
+
+    if (trayIcon)
+        delete trayIcon;
 
     delete ui;
 }
@@ -566,7 +569,7 @@ void SupplyWriter::dataReceived()
         datagram.resize(tcpSocket->bytesAvailable());
         tcpSocket->read(datagram.data(), datagram.size());
         memcpy(&resp, datagram.data(), length);
-//        tcpSocket->close();
+        tcpSocket->close();
 //        qDebug() << ((MsgHdr*)resp)->cmd << " " << ((MsgHdr*)resp)->len << " " << ((MsgHdr*)resp)->ret;
 //        qDebug() << "cmd=" << ((RespInfo*)resp)->cmd << " ret=" << ((RespInfo*)resp)->ret;
 
@@ -576,10 +579,13 @@ void SupplyWriter::dataReceived()
             {
                 ui->label_2->setText("<p style=\"color:green;font-weight:bold\">信息写入成功！</p>");
                 ui->label_45->setText("<p style=\"color:green;font-size:45px;font-weight:bold\">√√</p>");
+
                 this->Sleep(3000);
                 ui->lineEdit_3->setText("");
                 ui->lineEdit_3->setFocus();
+
                 ui->label_45->setText("");
+                server_status = _FAILED_STATUS;
             }
             else if (((RespInfo*)resp)->cmd == OP_READ_TONER_INFO ||
                      ((RespInfo*)resp)->cmd == OP_READ_DRUM_INFO)
@@ -601,10 +607,12 @@ void SupplyWriter::dataReceived()
                 readback->show();
                 this->Sleep(3000);
                 ui->label_45->setText("");
+                server_status = _FAILED_STATUS;
             }
         }
         else
         {
+            // operation failed
             if (((RespInfo*)resp)->cmd == OP_WRITE_INFO)
             {
                 ui->label_2->setText("<p style=\"color:red;font-weight:bold\">信息写入失败！</p>");
@@ -622,27 +630,36 @@ void SupplyWriter::dataReceived()
             }
             this->Sleep(3000);
             ui->label_45->setText("");
+            server_status = _FAILED_STATUS;
         }
 
         break;
     }
 }
 
-//bool SupplyWriter::sendData(QString serverIP, int port, int cmd, void* data, int data_len)
 bool SupplyWriter::sendData(int cmd, void* data, int data_len)
 {
     uint8_t writeinfo[sizeof(MsgHdr) + data_len];
 
+    if (tcpSocket == NULL)
+    {
+        tcpSocket = new QTcpSocket(this);
+    }
     connect(tcpSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
-    connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
+//    connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
     connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(dataReceived()));
 
-//    qDebug() << tcpSocket->isOpen();
+//    qDebug() << "tcp state" << tcpSocket->isOpen();
+//    qDebug() << "cmd" << cmd;
     if (tcpSocket->isOpen() == true)
     {
         tcpSocket->close();
     }
-    tcpSocket->connectToHost(serverIP, TCP_PORT);
+    tcpSocket->connectToHost(serverIP, TCP_PORT, QIODevice::ReadWrite, QAbstractSocket::AnyIPProtocol);
+//    if (tcpSocket->isWritable())
+//        qDebug() << "tcp socket can write";
+//    else
+//        qDebug() << "tcp socket can NOT write";
 
     ((MsgHdr*)writeinfo)->cmd = cmd;
     ((MsgHdr*)writeinfo)->len = data_len;
@@ -654,6 +671,7 @@ bool SupplyWriter::sendData(int cmd, void* data, int data_len)
             ((MsgHdr*)writeinfo)->i2c_addr = _DRUM_CHIP_ADDR;
 
         memcpy(writeinfo + sizeof(MsgHdr), data, data_len);
+//        this->hex_dump((unsigned char*)&writeinfo, sizeof(writeinfo));
     }
     else
     {
@@ -663,10 +681,11 @@ bool SupplyWriter::sendData(int cmd, void* data, int data_len)
             ((MsgHdr*)writeinfo)->i2c_addr = _DRUM_CHIP_ADDR;
     }
 
-    tcpSocket->write((const char*)&writeinfo, sizeof(writeinfo));
-//    this->hex_dump((const uint8_t*)data, data_len);
-//    qDebug() << sizeof(WriteInfo);
-//    this->hex_dump((unsigned char*)&writeinfo, sizeof(WriteInfo));
+    if (tcpSocket->write((const char*)&writeinfo, sizeof(writeinfo)) == -1)
+    {
+//        qDebug() << "write to tcp socket failed";
+        return false;
+    }
 
     return true;
 }
@@ -694,8 +713,7 @@ void SupplyWriter::open_sql_server()
         ui->label_13->setText("<p style=\"color:green;font-weight:bold\">数据库连接成功！</p>");
         odbc_status = _SUCCESS_STATUS;
         return;
-    }
-    else {
+    } else {
         ui->label_13->setText("<p style=\"color:red;font-weight:bold\">数据库连接失败！</p>");
 //        qDebug()<<"error open database because"<<db.lastError().text();
         odbc_status = _FAILED_STATUS;
@@ -757,8 +775,11 @@ bool SupplyWriter::Insert_SupplyInfo_Sql()
         qDebug() << query.lastError().driverText() << QString(QObject::tr("插入失败"));
         ret = _FAILED_STATUS;
     }
+
     this->Sleep(3000);
     ui->label_46->setText("");
+    odbc_status = _FAILED_STATUS;
+
     return ret;
 }
 
@@ -827,6 +848,7 @@ void SupplyWriter::on_QuerySqlButton_clicked()
     sqlinfo->show();
     this->Sleep(3000);
     ui->label_46->setText("");
+    odbc_status = _FAILED_STATUS;
 }
 
 //写入耗材
@@ -842,10 +864,8 @@ void SupplyWriter::fill_supplyinfo_data()
     char date[8] = {0};
 
     memset(&supply_info, 0, CGPRINTECH_SUPPLY_INFO_LEN);
-
     if (check_input_valid() == 0)
     {
-//        this->pipe_status = _FAILED_STATUS;
         return;
     }
 
@@ -962,7 +982,7 @@ int SupplyWriter::checkIPversion(QString IP)
 
     return 0;
 }
-
+#if 1
 //返回false表示离线，返回true表示在线
 bool SupplyWriter::check_server_status(const QString serverIP, const int port)
 {
@@ -977,7 +997,7 @@ bool SupplyWriter::check_server_status(const QString serverIP, const int port)
 
     return this->server_status;
 }
-
+#endif
 //关于按钮
 void SupplyWriter::on_AboutButton_clicked()
 {
@@ -1490,7 +1510,7 @@ void SupplyWriter::on_lineEdit_1_textChanged(const QString &arg1)
             delete tcpSocket;
             tcpSocket = NULL;
         }
-
+#if 1
         if (check_server_status(arg1, TCP_PORT) == _FAILED_STATUS)
         {
             ui->label_2->setText("<p style=\"color:red;font-weight:bold\">治具设备离线！</p>");
@@ -1503,6 +1523,7 @@ void SupplyWriter::on_lineEdit_1_textChanged(const QString &arg1)
             this->serverIP = ui->lineEdit_1->text();
             server_status = _SUCCESS_STATUS;
         }
+#endif
     }
     else
     {
@@ -1630,5 +1651,49 @@ void SupplyWriter::slotGetFixtureStatus(bool _server_status)
     else
     {
         ui->label_2->setText("<p style=\"color:red;font-weight:bold\">治具设备离线！</p>");
+    }
+}
+
+void SupplyWriter::on_pushButton_clicked()
+{
+    //隐藏程序主窗口
+    this->hide();
+
+    //新建QSystemTrayIcon对象
+    if (trayIcon == NULL)
+    {
+        trayIcon = new QSystemTrayIcon(this);
+        connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+                this, SLOT(on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason)));
+
+        //新建托盘要显示的icon
+        QIcon icon = QIcon(":/images/stayicon.png");
+        //将icon设到QSystemTrayIcon对象中
+        trayIcon->setIcon(icon);
+
+        //当鼠标移动到托盘上的图标时，会显示此处设置的内容
+        trayIcon->setToolTip(QString("辰光融信 耗材写入工具"));
+    }
+
+    //在系统托盘显示此对象
+    trayIcon->show();
+}
+
+void SupplyWriter::on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason)
+{
+    switch(reason){
+    case QSystemTrayIcon::Trigger:
+        //单击托盘图标
+        break;
+
+    case QSystemTrayIcon::DoubleClick:
+        //双击托盘图标
+        //双击后显示主程序窗口
+        this->show();
+        trayIcon->hide();
+        break;
+
+    default:
+        break;
     }
 }

@@ -18,7 +18,6 @@ StateMonitor::StateMonitor()
             this, SLOT(on_get_sql_config(QString, QString, QString, QString)));
 
     connect(writer, SIGNAL(send_fixture_config(QString)), this, SLOT(on_get_fixture_config(QString)));
-//    connect(writer, SIGNAL(send_pause_signal(bool)), this, SLOT(on_get_pause_signal(bool)));
 }
 
 void StateMonitor::run()
@@ -27,7 +26,6 @@ void StateMonitor::run()
     {
         this->sleep(3);
 
-//        qDebug() << "serv_ip" << serv_ip;
         if (writer->checkIpValid(writer->checkIPversion(serv_ip), serv_ip))
         {
 //            qDebug() << "----serv_ip" << serv_ip;
@@ -39,7 +37,6 @@ void StateMonitor::run()
             emit Fixture_Connect_Signal(_FAILED_STATUS);
         }
 
-        this->sleep(1);
         if (writer->checkIpValid(writer->checkIPversion(db_ip), db_ip) &&
             db_user.length() &&
             db_pwd.length() &&
