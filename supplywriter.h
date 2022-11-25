@@ -15,6 +15,7 @@
 #include <QImage>
 #include <QThread>
 #include <QSystemTrayIcon>
+#include <QMediaPlayer>
 
 #include "common.h"
 #include "readback.h"
@@ -31,6 +32,9 @@ QT_END_NAMESPACE
 
 #define _SUCCESS_STATUS  false
 #define _FAILED_STATUS   true
+
+#define _AUTO_WRITE_MODE      false
+#define _MANUAL_READ_MODE     true
 
 class SupplyWriter : public QDialog
 {
@@ -89,7 +93,7 @@ private slots:
     void on_lineEdit_1_textChanged(const QString &arg1);
     void on_lineEdit_2_textChanged(const QString &arg1);
     void on_lineEdit_3_textChanged(const QString &arg1);
-//    void slotUpdateWaterMark();
+    void slotUpdateWaterMark();
 
     void on_lineEdit_14_textChanged(const QString &arg1);
     void on_lineEdit_textChanged(const QString &arg1);
@@ -100,6 +104,8 @@ private slots:
     void slotGetFixtureStatus(bool _server_status);
     void on_pushButton_clicked();
     void on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason);
+    void on_radioButton_2_clicked();
+    void on_radioButton_clicked();
 
 signals:
     void sendChipInfo(struct cgprintech_supply_info_readback* info);
@@ -112,7 +118,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
-//    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event);
 
 private:
     bool is_drag = false;
@@ -130,16 +136,16 @@ private:
     QPalette palette;
     QPixmap pixmap[5];
     QIcon icon;
-
     int year;
     int month;
     int day;
 
+    QMediaPlayer *player = NULL;
+    bool working_mode = _AUTO_WRITE_MODE;  //默认采用自动写入模式
     bool odbc_status = _FAILED_STATUS;    //odbc数据库连接
     bool server_status = _FAILED_STATUS;  //治具连接
 
     QString serverIP;
-
     QString databaseIP;
     QString username;
     QString password;
@@ -151,6 +157,7 @@ private:
     struct cgprintech_supply_info supply_info;
 
 private:
+    void play_mp3_sound(QString file);
     void create_start_monitor();
     bool Insert_SupplyInfo_Sql();
     void open_sql_server();

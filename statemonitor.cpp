@@ -7,7 +7,8 @@
 
 extern SupplyWriter* writer;
 
-StateMonitor::StateMonitor()
+StateMonitor::StateMonitor(QObject *parent) :
+    QThread(parent)
 {
     db = QSqlDatabase::addDatabase("QODBC", "thread");
 
@@ -20,11 +21,66 @@ StateMonitor::StateMonitor()
     connect(writer, SIGNAL(send_fixture_config(QString)), this, SLOT(on_get_fixture_config(QString)));
 }
 
+StateMonitor::~StateMonitor()
+{
+    thread_stop();
+}
+
+void StateMonitor::thread_start(Priority pri)
+{
+    if (!isRunning() && THREAD_IDLE == monitor_state)
+    {
+        //调用子类start();
+        QThread::start(pri);
+        monitor_state = THREAD_START;        //在进入run函数之前,只能认为是start的状态
+    }
+}
+
+void StateMonitor::thread_stop()
+{
+    if (isRunning() && !isInterruptionRequested())
+    {
+        requestInterruption();
+        if (THREAD_PAUSE == monitor_state)
+        {
+            //暂停状态下stop要解锁(解锁之前先requestInterruption(),保证下次循环判断中断成功)
+            pauseMutex.unlock();
+        }
+        wait();
+    }
+}
+
+void StateMonitor::thread_pause()
+{
+    if(isRunning())
+    {
+        qDebug() << "thread is running";
+        pauseMutex.lock();
+        monitor_state = THREAD_PAUSE;
+    }
+}
+
+void StateMonitor::thread_resume()
+{
+    if(isRunning() && THREAD_PAUSE == monitor_state)
+    {
+        pauseMutex.unlock();
+        monitor_state = THREAD_RUNING;
+    }
+}
+
+ThreadState StateMonitor::get_thread_state()
+{
+    return monitor_state;
+}
+
 void StateMonitor::run()
 {
-    while(1)
+    monitor_state = THREAD_RUNING;
+
+    while(!isInterruptionRequested())
     {
-        this->sleep(3);
+        QMutexLocker lock(&pauseMutex); //这个锁的作用是控制 暂停/恢复
 
         if (writer->checkIpValid(writer->checkIPversion(serv_ip), serv_ip))
         {
@@ -49,7 +105,11 @@ void StateMonitor::run()
         {
             emit DB_Connect_Signal(_FAILED_STATUS);
         }
+
+        this->sleep(3);
     }
+
+    monitor_state = THREAD_IDLE;
 }
 
 void StateMonitor::on_get_sql_config(QString _db_ip, QString _db_user, QString _db_pwd, QString _db_ds)

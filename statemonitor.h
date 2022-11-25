@@ -4,13 +4,28 @@
 #include <QTcpSocket>
 #include <QThread>
 #include <QSqlDatabase>
+#include <QMutex>
+
+typedef enum {
+    THREAD_IDLE,       //线程空闲
+    THREAD_START,      //线程开启
+    THREAD_RUNING,     //线程工作
+    THREAD_PAUSE,      //线程暂停
+} ThreadState;
 
 class StateMonitor : public QThread
 {
     Q_OBJECT
 
 public:
-    StateMonitor();
+    explicit StateMonitor(QObject *parent = nullptr);
+    virtual ~StateMonitor();
+
+    ThreadState get_thread_state();
+    void thread_start(Priority pri = InheritPriority);
+    void thread_stop();
+    void thread_pause();
+    void thread_resume();
 
 signals:
     void DB_Connect_Signal(bool _odbc_status);
@@ -28,6 +43,8 @@ private:
     void check_server_status(const QString serverIP, const int port);
     void open_sql_server();
     bool is_pause = false;
+    QMutex pauseMutex;
+    ThreadState monitor_state = THREAD_IDLE;
 
 protected:
     virtual void run() override;

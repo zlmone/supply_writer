@@ -10,7 +10,6 @@
 #include <QRegExpValidator>
 #include <QCryptographicHash>
 #include <QPainter>
-#include <QTimer>
 
 #include "sqlchipinfo.h"
 #include "supplywriter.h"
@@ -41,21 +40,22 @@ void SupplyWriter::clear_login_page()
 
 void SupplyWriter::clear_main_page()
 {
-    ui->lineEdit->setText("");
-    ui->lineEdit_2->setText("");
-    ui->lineEdit_3->setText("");
-    ui->lineEdit_4->setText("");
-    ui->lineEdit_5->setText("");
-    ui->lineEdit_6->setText("");
-    ui->lineEdit_7->setText("");
-    ui->lineEdit_11->setText("");
-    ui->lineEdit_12->setText("");
-    ui->lineEdit_13->setText("");
-    ui->lineEdit_14->setText("");
-    ui->lineEdit_1->setText("");
+    ui->lineEdit->clear();
+    ui->lineEdit_2->clear();
+    ui->lineEdit_3->clear();
+    ui->lineEdit_4->clear();
+    ui->lineEdit_5->clear();
+    ui->lineEdit_6->clear();
+    ui->lineEdit_7->clear();
+    ui->lineEdit_11->clear();
+    ui->lineEdit_12->clear();
+    ui->lineEdit_13->clear();
+    ui->lineEdit_14->clear();
+    ui->lineEdit_1->clear();
 
-    ui->label_2->setText("");
-    ui->label_13->setText("");
+    ui->label_2->clear();
+    ui->label_13->clear();
+    ui->radioButton_2->setChecked(true);
 }
 
 void SupplyWriter::create_start_monitor()
@@ -70,7 +70,10 @@ void SupplyWriter::create_start_monitor()
         return;
 
     if (!worker->isRunning())
-        worker->start(QThread::NormalPriority);
+    {
+        worker->thread_start();
+//        worker->start(QThread::NormalPriority);
+    }
 }
 
 void SupplyWriter::clear_newuser_page()
@@ -135,6 +138,8 @@ void SupplyWriter::login_page_init()
     this->setWindowIcon(icon);
     setFixedSize(this->width(), this->height());
     this->setWindowFlags(Qt::FramelessWindowHint);
+//    current_path = QCoreApplication::applicationDirPath();
+//    qDebug() << current_path;
 //    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
 
     pixmap[1].load(":/images/title1.png");
@@ -180,6 +185,9 @@ void SupplyWriter::main_page_init()
     ui->lineEdit_3->setEnabled(false);
     ui->lineEdit_4->setEchoMode(QLineEdit::Password);
     db = QSqlDatabase::addDatabase("QODBC", "main");
+    player = new QMediaPlayer;
+    ui->QuerySqlButton->setEnabled(false);
+    ui->DeleteSqlButton->setEnabled(false);
 }
 
 //创建用户页面初始化
@@ -307,7 +315,7 @@ void SupplyWriter::paintEvent(QPaintEvent *event)
     //设置窗口的透明度
 //    setWindowOpacity(1.0);
 
-    QFont font("Microsoft YaHei", 13, 10, true);
+    QFont font("Microsoft YaHei", 12, 10, true);
 
     // 水印的尺寸
     int watermark_width = 200;
@@ -315,7 +323,7 @@ void SupplyWriter::paintEvent(QPaintEvent *event)
     //旋转角度
     int watermark_inclination_angle = 30.0;
 
-    QString content = QString("辰光融信CGPRINTECH\n%1\t%2").arg(ui->username->text()).arg(QDate::currentDate().toString("yyyy-MM-dd"));
+    QString content = QString("CGPRINTECH\n%1\t%2").arg(ui->username->text()).arg(QDate::currentDate().toString("yyyy-MM-dd"));
 
     //逆时针旋转
     qreal ang = -watermark_inclination_angle;
@@ -346,12 +354,19 @@ void SupplyWriter::paintEvent(QPaintEvent *event)
     QRect rect = event->rect();
     rect.setRect(0, 0, 720, 540);
 }
+#else
+void SupplyWriter::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+}
+#endif
 
+//定时更新绘画事件槽函数
 void SupplyWriter::slotUpdateWaterMark()
 {
     this->repaint(0, 0, 720, 540);
 }
-#endif
+
 SupplyWriter::~SupplyWriter()
 {
     if (worker)
@@ -365,6 +380,8 @@ SupplyWriter::~SupplyWriter()
 
     if (trayIcon)
         delete trayIcon;
+
+    delete player;
 
     delete ui;
 }
@@ -580,6 +597,11 @@ void SupplyWriter::dataReceived()
                 ui->label_2->setText("<p style=\"color:green;font-weight:bold\">信息写入成功！</p>");
                 ui->label_45->setText("<p style=\"color:green;font-size:45px;font-weight:bold\">√√</p>");
 
+//                QString mp3file = current_path + "/sound/done.mp3";
+//                qDebug() << mp3file;
+//                play_mp3_sound("./sound/done.mp3");
+                play_mp3_sound(QCoreApplication::applicationDirPath() + "/sound/done.mp3");
+
                 this->Sleep(3000);
                 ui->lineEdit_3->setText("");
                 ui->lineEdit_3->setFocus();
@@ -615,6 +637,11 @@ void SupplyWriter::dataReceived()
             // operation failed
             if (((RespInfo*)resp)->cmd == OP_WRITE_INFO)
             {
+//                qDebug() << current_path;
+//                QString mp3file = current_path + "/sound/failed.mp3";
+//                qDebug() << mp3file;
+                play_mp3_sound(QCoreApplication::applicationDirPath() + "/sound/failed.mp3");
+
                 ui->label_2->setText("<p style=\"color:red;font-weight:bold\">信息写入失败！</p>");
                 ui->label_45->setText("<p style=\"color:red;font-size:45px;font-weight:bold\">××</p>");
             }
@@ -649,17 +676,11 @@ bool SupplyWriter::sendData(int cmd, void* data, int data_len)
 //    connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
     connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(dataReceived()));
 
-//    qDebug() << "tcp state" << tcpSocket->isOpen();
-//    qDebug() << "cmd" << cmd;
     if (tcpSocket->isOpen() == true)
     {
         tcpSocket->close();
     }
     tcpSocket->connectToHost(serverIP, TCP_PORT, QIODevice::ReadWrite, QAbstractSocket::AnyIPProtocol);
-//    if (tcpSocket->isWritable())
-//        qDebug() << "tcp socket can write";
-//    else
-//        qDebug() << "tcp socket can NOT write";
 
     ((MsgHdr*)writeinfo)->cmd = cmd;
     ((MsgHdr*)writeinfo)->len = data_len;
@@ -704,8 +725,9 @@ void SupplyWriter::open_sql_server()
         odbc_status = _FAILED_STATUS;
         return;
     }
+
     db.setHostName(databaseIP);
-    db.setDatabaseName(datasource);   //这里填写data source name
+    db.setDatabaseName(datasource);   //这里填写数据源名称
     db.setUserName(username);
     db.setPassword(password);
 
@@ -726,6 +748,7 @@ bool SupplyWriter::Insert_SupplyInfo_Sql()
 {
     bool ret = _FAILED_STATUS;
 
+    open_sql_server();
     if (odbc_status == _FAILED_STATUS)
     {
         return ret;
@@ -764,12 +787,22 @@ bool SupplyWriter::Insert_SupplyInfo_Sql()
     ret = query.exec();
     if (ret)
     {
+//        QString mp3file = current_path + "/sound/done.mp3";
+//        qDebug() << mp3file;
+//        play_mp3_sound("./sound/done.mp3");
+        play_mp3_sound(QCoreApplication::applicationDirPath() + "/sound/done.mp3");
+
         ui->label_13->setText("<p style=\"color:green;font-weight:bold\">写入数据库成功！</p>");
         ui->label_46->setText("<p style=\"color:green;font-size:45px;font-weight:bold\">√√</p>");
         ret = _SUCCESS_STATUS;
     }
     else
     {
+//        QString mp3file = current_path + "/sound/failed.mp3";
+//        qDebug() << mp3file;
+//        play_mp3_sound("./sound/failed.mp3");
+        play_mp3_sound(QCoreApplication::applicationDirPath() + "/sound/failed.mp3");
+
         ui->label_13->setText("<p style=\"color:red;font-weight:bold\">写入数据库失败！</p>");
         ui->label_46->setText("<p style=\"color:red;font-size:45px;font-weight:bold\">××</p>");
         qDebug() << query.lastError().driverText() << QString(QObject::tr("插入失败"));
@@ -797,7 +830,7 @@ void SupplyWriter::on_QuerySqlButton_clicked()
     QString sqlcmd = QString("select model_id,serial_no,marketing_area,year,month,day,manufacturer,trade_mark,"
                              "type,pages,dots,overflow_pages,overflow_percent,free_pages,operator from %1.%2 "
                              "where serial_no='%3'").arg(DATABASE_NAME).arg(TABLE_NAME).arg(ui->lineEdit_3->text());
-//    qDebug() << sqlcmd;
+    qDebug() << sqlcmd;
     query = QSqlQuery(this->db);
     if (!query.exec(sqlcmd))
     {
@@ -825,7 +858,7 @@ void SupplyWriter::on_QuerySqlButton_clicked()
             memcpy(ChipInfo.free_pages, query.value(13).toString().toLatin1().data(), 4);
             ChipInfo.operator_id = query.value(14).toString();
 //            memcpy(ChipInfo.operator_id, query.value(14).toString().toLatin1().data(), 16);
-//            qDebug() << query.value(14).toString();
+            qDebug() << query.value(14).toString();
         }
     }
 
@@ -892,6 +925,7 @@ void SupplyWriter::fill_supplyinfo_data()
 //粉盒耗材信息回读
 void SupplyWriter::on_ReadTonerInfo_clicked()
 {
+    check_server_status(ui->lineEdit_1->text(), TCP_PORT);
     if (this->server_status == _FAILED_STATUS)
         return;
 
@@ -904,6 +938,7 @@ void SupplyWriter::on_ReadTonerInfo_clicked()
 void SupplyWriter::on_ReadDrumInfo_clicked()
 {
 //    qDebug() << server_status;
+    check_server_status(ui->lineEdit_1->text(), TCP_PORT);
     if (this->server_status == _FAILED_STATUS)
         return;
 
@@ -982,7 +1017,7 @@ int SupplyWriter::checkIPversion(QString IP)
 
     return 0;
 }
-#if 1
+
 //返回false表示离线，返回true表示在线
 bool SupplyWriter::check_server_status(const QString serverIP, const int port)
 {
@@ -997,7 +1032,7 @@ bool SupplyWriter::check_server_status(const QString serverIP, const int port)
 
     return this->server_status;
 }
-#endif
+
 //关于按钮
 void SupplyWriter::on_AboutButton_clicked()
 {
@@ -1030,12 +1065,22 @@ void SupplyWriter::on_HelpButton_clicked()
 //删除记录，根据序列号
 void SupplyWriter::on_DeleteSqlButton_clicked()
 {
+    open_sql_server();
+    if (odbc_status == _FAILED_STATUS)
+    {
+        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">数据库连接失败！</p>");
+        return;
+    }
+
     QString sqlcmd = QString("delete from %1.%2 where serial_no='%3'").arg(DATABASE_NAME).arg(TABLE_NAME).arg(ui->lineEdit_3->text());
     qDebug() << sqlcmd;
     query = QSqlQuery(this->db);
-    query.exec(sqlcmd);
+    bool ret = query.exec(sqlcmd);
 
-    ui->label_13->setText("<p style=\"color:green;font-weight:bold\">删除数据库记录成功！</p>");
+    if (ret == true)
+        ui->label_13->setText("<p style=\"color:green;font-weight:bold\">删除数据库记录成功！</p>");
+    else
+        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">删除数据库记录失败！</p>");
 }
 
 //登录进入耗材信息界面，更新最近使用日期
@@ -1481,7 +1526,9 @@ void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
 THE_END:
     if (ok_status)
     {
-        if (ui->lineEdit_1->text().length() && check_serialno_valid(ui->lineEdit_3->text()))
+        if (ui->lineEdit_1->text().length() &&
+            check_serialno_valid(ui->lineEdit_3->text()) &&
+            working_mode == _AUTO_WRITE_MODE)
         {
             if (this->Insert_SupplyInfo_Sql() == _FAILED_STATUS)
             {
@@ -1510,7 +1557,7 @@ void SupplyWriter::on_lineEdit_1_textChanged(const QString &arg1)
             delete tcpSocket;
             tcpSocket = NULL;
         }
-#if 1
+
         if (check_server_status(arg1, TCP_PORT) == _FAILED_STATUS)
         {
             ui->label_2->setText("<p style=\"color:red;font-weight:bold\">治具设备离线！</p>");
@@ -1523,7 +1570,6 @@ void SupplyWriter::on_lineEdit_1_textChanged(const QString &arg1)
             this->serverIP = ui->lineEdit_1->text();
             server_status = _SUCCESS_STATUS;
         }
-#endif
     }
     else
     {
@@ -1602,14 +1648,21 @@ void SupplyWriter::on_lineEdit_5_textChanged(const QString &arg1)
 
 void SupplyWriter::slotGetDBStatus(bool _odbc_status)
 {
-    if (_odbc_status == _SUCCESS_STATUS && server_status == _SUCCESS_STATUS)
+    if (working_mode == _AUTO_WRITE_MODE)
     {
-        ui->lineEdit_3->setEnabled(true);
-        ui->lineEdit_3->setFocus();
+        if (_odbc_status == _SUCCESS_STATUS && server_status == _SUCCESS_STATUS)
+        {
+            ui->lineEdit_3->setEnabled(true);
+            ui->lineEdit_3->setFocus();
+        }
+        else
+        {
+            ui->lineEdit_3->setEnabled(false);
+        }
     }
     else
     {
-        ui->lineEdit_3->setEnabled(false);
+        ui->lineEdit_3->setEnabled(true);
     }
 
     if (odbc_status == _odbc_status)
@@ -1629,14 +1682,21 @@ void SupplyWriter::slotGetDBStatus(bool _odbc_status)
 
 void SupplyWriter::slotGetFixtureStatus(bool _server_status)
 {
-    if (_server_status == _SUCCESS_STATUS && odbc_status == _SUCCESS_STATUS)
+    if (working_mode == _AUTO_WRITE_MODE)
     {
-        ui->lineEdit_3->setEnabled(true);
-        ui->lineEdit_3->setFocus();
+        if (_server_status == _SUCCESS_STATUS && odbc_status == _SUCCESS_STATUS)
+        {
+            ui->lineEdit_3->setEnabled(true);
+            ui->lineEdit_3->setFocus();
+        }
+        else
+        {
+            ui->lineEdit_3->setEnabled(false);
+        }
     }
     else
     {
-        ui->lineEdit_3->setEnabled(false);
+        ui->lineEdit_3->setEnabled(true);
     }
 
     if (server_status == _server_status)
@@ -1696,4 +1756,45 @@ void SupplyWriter::on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason rea
     default:
         break;
     }
+}
+
+void SupplyWriter::play_mp3_sound(QString file)
+{
+//    qDebug() << file;
+    player->setMedia(QMediaContent(QUrl::fromLocalFile(file)));
+//    ui->label_48->setText(file);
+    player->setVolume(50);
+    player->play();
+}
+
+void SupplyWriter::on_radioButton_2_clicked()
+{
+    qDebug() << "setting auto write mode" << working_mode;
+//    worker->thread_resume();
+    ui->lineEdit_14->setFocus();
+
+    ui->QuerySqlButton->setEnabled(false);
+    ui->DeleteSqlButton->setEnabled(false);
+
+    if (working_mode == _AUTO_WRITE_MODE)
+        return;
+    else
+        working_mode = _AUTO_WRITE_MODE;
+}
+
+void SupplyWriter::on_radioButton_clicked()
+{
+    qDebug() << "setting manual read mode" << working_mode;
+
+    ui->lineEdit_3->setEnabled(true);
+    ui->lineEdit_3->setFocus();
+//    worker->thread_pause();
+
+    ui->QuerySqlButton->setEnabled(true);
+    ui->DeleteSqlButton->setEnabled(true);
+
+    if (working_mode == _MANUAL_READ_MODE)
+        return;
+    else
+        working_mode = _MANUAL_READ_MODE;
 }
