@@ -56,24 +56,9 @@ void SupplyWriter::clear_main_page()
     ui->label_2->clear();
     ui->label_13->clear();
     ui->radioButton_2->setChecked(true);
-}
 
-void SupplyWriter::create_start_monitor()
-{
     ui->label_44->setText(ui->username->text());
     ui->lineEdit_14->setFocus();
-
-    if (worker == NULL)
-        worker = new StateMonitor();
-
-    if (!worker)
-        return;
-
-    if (!worker->isRunning())
-    {
-        worker->thread_start();
-//        worker->start(QThread::NormalPriority);
-    }
 }
 
 void SupplyWriter::clear_newuser_page()
@@ -188,6 +173,12 @@ void SupplyWriter::main_page_init()
     player = new QMediaPlayer;
     ui->QuerySqlButton->setEnabled(false);
     ui->DeleteSqlButton->setEnabled(false);
+
+    timer[0] = new QTimer(this);
+    timer[1] = new QTimer(this);
+
+    connect(timer[0], SIGNAL(timeout()), this, SLOT(update_connect_db()));
+    connect(timer[1], SIGNAL(timeout()), this, SLOT(update_connect_fixture()));
 }
 
 //创建用户页面初始化
@@ -369,14 +360,15 @@ void SupplyWriter::slotUpdateWaterMark()
 
 SupplyWriter::~SupplyWriter()
 {
-    if (worker)
+    if (timer[0])
     {
-        worker->quit();
-        worker->wait(0);
+        delete timer[0];
+        delete timer[1];
     }
-
-    if (tcpSocket)
-        delete tcpSocket;
+    if (tcpSocket[0])
+         delete tcpSocket[0];
+    if (tcpSocket[1])
+        delete tcpSocket[1];
 
     if (trayIcon)
         delete trayIcon;
@@ -535,12 +527,6 @@ void SupplyWriter::slotConnected()
     this->server_status = _SUCCESS_STATUS;
 }
 
-void SupplyWriter::slotDisconnected()
-{
-//    qDebug() << "Disconnected";
-    tcpSocket->close();
-}
-
 void SupplyWriter::print_chip_info(struct cgprintech_supply_info_readback *supply_info)
 {
     printf("model_id\t%s\n", supply_info->model_id);
@@ -577,18 +563,16 @@ void SupplyWriter::dataReceived()
     unsigned char resp[sizeof(MsgHdr) + SUPPLY_INFO_READBACK_LEN];
     qint64 length;
 
-    while (tcpSocket->bytesAvailable() > 0)
+    while (tcpSocket[1]->bytesAvailable() > 0)
     {
         QByteArray datagram;
-        length = tcpSocket->bytesAvailable();
+        length = tcpSocket[1]->bytesAvailable();
 //        qDebug() << "bytesAvailable" << length;
 
-        datagram.resize(tcpSocket->bytesAvailable());
-        tcpSocket->read(datagram.data(), datagram.size());
+        datagram.resize(tcpSocket[1]->bytesAvailable());
+        tcpSocket[1]->read(datagram.data(), datagram.size());
         memcpy(&resp, datagram.data(), length);
-        tcpSocket->close();
-//        qDebug() << ((MsgHdr*)resp)->cmd << " " << ((MsgHdr*)resp)->len << " " << ((MsgHdr*)resp)->ret;
-//        qDebug() << "cmd=" << ((RespInfo*)resp)->cmd << " ret=" << ((RespInfo*)resp)->ret;
+        tcpSocket[1]->close();
 
         if (((RespInfo*)resp)->ret == RESP_OK)
         {
@@ -597,9 +581,6 @@ void SupplyWriter::dataReceived()
                 ui->label_2->setText("<p style=\"color:green;font-weight:bold\">信息写入成功！</p>");
                 ui->label_45->setText("<p style=\"color:green;font-size:45px;font-weight:bold\">√√</p>");
 
-//                QString mp3file = current_path + "/sound/done.mp3";
-//                qDebug() << mp3file;
-//                play_mp3_sound("./sound/done.mp3");
                 play_mp3_sound(QCoreApplication::applicationDirPath() + "/sound/done.mp3");
 
                 this->Sleep(3000);
@@ -637,11 +618,7 @@ void SupplyWriter::dataReceived()
             // operation failed
             if (((RespInfo*)resp)->cmd == OP_WRITE_INFO)
             {
-//                qDebug() << current_path;
-//                QString mp3file = current_path + "/sound/failed.mp3";
-//                qDebug() << mp3file;
                 play_mp3_sound(QCoreApplication::applicationDirPath() + "/sound/failed.mp3");
-
                 ui->label_2->setText("<p style=\"color:red;font-weight:bold\">信息写入失败！</p>");
                 ui->label_45->setText("<p style=\"color:red;font-size:45px;font-weight:bold\">××</p>");
             }
@@ -668,19 +645,19 @@ bool SupplyWriter::sendData(int cmd, void* data, int data_len)
 {
     uint8_t writeinfo[sizeof(MsgHdr) + data_len];
 
-    if (tcpSocket == NULL)
+    if (tcpSocket[1] == NULL)
     {
-        tcpSocket = new QTcpSocket(this);
+        tcpSocket[1] = new QTcpSocket(this);
     }
-    connect(tcpSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
+    connect(tcpSocket[1], SIGNAL(connected()), this, SLOT(slotConnected()));
 //    connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
-    connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(dataReceived()));
+    connect(tcpSocket[1], SIGNAL(readyRead()), this, SLOT(dataReceived()));
 
-    if (tcpSocket->isOpen() == true)
+    if (tcpSocket[1]->isOpen() == true)
     {
-        tcpSocket->close();
+        tcpSocket[1]->close();
     }
-    tcpSocket->connectToHost(serverIP, TCP_PORT, QIODevice::ReadWrite, QAbstractSocket::AnyIPProtocol);
+    tcpSocket[1]->connectToHost(ui->lineEdit_1->text(), TCP_PORT, QIODevice::ReadWrite, QAbstractSocket::AnyIPProtocol);
 
     ((MsgHdr*)writeinfo)->cmd = cmd;
     ((MsgHdr*)writeinfo)->len = data_len;
@@ -702,7 +679,7 @@ bool SupplyWriter::sendData(int cmd, void* data, int data_len)
             ((MsgHdr*)writeinfo)->i2c_addr = _DRUM_CHIP_ADDR;
     }
 
-    if (tcpSocket->write((const char*)&writeinfo, sizeof(writeinfo)) == -1)
+    if (tcpSocket[1]->write((const char*)&writeinfo, sizeof(writeinfo)) == -1)
     {
 //        qDebug() << "write to tcp socket failed";
         return false;
@@ -726,10 +703,10 @@ void SupplyWriter::open_sql_server()
         return;
     }
 
-    db.setHostName(databaseIP);
-    db.setDatabaseName(datasource);   //这里填写数据源名称
-    db.setUserName(username);
-    db.setPassword(password);
+    db.setHostName(ui->lineEdit_14->text());
+    db.setUserName(ui->lineEdit->text());
+    db.setPassword(ui->lineEdit_4->text());
+    db.setDatabaseName(ui->lineEdit_5->text());   //这里填写数据源名称
 
     if (db.open()) {
         ui->label_13->setText("<p style=\"color:green;font-weight:bold\">数据库连接成功！</p>");
@@ -787,9 +764,6 @@ bool SupplyWriter::Insert_SupplyInfo_Sql()
     ret = query.exec();
     if (ret)
     {
-//        QString mp3file = current_path + "/sound/done.mp3";
-//        qDebug() << mp3file;
-//        play_mp3_sound("./sound/done.mp3");
         play_mp3_sound(QCoreApplication::applicationDirPath() + "/sound/done.mp3");
 
         ui->label_13->setText("<p style=\"color:green;font-weight:bold\">写入数据库成功！</p>");
@@ -798,9 +772,6 @@ bool SupplyWriter::Insert_SupplyInfo_Sql()
     }
     else
     {
-//        QString mp3file = current_path + "/sound/failed.mp3";
-//        qDebug() << mp3file;
-//        play_mp3_sound("./sound/failed.mp3");
         play_mp3_sound(QCoreApplication::applicationDirPath() + "/sound/failed.mp3");
 
         ui->label_13->setText("<p style=\"color:red;font-weight:bold\">写入数据库失败！</p>");
@@ -857,7 +828,6 @@ void SupplyWriter::on_QuerySqlButton_clicked()
             memcpy(ChipInfo.overflow_percent, query.value(12).toString().toLatin1().data(), 4);
             memcpy(ChipInfo.free_pages, query.value(13).toString().toLatin1().data(), 4);
             ChipInfo.operator_id = query.value(14).toString();
-//            memcpy(ChipInfo.operator_id, query.value(14).toString().toLatin1().data(), 16);
             qDebug() << query.value(14).toString();
         }
     }
@@ -1021,14 +991,14 @@ int SupplyWriter::checkIPversion(QString IP)
 //返回false表示离线，返回true表示在线
 bool SupplyWriter::check_server_status(const QString serverIP, const int port)
 {
-    tcpSocket = new QTcpSocket(this);
+    tcpSocket[0] = new QTcpSocket(this);
     this->server_status = _FAILED_STATUS;
 
-    connect(tcpSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
-    tcpSocket->connectToHost(serverIP, port);
+    connect(tcpSocket[0], SIGNAL(connected()), this, SLOT(slotConnected()));
+    tcpSocket[0]->connectToHost(serverIP, port);
 
     this->Sleep(100);
-    tcpSocket->close();
+    tcpSocket[0]->close();
 
     return this->server_status;
 }
@@ -1095,8 +1065,6 @@ void SupplyWriter::on_LoginButton_clicked()
 
     QString strmd5_username = QCryptographicHash::hash(ui->username->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
     QString strmd5_password = QCryptographicHash::hash(ui->password->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
-//    qDebug() << strmd5_username;
-//    qDebug() << strmd5_password;
 
     setting.beginGroup(strmd5_username);
     if (setting.value("name").toString().compare(strmd5_username, Qt::CaseInsensitive) != 0)
@@ -1119,7 +1087,7 @@ void SupplyWriter::on_LoginButton_clicked()
 
     this->clear_main_page();
     ui->stackedWidget->setCurrentIndex(1);
-    this->create_start_monitor();
+//    this->create_start_monitor();
 }
 
 //退出界面
@@ -1181,14 +1149,6 @@ void SupplyWriter::on_Confirm_clicked()
     QString strmd5_password = QCryptographicHash::hash(ui->lineEdit_9->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
     QString strmd5_register = QCryptographicHash::hash(QDate::currentDate().toString("yyyy/M/d").toLocal8Bit(), QCryptographicHash::Md5).toHex();
     QString strmd5_recently = QCryptographicHash::hash(QDate::currentDate().toString("yyyy/M/d").toLocal8Bit(), QCryptographicHash::Md5).toHex();
-
-//    qDebug() << ui->lineEdit_8->text();
-//    qDebug() << ui->lineEdit_9->text();
-//    qDebug() << QDate::currentDate().toString();
-//    qDebug() << QCryptographicHash::hash(ui->lineEdit_8->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
-//    qDebug() << QCryptographicHash::hash(ui->lineEdit_9->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
-//    qDebug() << QCryptographicHash::hash(QDate::currentDate().toString().toLocal8Bit(), QCryptographicHash::Md5).toHex();
-//    qDebug() << QCryptographicHash::hash(QDate::currentDate().toString().toLocal8Bit(), QCryptographicHash::Md5).toHex();
 
     setting.beginGroup(strmd5_username);
     if (setting.value("name").toString().compare(strmd5_username, Qt::CaseInsensitive) == 0)
@@ -1295,11 +1255,6 @@ void SupplyWriter::on_pushButton_8_clicked()
     QString strmd5_register = QCryptographicHash::hash(ui->dateEdit_2->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
     QString strmd5_recently = QCryptographicHash::hash(ui->dateEdit_3->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
 
-//    qDebug() << ui->dateEdit_2->text();
-//    qDebug() << QDate::currentDate().toString("yyyy/MM/dd");
-//    qDebug() << strmd5_register;
-//    qDebug() << strmd5_recently;
-
     if (setting.value("origin").toString().compare(strmd5_register, Qt::CaseInsensitive) != 0)
     {
         ui->label_41->setText("<p style=\"color:red;font-weight:bold\">账户注册日期不正确，验证失败！</p>");
@@ -1317,7 +1272,6 @@ void SupplyWriter::on_pushButton_8_clicked()
 
     ui->stackedWidget_2->setCurrentIndex(1);
     this->clear_resetpwd_page1();
-//    ui->pushButton_10->setAutoDefault(1);
 }
 
 //取消重置密码
@@ -1352,6 +1306,7 @@ void SupplyWriter::on_pushButton_10_clicked()
     ui->label_40->setText("<p style=\"color:green;font-weight:bold\">密码重置成功，将在 3 秒后返回登录页面</p>");
     ui->pushButton_9->setDisabled(true);
     ui->pushButton_10->setDisabled(true);
+
     this->Sleep(3000);
     ui->stackedWidget->setCurrentIndex(0);
     this->clear_login_page();
@@ -1548,15 +1503,18 @@ THE_END:
 //治具IP地址修改时，检测是否能够连接到治具
 void SupplyWriter::on_lineEdit_1_textChanged(const QString &arg1)
 {
-    emit send_fixture_config(ui->lineEdit_1->text());
+//    emit send_fixture_config(ui->lineEdit_1->text());
     if (arg1.length() && checkIpValid(checkIPversion(arg1), arg1))
     {
-        if (tcpSocket)
+        if (tcpSocket[0])
         {
-            tcpSocket->close();
-            delete tcpSocket;
-            tcpSocket = NULL;
+            tcpSocket[0]->close();
+            delete tcpSocket[0];
+            tcpSocket[0] = NULL;
         }
+
+        if (timer[1]->isActive() == false)
+            timer[1]->start(3000);
 
         if (check_server_status(arg1, TCP_PORT) == _FAILED_STATUS)
         {
@@ -1567,17 +1525,16 @@ void SupplyWriter::on_lineEdit_1_textChanged(const QString &arg1)
         else
         {
             ui->label_2->setText("<p style=\"color:green;font-weight:bold\">治具设备连接正常！</p>");
-            this->serverIP = ui->lineEdit_1->text();
             server_status = _SUCCESS_STATUS;
         }
     }
     else
     {
-        if (tcpSocket)
+        if (tcpSocket[0])
         {
-            tcpSocket->close();
-            delete tcpSocket;
-            tcpSocket = NULL;
+            tcpSocket[0]->close();
+            delete tcpSocket[0];
+            tcpSocket[0] = NULL;
         }
 
         ui->label_2->setText("<p style=\"color:red;font-weight:bold\">治具IP地址不正确！</p>");
@@ -1587,7 +1544,7 @@ void SupplyWriter::on_lineEdit_1_textChanged(const QString &arg1)
 
 void SupplyWriter::try_connect_db()
 {
-    emit send_serv_config(ui->lineEdit_14->text(), ui->lineEdit->text(), ui->lineEdit_4->text(), ui->lineEdit_5->text());
+//    emit send_serv_config(ui->lineEdit_14->text(), ui->lineEdit->text(), ui->lineEdit_4->text(), ui->lineEdit_5->text());
 
     if (ui->lineEdit->text().length() &&
         ui->lineEdit_14->text().length() &&
@@ -1595,10 +1552,8 @@ void SupplyWriter::try_connect_db()
         ui->lineEdit_5->text().length() &&
         checkIpValid(checkIPversion(ui->lineEdit_14->text()), ui->lineEdit_14->text()))
     {
-        this->databaseIP = ui->lineEdit_14->text();
-        this->username = ui->lineEdit->text();
-        this->password = ui->lineEdit_4->text();
-        this->datasource = ui->lineEdit_5->text();
+        if (timer[0]->isActive() == false)
+            timer[0]->start(3000);
 
         open_sql_server();
     }
@@ -1610,7 +1565,7 @@ void SupplyWriter::try_connect_db()
             db.close();
         }
         odbc_status = _FAILED_STATUS;
-        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">数据库信息不完整！</p>");
+        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">数据库信息不正确！</p>");
     }
 }
 
@@ -1646,11 +1601,11 @@ void SupplyWriter::on_lineEdit_5_textChanged(const QString &arg1)
     try_connect_db();
 }
 
-void SupplyWriter::slotGetDBStatus(bool _odbc_status)
+void SupplyWriter::Update_DBStatus()
 {
     if (working_mode == _AUTO_WRITE_MODE)
     {
-        if (_odbc_status == _SUCCESS_STATUS && server_status == _SUCCESS_STATUS)
+        if (odbc_status == _SUCCESS_STATUS && server_status == _SUCCESS_STATUS)
         {
             ui->lineEdit_3->setEnabled(true);
             ui->lineEdit_3->setFocus();
@@ -1664,27 +1619,26 @@ void SupplyWriter::slotGetDBStatus(bool _odbc_status)
     {
         ui->lineEdit_3->setEnabled(true);
     }
-
-    if (odbc_status == _odbc_status)
-        return;
-    else
-        odbc_status = _odbc_status;
 
     if (odbc_status == _FAILED_STATUS)
     {
         ui->label_13->setText("<p style=\"color:red;font-weight:bold\">数据库连接失败！</p>");
     }
-    else
+    else if (odbc_status == _SUCCESS_STATUS)
     {
         ui->label_13->setText("<p style=\"color:green;font-weight:bold\">数据库连接成功！</p>");
     }
+    else
+    {
+        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">数据库信息不正确！</p>");
+    }
 }
 
-void SupplyWriter::slotGetFixtureStatus(bool _server_status)
+void SupplyWriter::Update_FixtureStatus()
 {
     if (working_mode == _AUTO_WRITE_MODE)
     {
-        if (_server_status == _SUCCESS_STATUS && odbc_status == _SUCCESS_STATUS)
+        if (server_status == _SUCCESS_STATUS && odbc_status == _SUCCESS_STATUS)
         {
             ui->lineEdit_3->setEnabled(true);
             ui->lineEdit_3->setFocus();
@@ -1699,18 +1653,17 @@ void SupplyWriter::slotGetFixtureStatus(bool _server_status)
         ui->lineEdit_3->setEnabled(true);
     }
 
-    if (server_status == _server_status)
-        return;
-    else
-        server_status = _server_status;
-
     if (server_status == _SUCCESS_STATUS)
     {
         ui->label_2->setText("<p style=\"color:green;font-weight:bold\">治具设备连接正常！</p>");
     }
-    else
+    else if (server_status == _FAILED_STATUS)
     {
         ui->label_2->setText("<p style=\"color:red;font-weight:bold\">治具设备离线！</p>");
+    }
+    else
+    {
+        ui->label_2->setText("<p style=\"color:red;font-weight:bold\">治具IP地址不正确！</p>");
     }
 }
 
@@ -1760,17 +1713,45 @@ void SupplyWriter::on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason rea
 
 void SupplyWriter::play_mp3_sound(QString file)
 {
-//    qDebug() << file;
     player->setMedia(QMediaContent(QUrl::fromLocalFile(file)));
-//    ui->label_48->setText(file);
     player->setVolume(50);
     player->play();
+}
+
+void SupplyWriter::update_connect_db()
+{
+    if (checkIpValid(checkIPversion(ui->lineEdit_14->text()), ui->lineEdit_14->text()) &&
+        ui->lineEdit->text().length() &&
+        ui->lineEdit_4->text().length() &&
+        ui->lineEdit_5->text().length())
+    {
+        open_sql_server();
+    }
+    else
+    {
+        odbc_status = _INVALID_PARA;
+    }
+
+    Update_DBStatus();
+}
+
+void SupplyWriter::update_connect_fixture()
+{
+    if (checkIpValid(checkIPversion(ui->lineEdit_1->text()), ui->lineEdit_1->text()))
+    {
+        server_status = check_server_status(ui->lineEdit_1->text(), TCP_PORT);
+    }
+    else
+    {
+        server_status = _INVALID_PARA;
+    }
+
+    Update_FixtureStatus();
 }
 
 void SupplyWriter::on_radioButton_2_clicked()
 {
     qDebug() << "setting auto write mode" << working_mode;
-//    worker->thread_resume();
     ui->lineEdit_14->setFocus();
 
     ui->QuerySqlButton->setEnabled(false);
@@ -1788,7 +1769,6 @@ void SupplyWriter::on_radioButton_clicked()
 
     ui->lineEdit_3->setEnabled(true);
     ui->lineEdit_3->setFocus();
-//    worker->thread_pause();
 
     ui->QuerySqlButton->setEnabled(true);
     ui->DeleteSqlButton->setEnabled(true);
