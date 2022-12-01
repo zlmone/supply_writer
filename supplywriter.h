@@ -20,6 +20,7 @@
 
 #include "common.h"
 #include "readback.h"
+#include "statemonitor.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -32,7 +33,6 @@ QT_END_NAMESPACE
 
 #define _SUCCESS_STATUS  false
 #define _FAILED_STATUS   true
-#define _INVALID_PARA    2
 
 #define _AUTO_WRITE_MODE      false
 #define _MANUAL_READ_MODE     true
@@ -68,8 +68,10 @@ private slots:
     void on_DeleteSqlButton_clicked();
     void on_QuerySqlButton_clicked();
     void on_HelpButton_clicked();
+
     void slotConnected();
     void dataReceived();
+    void statusReceived();
 
     void on_CreateUser_clicked();
     void on_ResetPassword_clicked();
@@ -100,13 +102,14 @@ private slots:
     void on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason);
     void on_radioButton_2_clicked();
     void on_radioButton_clicked();
-    void update_connect_db();
+    void slotGetDBStatus(quint8 _odbc_status);
     void update_connect_fixture();
 
 signals:
     void sendChipInfo(struct cgprintech_supply_info_readback* info);
     void sendSqlInfo(struct cgprintech_supply_sqlinfo* info);
     void sendThemeMode(int state);
+    void send_db_config(QString _db_ip, QString _db_user, QString _db_pwd, QString _db_ds);
 
 protected:
     void mouseMoveEvent(QMouseEvent *event);
@@ -122,7 +125,8 @@ private:
 
 private:
     Ui::SupplyWriter *ui;
-    QTimer* timer[2] = {NULL};
+    StateMonitor* worker = NULL;
+    QTimer* timer = NULL;
     QSystemTrayIcon *trayIcon = NULL;
     QString login_user;
     QString resetpwd_username;
@@ -136,8 +140,8 @@ private:
 
     QMediaPlayer *player = NULL;
     bool working_mode = _AUTO_WRITE_MODE;  //默认采用自动写入模式
-    uint8_t odbc_status = _INVALID_PARA;    //odbc数据库连接
-    uint8_t server_status = _INVALID_PARA;  //治具连接
+    quint8 odbc_status = _INVALID_PARA;    //odbc数据库连接
+    quint8 server_status = _INVALID_PARA;  //治具连接
 
     QTcpSocket *tcpSocket[2] = {NULL};
     QSqlDatabase db;
@@ -145,11 +149,10 @@ private:
     struct cgprintech_supply_info supply_info;
 
 private:
-    void Update_DBStatus();
+    void open_sql_server();
     void Update_FixtureStatus();
     void play_mp3_sound(QString file);
     bool Insert_SupplyInfo_Sql();
-    void open_sql_server();
     void try_connect_db();
     QImage adjust_bright(int bright, const QImage& image);
     void adjust_bright_pixmap(int bright);
@@ -158,6 +161,7 @@ private:
     void set_style_sheet(QString filename);
     void init_market_area();
     bool check_input_valid();
+
     int StringToHex(char *str, unsigned char *out, unsigned int *outlen);
     void Pack32(unsigned char* dst, unsigned int val);
     void Pack16(unsigned char* dst, unsigned int val);
@@ -167,7 +171,7 @@ private:
 
     bool check_modelid_valid(QString modelid);
     bool check_serialno_valid(QString serialno);
-    bool check_server_status(const QString serverIP, const int port);
+    bool check_server_status();
     void fill_supplyinfo_data();
     bool sendData(int cmd, void* data, int data_len);
     void print_chip_info(struct cgprintech_supply_info_readback* supply_info);

@@ -59,6 +59,19 @@ void SupplyWriter::clear_main_page()
 
     ui->label_44->setText(ui->username->text());
     ui->lineEdit_14->setFocus();
+    ui->ReadDrumInfo->setEnabled(false);
+    ui->ReadTonerInfo->setEnabled(false);
+    ui->QuerySqlButton->setEnabled(false);
+    ui->DeleteSqlButton->setEnabled(false);
+
+    if (worker == NULL)
+        worker = new StateMonitor();
+
+    if (!worker)
+        return;
+
+    if (!worker->isRunning())
+        worker->start(QThread::NormalPriority);
 }
 
 void SupplyWriter::clear_newuser_page()
@@ -171,14 +184,15 @@ void SupplyWriter::main_page_init()
     ui->lineEdit_4->setEchoMode(QLineEdit::Password);
     db = QSqlDatabase::addDatabase("QODBC", "main");
     player = new QMediaPlayer;
+
+    ui->ReadDrumInfo->setEnabled(false);
+    ui->ReadTonerInfo->setEnabled(false);
     ui->QuerySqlButton->setEnabled(false);
     ui->DeleteSqlButton->setEnabled(false);
 
-    timer[0] = new QTimer(this);
-    timer[1] = new QTimer(this);
-
-    connect(timer[0], SIGNAL(timeout()), this, SLOT(update_connect_db()));
-    connect(timer[1], SIGNAL(timeout()), this, SLOT(update_connect_fixture()));
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(update_connect_fixture()));
+    timer->start(3000);
 }
 
 //创建用户页面初始化
@@ -263,7 +277,7 @@ QImage SupplyWriter::adjust_bright(int bright, const QImage &image)
         }
     }
 
-    return  brightImage;
+    return brightImage;
 }
 
 SupplyWriter::SupplyWriter(QWidget *parent)
@@ -351,20 +365,20 @@ void SupplyWriter::paintEvent(QPaintEvent *event)
     Q_UNUSED(event);
 }
 #endif
-
 //定时更新绘画事件槽函数
 void SupplyWriter::slotUpdateWaterMark()
 {
-    this->repaint(0, 0, 720, 540);
+    this->repaint();
 }
 
 SupplyWriter::~SupplyWriter()
 {
-    if (timer[0])
+    if (worker)
     {
-        delete timer[0];
-        delete timer[1];
+        worker->quit();
+        worker->wait(0);
     }
+
     if (tcpSocket[0])
          delete tcpSocket[0];
     if (tcpSocket[1])
@@ -373,8 +387,8 @@ SupplyWriter::~SupplyWriter()
     if (trayIcon)
         delete trayIcon;
 
+    delete timer;
     delete player;
-
     delete ui;
 }
 
@@ -576,27 +590,22 @@ void SupplyWriter::dataReceived()
 
         if (((RespInfo*)resp)->ret == RESP_OK)
         {
+            play_mp3_sound(QCoreApplication::applicationDirPath() + "/sound/done.mp3");
             if (((RespInfo*)resp)->cmd == OP_WRITE_INFO)
             {
-                ui->label_2->setText("<p style=\"color:green;font-weight:bold\">信息写入成功！</p>");
+                ui->label_2->setText("<p style=\"color:green;font-weight:bold\">写入成功！</p>");
                 ui->label_45->setText("<p style=\"color:green;font-size:45px;font-weight:bold\">√√</p>");
 
-                play_mp3_sound(QCoreApplication::applicationDirPath() + "/sound/done.mp3");
-
-                this->Sleep(3000);
                 ui->lineEdit_3->setText("");
                 ui->lineEdit_3->setFocus();
-
-                ui->label_45->setText("");
-                server_status = _FAILED_STATUS;
             }
             else if (((RespInfo*)resp)->cmd == OP_READ_TONER_INFO ||
                      ((RespInfo*)resp)->cmd == OP_READ_DRUM_INFO)
             {
                 if (((RespInfo*)resp)->cmd == OP_READ_TONER_INFO)
-                    ui->label_2->setText("<p style=\"color:green;font-weight:bold\">粉盒信息读取成功！</p>");
+                    ui->label_2->setText("<p style=\"color:green;font-weight:bold\">粉盒 读取成功！</p>");
                 else if (((RespInfo*)resp)->cmd == OP_READ_DRUM_INFO)
-                    ui->label_2->setText("<p style=\"color:green;font-weight:bold\">鼓组件信息读取成功！</p>");
+                    ui->label_2->setText("<p style=\"color:green;font-weight:bold\">鼓组件 读取成功！</p>");
 
                 ui->label_45->setText("<p style=\"color:green;font-size:45px;font-weight:bold\">√√</p>");
                 //展示读取到的信息
@@ -608,39 +617,44 @@ void SupplyWriter::dataReceived()
                 emit sendThemeMode(this->theme_state);
 
                 readback->show();
-                this->Sleep(3000);
-                ui->label_45->setText("");
-                server_status = _FAILED_STATUS;
             }
+            this->Sleep(3000);
+            ui->label_45->setText("");
         }
         else
         {
             // operation failed
             if (((RespInfo*)resp)->cmd == OP_WRITE_INFO)
             {
-                play_mp3_sound(QCoreApplication::applicationDirPath() + "/sound/failed.mp3");
-                ui->label_2->setText("<p style=\"color:red;font-weight:bold\">信息写入失败！</p>");
+                ui->label_2->setText("<p style=\"color:red;font-weight:bold\">写入失败！</p>");
                 ui->label_45->setText("<p style=\"color:red;font-size:45px;font-weight:bold\">××</p>");
             }
             else if (((RespInfo*)resp)->cmd == OP_READ_TONER_INFO ||
                      ((RespInfo*)resp)->cmd == OP_READ_DRUM_INFO)
             {
                 if (((RespInfo*)resp)->cmd == OP_READ_TONER_INFO)
-                    ui->label_2->setText("<p style=\"color:red;font-weight:bold\">粉盒信息读取失败！</p>");
+                {
+                    ui->label_2->setText("<p style=\"color:red;font-weight:bold\">粉盒 读取失败！</p>");
+                }
                 else if (((RespInfo*)resp)->cmd == OP_READ_DRUM_INFO)
-                    ui->label_2->setText("<p style=\"color:red;font-weight:bold\">鼓组件信息读取失败！</p>");
+                {
+                    ui->label_2->setText("<p style=\"color:red;font-weight:bold\">鼓组件 读取失败！</p>");
+                }
 
                 ui->label_45->setText("<p style=\"color:red;font-size:45px;font-weight:bold\">××</p>");
             }
+            play_mp3_sound(QCoreApplication::applicationDirPath() + "/sound/failed.mp3");
+
             this->Sleep(3000);
             ui->label_45->setText("");
-            server_status = _FAILED_STATUS;
         }
 
+        server_status = _INVALID_PARA;
         break;
     }
 }
 
+//发送读写芯片数据
 bool SupplyWriter::sendData(int cmd, void* data, int data_len)
 {
     uint8_t writeinfo[sizeof(MsgHdr) + data_len];
@@ -696,24 +710,17 @@ void SupplyWriter::open_sql_server()
         db.close();
     }
 
-    if (db.isValid() == false)
-    {
-        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">无效的数据库句柄！</p>");
-        odbc_status = _FAILED_STATUS;
-        return;
-    }
-
     db.setHostName(ui->lineEdit_14->text());
     db.setUserName(ui->lineEdit->text());
     db.setPassword(ui->lineEdit_4->text());
     db.setDatabaseName(ui->lineEdit_5->text());   //这里填写数据源名称
 
     if (db.open()) {
-        ui->label_13->setText("<p style=\"color:green;font-weight:bold\">数据库连接成功！</p>");
+        ui->label_13->setText("<p style=\"color:green;font-weight:bold\">连接成功！</p>");
         odbc_status = _SUCCESS_STATUS;
         return;
     } else {
-        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">数据库连接失败！</p>");
+        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">连接失败！</p>");
 //        qDebug()<<"error open database because"<<db.lastError().text();
         odbc_status = _FAILED_STATUS;
         return;
@@ -766,7 +773,7 @@ bool SupplyWriter::Insert_SupplyInfo_Sql()
     {
         play_mp3_sound(QCoreApplication::applicationDirPath() + "/sound/done.mp3");
 
-        ui->label_13->setText("<p style=\"color:green;font-weight:bold\">写入数据库成功！</p>");
+        ui->label_13->setText("<p style=\"color:green;font-weight:bold\">写入成功！</p>");
         ui->label_46->setText("<p style=\"color:green;font-size:45px;font-weight:bold\">√√</p>");
         ret = _SUCCESS_STATUS;
     }
@@ -774,15 +781,15 @@ bool SupplyWriter::Insert_SupplyInfo_Sql()
     {
         play_mp3_sound(QCoreApplication::applicationDirPath() + "/sound/failed.mp3");
 
-        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">写入数据库失败！</p>");
+        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">写入失败，可能已有该数据！</p>");
         ui->label_46->setText("<p style=\"color:red;font-size:45px;font-weight:bold\">××</p>");
-        qDebug() << query.lastError().driverText() << QString(QObject::tr("插入失败"));
+        qDebug() << query.lastError().text() << QString(QObject::tr("写入失败"));
         ret = _FAILED_STATUS;
     }
 
     this->Sleep(3000);
     ui->label_46->setText("");
-    odbc_status = _FAILED_STATUS;
+    odbc_status = _INVALID_PARA;
 
     return ret;
 }
@@ -792,6 +799,7 @@ void SupplyWriter::on_QuerySqlButton_clicked()
 {
     int num = 0;
 
+    open_sql_server();
     if (odbc_status == _FAILED_STATUS)
     {
         return;
@@ -801,7 +809,7 @@ void SupplyWriter::on_QuerySqlButton_clicked()
     QString sqlcmd = QString("select model_id,serial_no,marketing_area,year,month,day,manufacturer,trade_mark,"
                              "type,pages,dots,overflow_pages,overflow_percent,free_pages,operator from %1.%2 "
                              "where serial_no='%3'").arg(DATABASE_NAME).arg(TABLE_NAME).arg(ui->lineEdit_3->text());
-    qDebug() << sqlcmd;
+//    qDebug() << sqlcmd;
     query = QSqlQuery(this->db);
     if (!query.exec(sqlcmd))
     {
@@ -834,24 +842,26 @@ void SupplyWriter::on_QuerySqlButton_clicked()
 
     if (num == 0)
     {
+        play_mp3_sound(QCoreApplication::applicationDirPath() + "/sound/failed.mp3");
         ui->label_13->setText("<p style=\"color:red;font-weight:bold\">查询数据失败！</p>");
         ui->label_46->setText("<p style=\"color:red;font-size:45px;font-weight:bold\">××</p>");
         this->Sleep(3000);
         ui->label_46->setText("");
         return;
     }
+
+    play_mp3_sound(QCoreApplication::applicationDirPath() + "/sound/done.mp3");
     ui->label_13->setText("<p style=\"color:green;font-weight:bold\">查询数据成功！</p>");
     ui->label_46->setText("<p style=\"color:green;font-size:45px;font-weight:bold\">√√</p>");
 
     SqlChipInfo *sqlinfo = new SqlChipInfo();
-
     emit sendThemeMode(theme_state);
     emit sendSqlInfo(&ChipInfo);
-
     sqlinfo->show();
+
     this->Sleep(3000);
     ui->label_46->setText("");
-    odbc_status = _FAILED_STATUS;
+    odbc_status = _INVALID_PARA;
 }
 
 //写入耗材
@@ -895,7 +905,7 @@ void SupplyWriter::fill_supplyinfo_data()
 //粉盒耗材信息回读
 void SupplyWriter::on_ReadTonerInfo_clicked()
 {
-    check_server_status(ui->lineEdit_1->text(), TCP_PORT);
+    check_server_status();
     if (this->server_status == _FAILED_STATUS)
         return;
 
@@ -907,8 +917,7 @@ void SupplyWriter::on_ReadTonerInfo_clicked()
 //鼓组件芯片信息回读
 void SupplyWriter::on_ReadDrumInfo_clicked()
 {
-//    qDebug() << server_status;
-    check_server_status(ui->lineEdit_1->text(), TCP_PORT);
+    check_server_status();
     if (this->server_status == _FAILED_STATUS)
         return;
 
@@ -988,19 +997,93 @@ int SupplyWriter::checkIPversion(QString IP)
     return 0;
 }
 
+void SupplyWriter::statusReceived()
+{
+    RespInfo resp;
+    qint64 length;
+
+    while (tcpSocket[0]->bytesAvailable() > 0)
+    {
+        QByteArray datagram;
+        length = tcpSocket[0]->bytesAvailable();
+
+        datagram.resize(tcpSocket[0]->bytesAvailable());
+        tcpSocket[0]->read(datagram.data(), datagram.size());
+        memcpy(&resp, datagram.data(), length);
+        tcpSocket[0]->close();
+
+//        qDebug() << resp.cmd << resp.ret;
+        switch (resp.ret)
+        {
+        case RESP_NO_DETECT:
+            ui->label_2->setText(tr("<font style='color:red; font:bold;'>%1</font>").arg(QStringLiteral("未安装鼓组件及粉盒！")));
+            ui->label_45->setText("<p style=\"color:red;font-size:45px;font-weight:bold\">▲▲</p>");
+            ui->ReadDrumInfo->setEnabled(false);
+            ui->ReadTonerInfo->setEnabled(false);
+            //鼓组件和粉盒均未安装
+            break;
+        case RESP_NO_TONER_DETECT:
+            ui->label_2->setText(tr("<font style='color:green; font:bold;'>%1</font>").arg(QStringLiteral("已安装鼓组件，")) +
+                                 tr("<font style='color:red; font:bold;'>%1</font>").arg(QStringLiteral("未安装粉盒！")));
+            ui->label_45->setText("<p style=\"color:blue;font-size:45px;font-weight:bold\">\?\?</p>");
+            ui->ReadDrumInfo->setEnabled(true);
+            ui->ReadTonerInfo->setEnabled(false);
+            //仅安装了鼓组件
+            break;
+        case RESP_NO_DRUM_DETECT:
+            ui->label_2->setText(tr("<font style='color:green; font:bold;'>%1</font>").arg(QStringLiteral("已安装粉盒，")) +
+                                 tr("<font style='color:red; font:bold;'>%1</font>").arg(QStringLiteral("未安装鼓组件！")));
+            ui->label_45->setText("<p style=\"color:blue;font-size:45px;font-weight:bold\">\?\?</p>");
+            ui->ReadDrumInfo->setEnabled(false);
+            ui->ReadTonerInfo->setEnabled(true);
+            //仅安装了粉盒
+            break;
+        case RESP_ALL_DETECT:
+        default:
+            //治具在线，且安装了鼓组件和粉盒
+            ui->label_2->setText("<p style=\"color:green;font-weight:bold\">已安装鼓组件及粉盒！</p>");
+            ui->label_45->setText("<p style=\"color:green;font-size:45px;font-weight:bold\">★★</p>");
+            ui->ReadDrumInfo->setEnabled(true);
+            ui->ReadTonerInfo->setEnabled(true);
+            break;
+        }
+
+        break;
+    }
+}
+
+//定时发送检测治具状态信息
 //返回false表示离线，返回true表示在线
-bool SupplyWriter::check_server_status(const QString serverIP, const int port)
+bool SupplyWriter::check_server_status()
 {
     tcpSocket[0] = new QTcpSocket(this);
     this->server_status = _FAILED_STATUS;
+    MsgHdr hdr;
 
     connect(tcpSocket[0], SIGNAL(connected()), this, SLOT(slotConnected()));
-    tcpSocket[0]->connectToHost(serverIP, port);
+    connect(tcpSocket[0], SIGNAL(readyRead()), this, SLOT(statusReceived()));
+
+    if (tcpSocket[0]->isOpen() == true)
+    {
+        tcpSocket[0]->close();
+    }
+    tcpSocket[0]->connectToHost(ui->lineEdit_1->text(), TCP_PORT, QIODevice::ReadWrite, QAbstractSocket::AnyIPProtocol);
+
+    if (server_status)
+    {
+        hdr.cmd = OP_GET_STATUS;
+        hdr.len = 0;
+        hdr.i2c_addr = 0;
+
+        if (tcpSocket[0]->write((const char*)&hdr, sizeof(hdr)) == -1)
+        {
+            qDebug() << "send data failed";
+            return false;
+        }
+    }
 
     this->Sleep(100);
-    tcpSocket[0]->close();
-
-    return this->server_status;
+    return server_status;
 }
 
 //关于按钮
@@ -1298,7 +1381,6 @@ void SupplyWriter::on_pushButton_10_clicked()
     }
 
     QString strmd5_password = QCryptographicHash::hash(ui->lineEdit_20->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
-//    qDebug() << strmd5_password;
     setting.beginGroup(resetpwd_username);
     setting.setValue("pwd", strmd5_password);
     setting.endGroup();
@@ -1485,13 +1567,16 @@ THE_END:
             check_serialno_valid(ui->lineEdit_3->text()) &&
             working_mode == _AUTO_WRITE_MODE)
         {
-            if (this->Insert_SupplyInfo_Sql() == _FAILED_STATUS)
+            if ((ui->lineEdit_2->text().mid(0, 2).compare("DL", Qt::CaseSensitive) == 0 && ui->ReadDrumInfo->isEnabled()) ||
+                (ui->lineEdit_2->text().mid(0, 2).compare("TL", Qt::CaseSensitive) == 0 && ui->ReadTonerInfo->isEnabled()))
             {
-                qDebug() << "insert into database failed";
-                return;
+                if (this->Insert_SupplyInfo_Sql() == _FAILED_STATUS)
+                {
+                    qDebug() << "insert into database failed";
+                    return;
+                }
+                write_supplyinfo2chip();
             }
-
-            write_supplyinfo2chip();
         }
     }
     else
@@ -1503,7 +1588,6 @@ THE_END:
 //治具IP地址修改时，检测是否能够连接到治具
 void SupplyWriter::on_lineEdit_1_textChanged(const QString &arg1)
 {
-//    emit send_fixture_config(ui->lineEdit_1->text());
     if (arg1.length() && checkIpValid(checkIPversion(arg1), arg1))
     {
         if (tcpSocket[0])
@@ -1513,38 +1597,28 @@ void SupplyWriter::on_lineEdit_1_textChanged(const QString &arg1)
             tcpSocket[0] = NULL;
         }
 
-        if (timer[1]->isActive() == false)
-            timer[1]->start(3000);
-
-        if (check_server_status(arg1, TCP_PORT) == _FAILED_STATUS)
+        if (check_server_status() == _FAILED_STATUS)
         {
-            ui->label_2->setText("<p style=\"color:red;font-weight:bold\">治具设备离线！</p>");
-            server_status = _FAILED_STATUS;
+            ui->label_2->setText("<p style=\"color:red;font-weight:bold\">设备离线！</p>");
+            ui->label_45->clear();
+            ui->ReadDrumInfo->setEnabled(false);
+            ui->ReadTonerInfo->setEnabled(false);
             return;
-        }
-        else
-        {
-            ui->label_2->setText("<p style=\"color:green;font-weight:bold\">治具设备连接正常！</p>");
-            server_status = _SUCCESS_STATUS;
         }
     }
     else
     {
-        if (tcpSocket[0])
-        {
-            tcpSocket[0]->close();
-            delete tcpSocket[0];
-            tcpSocket[0] = NULL;
-        }
-
-        ui->label_2->setText("<p style=\"color:red;font-weight:bold\">治具IP地址不正确！</p>");
-        server_status = _FAILED_STATUS;
+        ui->label_2->setText("<p style=\"color:red;font-weight:bold\">IP地址不正确！</p>");
+        ui->label_45->clear();
+        ui->ReadDrumInfo->setEnabled(false);
+        ui->ReadTonerInfo->setEnabled(false);
     }
 }
 
 void SupplyWriter::try_connect_db()
 {
-//    emit send_serv_config(ui->lineEdit_14->text(), ui->lineEdit->text(), ui->lineEdit_4->text(), ui->lineEdit_5->text());
+    emit send_db_config(ui->lineEdit_14->text(), ui->lineEdit->text(),
+                        ui->lineEdit_4->text(), ui->lineEdit_5->text());
 
     if (ui->lineEdit->text().length() &&
         ui->lineEdit_14->text().length() &&
@@ -1552,20 +1626,12 @@ void SupplyWriter::try_connect_db()
         ui->lineEdit_5->text().length() &&
         checkIpValid(checkIPversion(ui->lineEdit_14->text()), ui->lineEdit_14->text()))
     {
-        if (timer[0]->isActive() == false)
-            timer[0]->start(3000);
-
         open_sql_server();
     }
     else
     {
-        if (db.isOpen())
-        {
-            //如果数据库句柄已打开，则先关闭
-            db.close();
-        }
-        odbc_status = _FAILED_STATUS;
-        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">数据库信息不正确！</p>");
+        odbc_status = _INVALID_PARA;
+        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">信息不正确！</p>");
     }
 }
 
@@ -1601,39 +1667,6 @@ void SupplyWriter::on_lineEdit_5_textChanged(const QString &arg1)
     try_connect_db();
 }
 
-void SupplyWriter::Update_DBStatus()
-{
-    if (working_mode == _AUTO_WRITE_MODE)
-    {
-        if (odbc_status == _SUCCESS_STATUS && server_status == _SUCCESS_STATUS)
-        {
-            ui->lineEdit_3->setEnabled(true);
-            ui->lineEdit_3->setFocus();
-        }
-        else
-        {
-            ui->lineEdit_3->setEnabled(false);
-        }
-    }
-    else
-    {
-        ui->lineEdit_3->setEnabled(true);
-    }
-
-    if (odbc_status == _FAILED_STATUS)
-    {
-        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">数据库连接失败！</p>");
-    }
-    else if (odbc_status == _SUCCESS_STATUS)
-    {
-        ui->label_13->setText("<p style=\"color:green;font-weight:bold\">数据库连接成功！</p>");
-    }
-    else
-    {
-        ui->label_13->setText("<p style=\"color:red;font-weight:bold\">数据库信息不正确！</p>");
-    }
-}
-
 void SupplyWriter::Update_FixtureStatus()
 {
     if (working_mode == _AUTO_WRITE_MODE)
@@ -1653,17 +1686,10 @@ void SupplyWriter::Update_FixtureStatus()
         ui->lineEdit_3->setEnabled(true);
     }
 
-    if (server_status == _SUCCESS_STATUS)
+    if (server_status == _FAILED_STATUS)
     {
-        ui->label_2->setText("<p style=\"color:green;font-weight:bold\">治具设备连接正常！</p>");
-    }
-    else if (server_status == _FAILED_STATUS)
-    {
-        ui->label_2->setText("<p style=\"color:red;font-weight:bold\">治具设备离线！</p>");
-    }
-    else
-    {
-        ui->label_2->setText("<p style=\"color:red;font-weight:bold\">治具IP地址不正确！</p>");
+        ui->label_2->setText("<p style=\"color:red;font-weight:bold\">设备离线！</p>");
+        ui->label_45->setText("<p style=\"color:red;font-size:45px;font-weight:bold\">\?\?</p>");
     }
 }
 
@@ -1714,32 +1740,52 @@ void SupplyWriter::on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason rea
 void SupplyWriter::play_mp3_sound(QString file)
 {
     player->setMedia(QMediaContent(QUrl::fromLocalFile(file)));
-    player->setVolume(50);
     player->play();
 }
 
-void SupplyWriter::update_connect_db()
+void SupplyWriter::slotGetDBStatus(quint8 _odbc_status)
 {
-    if (checkIpValid(checkIPversion(ui->lineEdit_14->text()), ui->lineEdit_14->text()) &&
-        ui->lineEdit->text().length() &&
-        ui->lineEdit_4->text().length() &&
-        ui->lineEdit_5->text().length())
+    if (working_mode == _AUTO_WRITE_MODE)
     {
-        open_sql_server();
+        if (_odbc_status == _SUCCESS_STATUS && server_status == _SUCCESS_STATUS)
+        {
+            ui->lineEdit_3->setEnabled(true);
+            ui->lineEdit_3->setFocus();
+        }
+        else
+        {
+            ui->lineEdit_3->setEnabled(false);
+        }
     }
     else
     {
-        odbc_status = _INVALID_PARA;
+        ui->lineEdit_3->setEnabled(true);
     }
 
-    Update_DBStatus();
+    if (odbc_status == _odbc_status)
+        return;
+    else
+        odbc_status = _odbc_status;
+
+    if (odbc_status == _FAILED_STATUS)
+    {
+        ui->label_13->setText(tr("<font style='color:red; font:bold;'>%1</font>").arg(QStringLiteral("连接失败！")));
+    }
+    else if (odbc_status == _SUCCESS_STATUS)
+    {
+        ui->label_13->setText(tr("<font style='color:green; font:bold;'>%1</font>").arg(QStringLiteral("连接成功！")));
+    }
+    else if (odbc_status == _INVALID_PARA)
+    {
+        ui->label_13->setText(tr("<font style='color:red; font:bold;'>%1</font>").arg(QStringLiteral("信息不正确！")));
+    }
 }
 
 void SupplyWriter::update_connect_fixture()
 {
     if (checkIpValid(checkIPversion(ui->lineEdit_1->text()), ui->lineEdit_1->text()))
     {
-        server_status = check_server_status(ui->lineEdit_1->text(), TCP_PORT);
+        server_status = check_server_status();
     }
     else
     {
@@ -1751,7 +1797,7 @@ void SupplyWriter::update_connect_fixture()
 
 void SupplyWriter::on_radioButton_2_clicked()
 {
-    qDebug() << "setting auto write mode" << working_mode;
+//    qDebug() << "setting auto write mode" << working_mode;
     ui->lineEdit_14->setFocus();
 
     ui->QuerySqlButton->setEnabled(false);
@@ -1765,13 +1811,16 @@ void SupplyWriter::on_radioButton_2_clicked()
 
 void SupplyWriter::on_radioButton_clicked()
 {
-    qDebug() << "setting manual read mode" << working_mode;
+//    qDebug() << "setting manual read mode" << working_mode;
 
     ui->lineEdit_3->setEnabled(true);
     ui->lineEdit_3->setFocus();
 
-    ui->QuerySqlButton->setEnabled(true);
-    ui->DeleteSqlButton->setEnabled(true);
+    if (odbc_status == _SUCCESS_STATUS)
+    {
+        ui->QuerySqlButton->setEnabled(true);
+        ui->DeleteSqlButton->setEnabled(true);
+    }
 
     if (working_mode == _MANUAL_READ_MODE)
         return;

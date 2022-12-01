@@ -18,6 +18,7 @@ SOURCES += \
     main.cpp \
     readback.cpp \
     sqlchipinfo.cpp \
+    statemonitor.cpp \
     supplywriter.cpp
 
 HEADERS += \
@@ -25,6 +26,7 @@ HEADERS += \
     readback.h \
     sqlchipinfo.h \
     supplywriter.h \
+    statemonitor.h \
     common.h
 
 FORMS += \

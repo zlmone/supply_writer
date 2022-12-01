@@ -10,11 +10,11 @@ QPushButton {
     background-color: #808080;
     min-width: 45px;
 }
-QPushButton:hover {
+QPushButton:hover, QPushButton:pressed {
     background-color: #000000;
 }
-QPushButton:pressed {
-    background-color: #000000;
+QPushButton:disabled {
+    background-color: #d0d0d0;
 }
 QLabel {
     font: default;

@@ -7,8 +7,10 @@ QPushButton {
     min-width: 45px;
 }
 QPushButton:hover, QPushButton:pressed {
-    border: none;
     background-color: #05B8fC;
+}
+QPushButton:disabled {
+    background-color:#556B2F;
 }
 QGroupBox {
     font: bold 15px;

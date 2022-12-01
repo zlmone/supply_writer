@@ -16,14 +16,23 @@ typedef unsigned int   uint32_t;
 //上位机发送给下位机的命令
 enum {
     OP_WRITE_INFO,     //上位机写入耗材信息
-    OP_READ_TONER_INFO,      //上位机读取粉盒耗材信息
-    OP_READ_DRUM_INFO,   //读取硒鼓芯片信息
+    OP_READ_TONER_INFO,      //上位机读取耗材信息
+    OP_READ_DRUM_INFO,
+
+    OP_GET_STATUS,      //获取治具状态
 };
 
-//下位机返回码
+//下位机的反馈
 enum {
     RESP_OK,
     RESP_ERROR,
+    RESP_NO_DRUM,
+    RESP_NO_TONER,
+
+    RESP_ALL_DETECT   = 0x10,         //安装粉盒和鼓组件
+    RESP_NO_DRUM_DETECT  = 0x11,      //未安装鼓组件
+    RESP_NO_TONER_DETECT = 0x12,      //为未安装粉盒
+    RESP_NO_DETECT   = 0x13,          //未安装鼓组件和粉盒
 };
 
 typedef struct cgmsghdr {
@@ -31,7 +40,7 @@ typedef struct cgmsghdr {
     int i2c_addr;    //i2c地址，根据耗材型号修改
                      //DL开头为0x28，TL开头为0x2c
     int len;         //数据长度，不包含头部
-} MsgHdr;
+} __attribute__((__packed__)) MsgHdr;
 
 typedef struct respinfo {
     int cmd;
