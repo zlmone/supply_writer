@@ -596,7 +596,7 @@ void SupplyWriter::dataReceived()
                 ui->label_2->setText("<p style=\"color:green;font-weight:bold\">写入成功！</p>");
                 ui->label_45->setText("<p style=\"color:green;font-size:45px;font-weight:bold\">√√</p>");
 
-                ui->lineEdit_3->setText("");
+                ui->lineEdit_3->clear();
                 ui->lineEdit_3->setFocus();
             }
             else if (((RespInfo*)resp)->cmd == OP_READ_TONER_INFO ||
@@ -618,8 +618,7 @@ void SupplyWriter::dataReceived()
 
                 readback->show();
             }
-            this->Sleep(3000);
-            ui->label_45->setText("");
+//            this->Sleep(3000);
         }
         else
         {
@@ -645,8 +644,7 @@ void SupplyWriter::dataReceived()
             }
             play_mp3_sound(QCoreApplication::applicationDirPath() + "/sound/failed.mp3");
 
-            this->Sleep(3000);
-            ui->label_45->setText("");
+//            this->Sleep(3000);
         }
 
         server_status = _INVALID_PARA;
@@ -860,7 +858,7 @@ void SupplyWriter::on_QuerySqlButton_clicked()
     sqlinfo->show();
 
     this->Sleep(3000);
-    ui->label_46->setText("");
+    ui->label_46->clear();
     odbc_status = _INVALID_PARA;
 }
 
@@ -1017,7 +1015,8 @@ void SupplyWriter::statusReceived()
         {
         case RESP_NO_DETECT:
             ui->label_2->setText(tr("<font style='color:red; font:bold;'>%1</font>").arg(QStringLiteral("未安装鼓组件及粉盒！")));
-            ui->label_45->setText("<p style=\"color:red;font-size:45px;font-weight:bold\">▲▲</p>");
+//            ui->label_45->setText("<p style=\"color:red;font-size:45px;font-weight:bold\">▲▲</p>");
+            ui->label_45->clear();
             ui->ReadDrumInfo->setEnabled(false);
             ui->ReadTonerInfo->setEnabled(false);
             //鼓组件和粉盒均未安装
@@ -1025,7 +1024,8 @@ void SupplyWriter::statusReceived()
         case RESP_NO_TONER_DETECT:
             ui->label_2->setText(tr("<font style='color:green; font:bold;'>%1</font>").arg(QStringLiteral("已安装鼓组件，")) +
                                  tr("<font style='color:red; font:bold;'>%1</font>").arg(QStringLiteral("未安装粉盒！")));
-            ui->label_45->setText("<p style=\"color:blue;font-size:45px;font-weight:bold\">\?\?</p>");
+//            ui->label_45->setText("<p style=\"color:blue;font-size:45px;font-weight:bold\">\?\?</p>");
+            ui->label_45->clear();
             ui->ReadDrumInfo->setEnabled(true);
             ui->ReadTonerInfo->setEnabled(false);
             //仅安装了鼓组件
@@ -1033,7 +1033,8 @@ void SupplyWriter::statusReceived()
         case RESP_NO_DRUM_DETECT:
             ui->label_2->setText(tr("<font style='color:green; font:bold;'>%1</font>").arg(QStringLiteral("已安装粉盒，")) +
                                  tr("<font style='color:red; font:bold;'>%1</font>").arg(QStringLiteral("未安装鼓组件！")));
-            ui->label_45->setText("<p style=\"color:blue;font-size:45px;font-weight:bold\">\?\?</p>");
+//            ui->label_45->setText("<p style=\"color:blue;font-size:45px;font-weight:bold\">\?\?</p>");
+            ui->label_45->clear();
             ui->ReadDrumInfo->setEnabled(false);
             ui->ReadTonerInfo->setEnabled(true);
             //仅安装了粉盒
@@ -1042,7 +1043,8 @@ void SupplyWriter::statusReceived()
         default:
             //治具在线，且安装了鼓组件和粉盒
             ui->label_2->setText("<p style=\"color:green;font-weight:bold\">已安装鼓组件及粉盒！</p>");
-            ui->label_45->setText("<p style=\"color:green;font-size:45px;font-weight:bold\">★★</p>");
+//            ui->label_45->setText("<p style=\"color:green;font-size:45px;font-weight:bold\">★★</p>");
+            ui->label_45->clear();
             ui->ReadDrumInfo->setEnabled(true);
             ui->ReadTonerInfo->setEnabled(true);
             break;
@@ -1575,7 +1577,9 @@ THE_END:
                     qDebug() << "insert into database failed";
                     return;
                 }
+                timer->stop();
                 write_supplyinfo2chip();
+                timer->start(3000);
             }
         }
     }
