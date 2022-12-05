@@ -597,6 +597,9 @@ void SupplyWriter::dataReceived()
                 ui->label_45->setText("<p style=\"color:green;font-size:45px;font-weight:bold\">√√</p>");
 
                 ui->lineEdit_3->clear();
+                ui->lineEdit_7->clear();
+                ui->lineEdit_11->clear();
+                ui->lineEdit_12->clear();
                 ui->lineEdit_3->setFocus();
             }
             else if (((RespInfo*)resp)->cmd == OP_READ_TONER_INFO ||
@@ -1449,34 +1452,40 @@ void SupplyWriter::on_lineEdit_2_textChanged(const QString &arg1)
     if (rxt1.exactMatch(arg1))
     {
         ui->lineEdit_6->setText("1500");
+        ui->lineEdit_11->setText("45");
         return;
     }
 
     if (rxt0.exactMatch(arg1))
     {
         ui->lineEdit_6->setText("3000");
+        ui->lineEdit_11->setText("90");
         return;
     }
 
     if (rxt2.exactMatch(arg1))
     {
         ui->lineEdit_6->setText("5500");
+        ui->lineEdit_11->setText("165");
         return;
     }
 
     if (rxt3.exactMatch(arg1))
     {
         ui->lineEdit_6->setText("15000");
+        ui->lineEdit_11->setText("450");
         return;
     }
 
     if (rxd0.exactMatch(arg1))
     {
         ui->lineEdit_6->setText("30000");
+        ui->lineEdit_11->setText("0");
         return;
     }
 
     ui->lineEdit_6->setText("");
+    ui->lineEdit_11->clear();
 }
 
 void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
@@ -1488,9 +1497,8 @@ void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
     else if (arg1.mid(0, 2).compare("CG", Qt::CaseSensitive) == 0)
         ui->lineEdit_13->setText("M");
     else
-        ui->lineEdit_13->setText("");
+        ui->lineEdit_13->clear();
 
-    ui->lineEdit_11->setText("250");
     ui->lineEdit_12->setText("20");
 
     if (arg1.contains("L2090000045", Qt::CaseSensitive) ||
