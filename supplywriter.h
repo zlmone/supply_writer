@@ -28,7 +28,7 @@ class SupplyWriter;
 }
 QT_END_NAMESPACE
 
-#define DATABASE_NAME   "public"
+#define DATABASE_NAME   "cgprintech"
 #define TABLE_NAME      "supplyinfo"
 
 #define _SUCCESS_STATUS  false

@@ -1094,16 +1094,15 @@ bool SupplyWriter::check_server_status()
 //关于按钮
 void SupplyWriter::on_AboutButton_clicked()
 {
-    QDate date = QDate::fromString("20221122", "yyyyMMdd");
+    QDate date = QDate::fromString("20221210", "yyyyMMdd");
 
-    QString info = QString("软件版本：v2.0\n"
+    QString info = QString("软件版本：v2.2\n"
                            "编译时间：%1\n"
                            "基于 Qt 5.14.2 开发 by youshun\n\n"
                            "本软件 仅用于辰光融信写入耗材出厂信息，严禁外泄\n"
                            "辰光融信技术有限公司 版权所有\n").arg(date.toString("yyyy-MM-dd"));
-    QMessageBox::about(this, tr("关于 耗材写入工具"), info);
 
-    return;
+    QMessageBox::about(this, tr("关于 耗材写入工具"), info);
 }
 
 //关闭对话框
@@ -1408,6 +1407,7 @@ void SupplyWriter::adjust_bright_pixmap(int bright)
     image[1] = pixmap[2].toImage();
     image[2] = pixmap[3].toImage();
     image[3] = pixmap[4].toImage();
+
     new_image[0] = adjust_bright(bright, image[0]);
     new_image[1] = adjust_bright(bright, image[1]);
     new_image[2] = adjust_bright(bright, image[2]);
@@ -1484,7 +1484,7 @@ void SupplyWriter::on_lineEdit_2_textChanged(const QString &arg1)
         return;
     }
 
-    ui->lineEdit_6->setText("");
+    ui->lineEdit_6->clear();
     ui->lineEdit_11->clear();
 }
 
@@ -1585,6 +1585,7 @@ THE_END:
                     qDebug() << "insert into database failed";
                     return;
                 }
+
                 timer->stop();
                 write_supplyinfo2chip();
                 timer->start(3000);

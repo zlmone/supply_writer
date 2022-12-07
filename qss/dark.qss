@@ -1,20 +1,23 @@
 QDialog {
     background-color: #404040;
+    font-family: "Microsoft YaHei";
 }
 
 QPushButton {
     border: none;
     border-radius: 4px;
-    color: #FFFFFF;
+    color: #ffffff;
     padding: 6px;
-    background-color: #808080;
+    background-color: #606060;
     min-width: 45px;
 }
 QPushButton:hover, QPushButton:pressed {
     background-color: #000000;
+    color: #ffffff;
 }
 QPushButton:disabled {
     background-color: #d0d0d0;
+    color: #000000;
 }
 QLabel {
     font: default;
@@ -23,16 +26,8 @@ QLabel {
 QGroupBox {
     font: bold 15px;
     color: #FFFFFF;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-}
-QRadioButton {
-    font: 12px;
-    color: #FFFFFF;
-}
-QCheckBox {
-    font: 12px;
-    color: #FFFFFF;
+    border: 1px solid #DCDCDC;
+    border-radius: 4px;
 }
 QCheckBox::indicator:checked {
     border-style: outset;
@@ -48,19 +43,42 @@ QCheckBox::indicator:unchecked {
 }
 QRadioButton {
     color: #ffffff;
-    padding: 1px;
+}
+QRadioButton:pressed {
+    color: green;
+    border-color: blueviolet;
 }
 QRadioButton::indicator:checked {
-    border: 1px solid grey;
+    border: none;
     border-radius: 6px;
     border-style: outset;
-    color: #000000;
+    padding: 1px;
     background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(128, 128, 128, 255), stop:1 rgba(80, 80, 80, 255));
 }
 QRadioButton::indicator:unchecked {
-    border: 1px solid white;
+    border: none;
     border-radius: 6px;
     border-style: outset;
-    color: #000000;
+    padding: 1px;
     background-color: #ffffff;
+}
+QLineEdit {
+    color: white;
+    border: 1px solid gray;
+    border-radius: 4px;
+    padding: 1px;
+    background: #202020;
+    selection-background-color: #ffffff;
+    selection-color: black;
+}
+QLineEdit[echoMode="2"] {
+    lineedit-password-character: 9679;
+}
+QLineEdit:read-only {
+    background: gray;
+}
+QSpinBox::up-arrow:disabled, QSpinBox::up-arrow:off {
+    padding-right: 2px;
+    border: 1px solid gray;
+    border-radius: 4px;
 }
