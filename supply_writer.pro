@@ -15,7 +15,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     helpdialog.cpp \
-    main.cpp \
     readback.cpp \
     sqlchipinfo.cpp \
     statemonitor.cpp \
@@ -43,5 +42,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     src.qrc
 
-RC_FILE += \
-    logo.rc
+RC_ICONS = images/cgprint.ico

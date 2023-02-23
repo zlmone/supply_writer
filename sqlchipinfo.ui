@@ -25,6 +25,12 @@
      <height>390</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
    <property name="title">
     <string>数据库耗材信息</string>
    </property>
@@ -40,12 +46,24 @@
       <height>360</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>微软雅黑</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
     <layout class="QGridLayout" name="gridLayout" columnstretch="5,9">
      <property name="horizontalSpacing">
       <number>12</number>
      </property>
      <item row="1" column="0">
       <widget class="QLabel" name="label_3">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>序列号</string>
        </property>
@@ -56,6 +74,12 @@
      </item>
      <item row="6" column="1">
       <widget class="QLabel" name="label_19">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>-</string>
        </property>
@@ -63,6 +87,12 @@
      </item>
      <item row="11" column="0">
       <widget class="QLabel" name="label_14">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>不计数页数</string>
        </property>
@@ -73,6 +103,12 @@
      </item>
      <item row="8" column="0">
       <widget class="QLabel" name="label_11">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>类型</string>
        </property>
@@ -83,6 +119,12 @@
      </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>型号</string>
        </property>
@@ -93,6 +135,12 @@
      </item>
      <item row="7" column="1">
       <widget class="QLabel" name="label_20">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>-</string>
        </property>
@@ -100,6 +148,12 @@
      </item>
      <item row="10" column="1">
       <widget class="QLabel" name="label_23">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>-</string>
        </property>
@@ -107,6 +161,12 @@
      </item>
      <item row="3" column="0">
       <widget class="QLabel" name="label_6">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>生产日期</string>
        </property>
@@ -117,6 +177,12 @@
      </item>
      <item row="4" column="1">
       <widget class="QLabel" name="label_17">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>-</string>
        </property>
@@ -124,6 +190,12 @@
      </item>
      <item row="6" column="0">
       <widget class="QLabel" name="label_9">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>厂商名称</string>
        </property>
@@ -134,6 +206,12 @@
      </item>
      <item row="10" column="0">
       <widget class="QLabel" name="label_13">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>超出打印比例</string>
        </property>
@@ -144,6 +222,12 @@
      </item>
      <item row="4" column="0">
       <widget class="QLabel" name="label_7">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>容量（总页数）</string>
        </property>
@@ -154,6 +238,12 @@
      </item>
      <item row="2" column="1">
       <widget class="QLabel" name="label_15">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>-</string>
        </property>
@@ -161,6 +251,12 @@
      </item>
      <item row="0" column="1">
       <widget class="QLabel" name="label_2">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>-</string>
        </property>
@@ -168,6 +264,12 @@
      </item>
      <item row="7" column="0">
       <widget class="QLabel" name="label_10">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>商标</string>
        </property>
@@ -178,6 +280,12 @@
      </item>
      <item row="3" column="1">
       <widget class="QLabel" name="label_16">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>-</string>
        </property>
@@ -185,6 +293,12 @@
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_5">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>销售区域</string>
        </property>
@@ -195,6 +309,12 @@
      </item>
      <item row="9" column="0">
       <widget class="QLabel" name="label_12">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>超出打印页数</string>
        </property>
@@ -204,10 +324,23 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="lineEdit">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+      </widget>
      </item>
      <item row="11" column="1">
       <widget class="QLabel" name="label_24">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>-</string>
        </property>
@@ -215,6 +348,12 @@
      </item>
      <item row="5" column="0">
       <widget class="QLabel" name="label_8">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>容量（总点数）</string>
        </property>
@@ -225,6 +364,12 @@
      </item>
      <item row="5" column="1">
       <widget class="QLabel" name="label_18">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>-</string>
        </property>
@@ -232,6 +377,12 @@
      </item>
      <item row="8" column="1">
       <widget class="QLabel" name="label_21">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>-</string>
        </property>
@@ -239,6 +390,12 @@
      </item>
      <item row="9" column="1">
       <widget class="QLabel" name="label_22">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>-</string>
        </property>
@@ -246,6 +403,12 @@
      </item>
      <item row="12" column="0">
       <widget class="QLabel" name="label_4">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>操作员</string>
        </property>
@@ -256,6 +419,12 @@
      </item>
      <item row="12" column="1">
       <widget class="QLabel" name="label_25">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>-</string>
        </property>
@@ -273,9 +442,21 @@
      <height>40</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <spacer name="horizontalSpacer">
+      <property name="font">
+       <font>
+        <family>微软雅黑</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -289,6 +470,12 @@
     </item>
     <item>
      <widget class="QPushButton" name="pushButton">
+      <property name="font">
+       <font>
+        <family>微软雅黑</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>关闭</string>
       </property>

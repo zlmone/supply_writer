@@ -10,12 +10,19 @@
 #include <QRegExpValidator>
 #include <QCryptographicHash>
 #include <QPainter>
+#include <QApplication>
+#include <QSettings>
+#include <QStyle>
+#include <QStyleFactory>
+#include <QTextCodec>
 
 #include "sqlchipinfo.h"
 #include "supplywriter.h"
 #include "helpdialog.h"
 
 #include "ui_supplywriter.h"
+
+SupplyWriter* writer;
 
 void SupplyWriter::init_market_area()
 {
@@ -55,7 +62,7 @@ void SupplyWriter::clear_main_page()
 
     ui->label_2->clear();
     ui->label_13->clear();
-    ui->radioButton_2->setChecked(true);
+//    ui->radioButton_2->setChecked(true);
 
     ui->label_44->setText(ui->username->text());
     ui->lineEdit_14->setFocus();
@@ -132,10 +139,12 @@ void SupplyWriter::clear_resetpwd_page1()
 //登录页面初始化
 void SupplyWriter::login_page_init()
 {
-    icon.addFile(QString::fromUtf8(":/images/cgprint.png"), QSize(), QIcon::Normal, QIcon::Off);
-    this->setWindowIcon(icon);
-    setFixedSize(this->width(), this->height());
+//    icon.addFile(QString::fromUtf8(":/images/cgprint.png"), QSize(), QIcon::Normal, QIcon::Off);
+//    this->setWindowIcon(icon);
+
+//    setFixedSize(this->width(), this->height());
     this->setWindowFlags(Qt::FramelessWindowHint);
+
 //    current_path = QCoreApplication::applicationDirPath();
 //    qDebug() << current_path;
 //    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
@@ -939,7 +948,7 @@ bool SupplyWriter::check_modelid_valid(QString modelid)
 
 bool SupplyWriter::check_serialno_valid(QString serialno)
 {
-    QRegExp rx4("^CGL?[0-9]{10}CGRX[ABCDFGHJKLMNPQRSTWXYZ][1-9A-C][1-9A-V][0-9]{4}$");
+    QRegExp rx4("^CGL?[0-9]{4}000[0-9]{3}CGRX[ABCDFGHJKLMNPQRSTWXYZ][1-9A-C][1-9A-V][0-9]{4}$");
     if (!rx4.exactMatch(serialno))
     {
         return false;
@@ -1061,30 +1070,23 @@ void SupplyWriter::statusReceived()
 //返回false表示离线，返回true表示在线
 bool SupplyWriter::check_server_status()
 {
-    tcpSocket[0] = new QTcpSocket(this);
+    if (tcpSocket[0] == NULL)
+        tcpSocket[0] = new QTcpSocket(this);
     this->server_status = _FAILED_STATUS;
     MsgHdr hdr;
 
     connect(tcpSocket[0], SIGNAL(connected()), this, SLOT(slotConnected()));
     connect(tcpSocket[0], SIGNAL(readyRead()), this, SLOT(statusReceived()));
-
-    if (tcpSocket[0]->isOpen() == true)
-    {
-        tcpSocket[0]->close();
-    }
     tcpSocket[0]->connectToHost(ui->lineEdit_1->text(), TCP_PORT, QIODevice::ReadWrite, QAbstractSocket::AnyIPProtocol);
 
-    if (server_status)
-    {
-        hdr.cmd = OP_GET_STATUS;
-        hdr.len = 0;
-        hdr.i2c_addr = 0;
+    hdr.cmd = OP_GET_STATUS;
+    hdr.len = 0;
+    hdr.i2c_addr = 0;
 
-        if (tcpSocket[0]->write((const char*)&hdr, sizeof(hdr)) == -1)
-        {
-            qDebug() << "send data failed";
-            return false;
-        }
+    if (tcpSocket[0]->write((const char*)&hdr, sizeof(hdr)) == -1)
+    {
+        qDebug() << "send data failed";
+        return false;
     }
 
     this->Sleep(100);
@@ -1499,9 +1501,9 @@ void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
     else
         ui->lineEdit_13->clear();
 
-    ui->lineEdit_12->setText("20");
+    ui->lineEdit_12->setText("10");
 
-    if (arg1.contains("L2090000045", Qt::CaseSensitive) ||
+    if (arg1.contains("L2100000107", Qt::CaseSensitive) ||
         arg1.contains("0301000259", Qt::CaseSensitive))
     {
         ui->lineEdit_2->setText("TL-341L");
@@ -1509,8 +1511,7 @@ void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
         goto THE_END;
     }
 
-    if (arg1.contains("L2090000046", Qt::CaseSensitive) ||
-        arg1.contains("0301000260", Qt::CaseSensitive))
+    if (arg1.contains("0301000260", Qt::CaseSensitive))
     {
         ui->lineEdit_2->setText("TL-341");
         ok_status = true;
@@ -1524,15 +1525,14 @@ void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
         goto THE_END;
     }
 
-    if (arg1.contains("L2090000052", Qt::CaseSensitive) ||
-        arg1.contains("0301000224", Qt::CaseSensitive))
+    if (arg1.contains("0301000224", Qt::CaseSensitive))
     {
         ui->lineEdit_2->setText("TL-340L");
         ok_status = true;
         goto THE_END;
     }
 
-    if (arg1.contains("L2090000053", Qt::CaseSensitive) ||
+    if (arg1.contains("L2100000022", Qt::CaseSensitive) ||
         arg1.contains("0301000223", Qt::CaseSensitive))
     {
         ui->lineEdit_2->setText("TL-340");
@@ -1554,7 +1554,7 @@ void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
         goto THE_END;
     }
 
-    if (arg1.contains("L2090000049", Qt::CaseSensitive) ||
+    if (arg1.contains("L2100000006", Qt::CaseSensitive) ||
         arg1.contains("0204000131", Qt::CaseSensitive))
     {
         ui->lineEdit_2->setText("DL-340");
@@ -1562,8 +1562,8 @@ void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
         goto THE_END;
     }
 
-    if (arg1.contains("L2090000051", Qt::CaseSensitive) ||
-        arg1.contains("0204000258", Qt::CaseSensitive))
+    if (arg1.contains("L2100000136", Qt::CaseSensitive) ||
+        arg1.contains("0301000258", Qt::CaseSensitive))
     {
         ui->lineEdit_2->setText("DL-341");
         ok_status = true;
@@ -1601,7 +1601,8 @@ THE_END:
 //治具IP地址修改时，检测是否能够连接到治具
 void SupplyWriter::on_lineEdit_1_textChanged(const QString &arg1)
 {
-    if (arg1.length() && checkIpValid(checkIPversion(arg1), arg1))
+    Q_UNUSED(arg1);
+    if (ui->lineEdit_1->text().length() && checkIpValid(checkIPversion(ui->lineEdit_1->text()), ui->lineEdit_1->text()))
     {
         if (tcpSocket[0])
         {
@@ -1619,12 +1620,17 @@ void SupplyWriter::on_lineEdit_1_textChanged(const QString &arg1)
             return;
         }
     }
-    else
+    else if (ui->lineEdit_1->text().length())
     {
         ui->label_2->setText("<p style=\"color:red;font-weight:bold\">IP地址不正确！</p>");
         ui->label_45->clear();
         ui->ReadDrumInfo->setEnabled(false);
         ui->ReadTonerInfo->setEnabled(false);
+    }
+    else
+    {
+        ui->label_2->clear();
+        ui->label_45->clear();
     }
 }
 
@@ -1807,7 +1813,7 @@ void SupplyWriter::update_connect_fixture()
 
     Update_FixtureStatus();
 }
-
+#if 0
 void SupplyWriter::on_radioButton_2_clicked()
 {
 //    qDebug() << "setting auto write mode" << working_mode;
@@ -1839,4 +1845,26 @@ void SupplyWriter::on_radioButton_clicked()
         return;
     else
         working_mode = _MANUAL_READ_MODE;
+}
+#endif
+int main(int argc, char **argv)
+{
+    QApplication a(argc, argv);
+    QApplication::setStyle(QStyleFactory::create("fusion"));
+
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+
+    QCoreApplication::setOrganizationName("SupplyWriter");
+    QCoreApplication::setApplicationName("user");
+
+    QSettings setting;
+    setting.setValue("desc", "supply writer user info");
+
+    qputenv("QT_SCALE_FACTOR", "1.5");
+
+    SupplyWriter w;
+    writer = &w;
+    w.show();
+
+    return a.exec();
 }

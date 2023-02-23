@@ -15,11 +15,21 @@ typedef unsigned int   uint32_t;
 
 //上位机发送给下位机的命令
 enum {
-    OP_WRITE_INFO,     //上位机写入耗材信息
+    OP_WRITE_INFO,           //上位机写入耗材信息
     OP_READ_TONER_INFO,      //上位机读取耗材信息
     OP_READ_DRUM_INFO,
+    OP_GET_STATUS,          //获取治具状态，返回治具上安装的耗材芯片状态
+    OP_GET_SUPPLY_INFO,     //获取耗材信息
 
-    OP_GET_STATUS,      //获取治具状态
+    OP_GET_STATE_LONGCONN,  //获取状态的长连接
+    OP_WRITE_BULK_INFO,     //批量写入耗材信息
+    OP_SEND_BULK_INFO,      //发送批量数据到治具
+    FIXTURE_TRIGGER_UP,         //抬起动作
+    RE_HEARTBEAT_SIGNAL,    //发送心跳包，维护长连接句柄有效性
+
+    OP_BROADCAST_UDP_REQUEST = 99,
+    OP_BROADCAST_UDP_RESP,
+    OP_HB_UDP_REQUEST,       //UDP的心跳包
 };
 
 //下位机的反馈

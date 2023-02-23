@@ -10,6 +10,12 @@
     <height>540</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>微软雅黑</family>
+    <pointsize>9</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>辰光融信 耗材写入工具</string>
   </property>
@@ -25,6 +31,15 @@
      <height>540</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
    <widget class="QWidget" name="loginpage">
     <widget class="QLabel" name="title_label">
      <property name="geometry">
@@ -34,6 +49,12 @@
        <width>380</width>
        <height>540</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+       <pointsize>10</pointsize>
+      </font>
      </property>
      <property name="text">
       <string/>
@@ -50,6 +71,12 @@
        <width>340</width>
        <height>460</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+       <pointsize>10</pointsize>
+      </font>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_9">
       <property name="bottomMargin">
@@ -68,6 +95,12 @@
         </property>
         <item>
          <widget class="QLabel" name="logo_label">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -78,6 +111,12 @@
         </item>
         <item>
          <widget class="QLabel" name="label_18">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>欢迎使用</string>
           </property>
@@ -91,6 +130,12 @@
         </item>
         <item>
          <widget class="QLabel" name="label_20">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>辰光融信 耗材写入工具</string>
           </property>
@@ -101,6 +146,12 @@
         </item>
         <item>
          <spacer name="verticalSpacer">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
@@ -114,6 +165,12 @@
         </item>
         <item>
          <widget class="QLabel" name="label_17">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>登录</string>
           </property>
@@ -124,6 +181,12 @@
         </item>
         <item>
          <widget class="QLineEdit" name="username">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="maxLength">
            <number>32</number>
           </property>
@@ -134,6 +197,12 @@
         </item>
         <item>
          <widget class="QLineEdit" name="password">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="maxLength">
            <number>32</number>
           </property>
@@ -146,6 +215,12 @@
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
            <spacer name="horizontalSpacer_4">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -159,6 +234,12 @@
           </item>
           <item>
            <widget class="QPushButton" name="LoginButton">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>登录</string>
             </property>
@@ -169,6 +250,12 @@
           </item>
           <item>
            <widget class="QPushButton" name="CreateUser">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>创建用户</string>
             </property>
@@ -179,6 +266,12 @@
           </item>
           <item>
            <spacer name="horizontalSpacer_5">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -194,6 +287,12 @@
         </item>
         <item>
          <widget class="QLabel" name="label_21">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -212,6 +311,12 @@
           </property>
           <item>
            <spacer name="horizontalSpacer_16">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -228,6 +333,12 @@
             <property name="enabled">
              <bool>true</bool>
             </property>
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>深色模式</string>
             </property>
@@ -235,6 +346,12 @@
           </item>
           <item>
            <spacer name="horizontalSpacer_17">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -265,6 +382,12 @@
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
            <spacer name="horizontalSpacer_6">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -278,6 +401,12 @@
           </item>
           <item>
            <widget class="QPushButton" name="ExitButton">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>关闭</string>
             </property>
@@ -288,6 +417,12 @@
           </item>
           <item>
            <widget class="QPushButton" name="ModifyPassword">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>修改密码</string>
             </property>
@@ -298,6 +433,12 @@
           </item>
           <item>
            <widget class="QPushButton" name="ResetPassword">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>重置密码</string>
             </property>
@@ -308,6 +449,12 @@
           </item>
           <item>
            <spacer name="horizontalSpacer_7">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -323,6 +470,12 @@
         </item>
         <item>
          <widget class="QLabel" name="label_19">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>辰光融信 版权所有 2022 V2.0  by youshun</string>
           </property>
@@ -337,177 +490,75 @@
     </widget>
    </widget>
    <widget class="QWidget" name="mainpage">
-    <widget class="QWidget" name="layoutWidget_2">
+    <widget class="QWidget" name="verticalLayoutWidget_8">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>495</y>
+       <y>0</y>
        <width>720</width>
-       <height>36</height>
+       <height>540</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,0,0,0,0">
-      <property name="spacing">
-       <number>6</number>
-      </property>
-      <property name="leftMargin">
-       <number>12</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>12</number>
-      </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="QLabel" name="label_42">
-        <property name="text">
-         <string>辰光融信 耗材写入工具  操作员：</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_44">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="CloseButton">
-        <property name="text">
-         <string>关闭</string>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton">
-        <property name="toolTip">
-         <string>最小化到右下角托盘栏</string>
-        </property>
-        <property name="text">
-         <string>最小化</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="AboutButton">
-        <property name="toolTip">
-         <string>关于本软件</string>
-        </property>
-        <property name="text">
-         <string>关于</string>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="HelpButton">
-        <property name="toolTip">
-         <string>获取本软件帮助信息</string>
-        </property>
-        <property name="text">
-         <string>帮助</string>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="horizontalLayoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>15</y>
-       <width>720</width>
-       <height>470</height>
-      </rect>
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+       <pointsize>10</pointsize>
+      </font>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="17,13">
-      <property name="spacing">
-       <number>12</number>
-      </property>
+     <layout class="QVBoxLayout" name="verticalLayout_12">
       <property name="leftMargin">
-       <number>12</number>
+       <number>8</number>
       </property>
       <property name="topMargin">
-       <number>4</number>
+       <number>8</number>
       </property>
       <property name="rightMargin">
-       <number>4</number>
+       <number>8</number>
       </property>
       <property name="bottomMargin">
-       <number>4</number>
+       <number>2</number>
       </property>
       <item>
-       <widget class="QGroupBox" name="groupBox">
-        <property name="minimumSize">
-         <size>
-          <width>150</width>
-          <height>0</height>
-         </size>
+       <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="7,0,5">
+        <property name="spacing">
+         <number>8</number>
         </property>
-        <property name="font">
-         <font>
-          <weight>50</weight>
-          <italic>false</italic>
-          <bold>false</bold>
-         </font>
+        <property name="leftMargin">
+         <number>0</number>
         </property>
-        <property name="autoFillBackground">
-         <bool>false</bool>
+        <property name="topMargin">
+         <number>0</number>
         </property>
-        <property name="title">
-         <string>耗材基本信息</string>
+        <property name="rightMargin">
+         <number>0</number>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        <property name="bottomMargin">
+         <number>0</number>
         </property>
-        <property name="flat">
-         <bool>false</bool>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-        <widget class="QWidget" name="verticalLayoutWidget_9">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>20</y>
-           <width>370</width>
-           <height>421</height>
-          </rect>
-         </property>
+        <item>
          <layout class="QVBoxLayout" name="verticalLayout_10">
           <property name="spacing">
            <number>8</number>
           </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
           <property name="bottomMargin">
            <number>0</number>
           </property>
+          <item>
+           <widget class="QLabel" name="label_48">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>耗材基本信息</string>
+            </property>
+           </widget>
+          </item>
           <item>
            <layout class="QGridLayout" name="gridLayout" rowstretch="1,1,1,1,1,1,1,1,1,1" columnstretch="1,3" rowminimumheight="1,1,1,1,1,1,1,1,1,1" columnminimumwidth="1,2">
             <property name="sizeConstraint">
@@ -530,6 +581,12 @@
             </property>
             <item row="6" column="0">
              <widget class="QLabel" name="label_8">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>商标</string>
               </property>
@@ -540,6 +597,12 @@
             </item>
             <item row="1" column="1">
              <widget class="QLineEdit" name="lineEdit_3">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="maxLength">
                <number>31</number>
               </property>
@@ -550,6 +613,12 @@
             </item>
             <item row="9" column="0">
              <widget class="QLabel" name="label_3">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>不计数页数</string>
               </property>
@@ -560,6 +629,12 @@
             </item>
             <item row="8" column="1">
              <widget class="QLineEdit" name="lineEdit_11">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="maxLength">
                <number>3</number>
               </property>
@@ -573,6 +648,12 @@
             </item>
             <item row="6" column="1">
              <widget class="QComboBox" name="comboBox_4">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="toolTip">
                <string>选择耗材商标</string>
               </property>
@@ -580,6 +661,12 @@
             </item>
             <item row="2" column="0">
              <widget class="QLabel" name="label_5">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>销售国家或地区</string>
               </property>
@@ -590,6 +677,12 @@
             </item>
             <item row="5" column="0">
              <widget class="QLabel" name="label_6">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="layoutDirection">
                <enum>Qt::LeftToRight</enum>
               </property>
@@ -603,6 +696,12 @@
             </item>
             <item row="3" column="0">
              <widget class="QLabel" name="label_11">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>生产日期</string>
               </property>
@@ -613,6 +712,12 @@
             </item>
             <item row="0" column="1">
              <widget class="QLineEdit" name="lineEdit_2">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="maxLength">
                <number>15</number>
               </property>
@@ -626,6 +731,12 @@
             </item>
             <item row="7" column="0">
              <widget class="QLabel" name="label_7">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>售卖类型</string>
               </property>
@@ -636,6 +747,12 @@
             </item>
             <item row="5" column="1">
              <widget class="QComboBox" name="comboBox_3">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="toolTip">
                <string>选择耗材厂商名称</string>
               </property>
@@ -643,6 +760,12 @@
             </item>
             <item row="4" column="0">
              <widget class="QLabel" name="label_47">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>容量（总页数）</string>
               </property>
@@ -653,6 +776,12 @@
             </item>
             <item row="0" column="0">
              <widget class="QLabel" name="label_4">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>型号</string>
               </property>
@@ -663,6 +792,12 @@
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="label_12">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>序列号</string>
               </property>
@@ -672,10 +807,23 @@
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="QDateEdit" name="dateEdit"/>
+             <widget class="QDateEdit" name="dateEdit">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+             </widget>
             </item>
             <item row="8" column="0">
              <widget class="QLabel" name="label_49">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>超出打印页数</string>
               </property>
@@ -686,6 +834,12 @@
             </item>
             <item row="2" column="1">
              <widget class="QLineEdit" name="lineEdit_7">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>CN</string>
               </property>
@@ -699,6 +853,12 @@
             </item>
             <item row="4" column="1">
              <widget class="QLineEdit" name="lineEdit_6">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="maxLength">
                <number>32</number>
               </property>
@@ -709,6 +869,12 @@
             </item>
             <item row="9" column="1">
              <widget class="QLineEdit" name="lineEdit_12">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="maxLength">
                <number>3</number>
               </property>
@@ -722,6 +888,12 @@
             </item>
             <item row="7" column="1">
              <widget class="QLineEdit" name="lineEdit_13">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="maxLength">
                <number>32</number>
               </property>
@@ -737,6 +909,12 @@
           </item>
           <item>
            <spacer name="verticalSpacer_2">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
@@ -748,100 +926,58 @@
             </property>
            </spacer>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_12">
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <spacer name="horizontalSpacer_18">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <layout class="QVBoxLayout" name="verticalLayout_12">
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QRadioButton" name="radioButton">
-                <property name="toolTip">
-                 <string>查询数据库及治具上耗材芯片信息</string>
-                </property>
-                <property name="text">
-                 <string>查询模式</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="radioButton_2">
-                <property name="toolTip">
-                 <string>自动写入数据库及治具所载耗材芯片</string>
-                </property>
-                <property name="text">
-                 <string>写入模式</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </item>
          </layout>
-        </widget>
-       </widget>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="7,5">
-        <property name="spacing">
-         <number>12</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>8</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
+        </item>
         <item>
-         <widget class="QGroupBox" name="groupBox_3">
-          <property name="title">
-           <string>数据库服务器信息</string>
+         <widget class="Line" name="line">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
           </property>
-          <widget class="QWidget" name="verticalLayoutWidget_4">
-           <property name="geometry">
-            <rect>
-             <x>10</x>
-             <y>20</y>
-             <width>270</width>
-             <height>230</height>
-            </rect>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_4" stretch="4,1,0">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0">
+          <property name="spacing">
+           <number>8</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_50">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>数据库信息</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,0">
             <property name="leftMargin">
-             <number>4</number>
+             <number>0</number>
             </property>
             <property name="topMargin">
              <number>0</number>
@@ -874,6 +1010,12 @@
               </property>
               <item row="0" column="1">
                <widget class="QLineEdit" name="lineEdit_14">
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="maxLength">
                  <number>64</number>
                 </property>
@@ -884,6 +1026,12 @@
               </item>
               <item row="0" column="0">
                <widget class="QLabel" name="label_10">
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>IP地址</string>
                 </property>
@@ -894,6 +1042,12 @@
               </item>
               <item row="1" column="1">
                <widget class="QLineEdit" name="lineEdit">
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string/>
                 </property>
@@ -907,6 +1061,12 @@
               </item>
               <item row="3" column="1">
                <widget class="QLineEdit" name="lineEdit_5">
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="maxLength">
                  <number>32</number>
                 </property>
@@ -917,6 +1077,12 @@
               </item>
               <item row="2" column="0">
                <widget class="QLabel" name="label_15">
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>密码</string>
                 </property>
@@ -927,6 +1093,12 @@
               </item>
               <item row="1" column="0">
                <widget class="QLabel" name="label">
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>用户名</string>
                 </property>
@@ -937,6 +1109,12 @@
               </item>
               <item row="2" column="1">
                <widget class="QLineEdit" name="lineEdit_4">
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="autoFillBackground">
                  <bool>false</bool>
                 </property>
@@ -947,6 +1125,12 @@
               </item>
               <item row="3" column="0">
                <widget class="QLabel" name="label_16">
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>数据源</string>
                 </property>
@@ -957,6 +1141,12 @@
               </item>
               <item row="4" column="0">
                <widget class="QLabel" name="label_14">
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;状态：&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
@@ -969,6 +1159,8 @@
                <widget class="QLabel" name="label_13">
                 <property name="font">
                  <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
                  </font>
@@ -987,6 +1179,12 @@
               </property>
               <item>
                <widget class="QLabel" name="label_46">
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string/>
                 </property>
@@ -994,6 +1192,12 @@
               </item>
               <item>
                <spacer name="horizontalSpacer_2">
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
@@ -1021,6 +1225,12 @@
                 </property>
                 <item row="1" column="0">
                  <widget class="QPushButton" name="QuerySqlButton">
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>10</pointsize>
+                   </font>
+                  </property>
                   <property name="toolTip">
                    <string>根据输入的序列号查询数据库中耗材信息</string>
                   </property>
@@ -1034,6 +1244,12 @@
                 </item>
                 <item row="2" column="0">
                  <widget class="QPushButton" name="DeleteSqlButton">
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>10</pointsize>
+                   </font>
+                  </property>
                   <property name="toolTip">
                    <string>根据输入的序列号删除数据库中记录</string>
                   </property>
@@ -1051,6 +1267,12 @@
             </item>
             <item>
              <spacer name="verticalSpacer_4">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -1063,29 +1285,40 @@
              </spacer>
             </item>
            </layout>
-          </widget>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupBox_4">
-          <property name="title">
-           <string>治具设备信息</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-          <widget class="QWidget" name="verticalLayoutWidget_5">
-           <property name="geometry">
-            <rect>
-             <x>10</x>
-             <y>20</y>
-             <width>270</width>
-             <height>150</height>
-            </rect>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_5" stretch="2,1,0">
+          </item>
+          <item>
+           <widget class="Line" name="line_2">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_51">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>治具信息</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,0,0">
             <property name="leftMargin">
-             <number>4</number>
+             <number>0</number>
             </property>
             <property name="topMargin">
              <number>0</number>
@@ -1118,6 +1351,12 @@
               </property>
               <item row="0" column="1">
                <widget class="QLineEdit" name="lineEdit_1">
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="maxLength">
                  <number>64</number>
                 </property>
@@ -1128,6 +1367,12 @@
               </item>
               <item row="0" column="0">
                <widget class="QLabel" name="label_1">
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>IP地址</string>
                 </property>
@@ -1138,6 +1383,12 @@
               </item>
               <item row="1" column="0">
                <widget class="QLabel" name="label_9">
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;状态：&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
@@ -1150,6 +1401,8 @@
                <widget class="QLabel" name="label_2">
                 <property name="font">
                  <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
                  </font>
@@ -1168,6 +1421,12 @@
               </property>
               <item>
                <widget class="QLabel" name="label_45">
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string/>
                 </property>
@@ -1175,6 +1434,12 @@
               </item>
               <item>
                <spacer name="horizontalSpacer_3">
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
@@ -1202,6 +1467,12 @@
                 </property>
                 <item row="1" column="0">
                  <widget class="QPushButton" name="ReadTonerInfo">
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>10</pointsize>
+                   </font>
+                  </property>
                   <property name="toolTip">
                    <string>读出治具上粉盒芯片信息</string>
                   </property>
@@ -1215,6 +1486,12 @@
                 </item>
                 <item row="2" column="0">
                  <widget class="QPushButton" name="ReadDrumInfo">
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>10</pointsize>
+                   </font>
+                  </property>
                   <property name="toolTip">
                    <string>读出治具上鼓组件芯片信息</string>
                   </property>
@@ -1229,6 +1506,12 @@
             </item>
             <item>
              <spacer name="verticalSpacer_3">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -1241,7 +1524,141 @@
              </spacer>
             </item>
            </layout>
-          </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,0,0,0,0">
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="label_42">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>辰光融信 耗材写入工具  操作员：</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_44">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="CloseButton">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>关闭</string>
+          </property>
+          <property name="autoDefault">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>最小化到右下角托盘栏</string>
+          </property>
+          <property name="text">
+           <string>最小化</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="AboutButton">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>关于本软件</string>
+          </property>
+          <property name="text">
+           <string>关于</string>
+          </property>
+          <property name="autoDefault">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="HelpButton">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>获取本软件帮助信息</string>
+          </property>
+          <property name="text">
+           <string>帮助</string>
+          </property>
+          <property name="autoDefault">
+           <bool>false</bool>
+          </property>
          </widget>
         </item>
        </layout>
@@ -1258,6 +1675,12 @@
        <width>340</width>
        <height>400</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+       <pointsize>10</pointsize>
+      </font>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <property name="spacing">
@@ -1277,6 +1700,12 @@
       </property>
       <item>
        <widget class="QLabel" name="label_25">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -1287,6 +1716,12 @@
       </item>
       <item>
        <widget class="QLabel" name="label_23">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>辰光融信 耗材写入工具</string>
         </property>
@@ -1297,6 +1732,12 @@
       </item>
       <item>
        <spacer name="verticalSpacer_5">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
@@ -1310,6 +1751,12 @@
       </item>
       <item>
        <widget class="QLabel" name="label_22">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>用户注册</string>
         </property>
@@ -1323,6 +1770,12 @@
       </item>
       <item>
        <widget class="QLineEdit" name="lineEdit_8">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="maxLength">
          <number>32</number>
         </property>
@@ -1333,6 +1786,12 @@
       </item>
       <item>
        <widget class="QLineEdit" name="lineEdit_9">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="maxLength">
          <number>32</number>
         </property>
@@ -1343,6 +1802,12 @@
       </item>
       <item>
        <widget class="QLineEdit" name="lineEdit_10">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="maxLength">
          <number>32</number>
         </property>
@@ -1355,6 +1820,12 @@
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <item>
          <spacer name="horizontalSpacer_8">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -1368,6 +1839,12 @@
         </item>
         <item>
          <widget class="QPushButton" name="Return">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>返回</string>
           </property>
@@ -1378,6 +1855,12 @@
         </item>
         <item>
          <widget class="QPushButton" name="Confirm">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>确定</string>
           </property>
@@ -1388,6 +1871,12 @@
         </item>
         <item>
          <spacer name="horizontalSpacer_9">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -1403,6 +1892,12 @@
       </item>
       <item>
        <widget class="QLabel" name="label_26">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -1422,6 +1917,12 @@
        <height>540</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -1437,6 +1938,12 @@
        <height>540</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -1450,6 +1957,12 @@
        <height>400</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <layout class="QVBoxLayout" name="verticalLayout_6">
       <property name="spacing">
        <number>12</number>
@@ -1462,6 +1975,12 @@
       </property>
       <item>
        <widget class="QLabel" name="label_28">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -1472,6 +1991,12 @@
       </item>
       <item>
        <widget class="QLabel" name="label_29">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>辰光融信 耗材写入工具</string>
         </property>
@@ -1482,6 +2007,12 @@
       </item>
       <item>
        <spacer name="verticalSpacer_6">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
@@ -1495,6 +2026,12 @@
       </item>
       <item>
        <widget class="QLabel" name="label_30">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>修改密码</string>
         </property>
@@ -1505,6 +2042,12 @@
       </item>
       <item>
        <widget class="QLineEdit" name="lineEdit_15">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="maxLength">
          <number>32</number>
         </property>
@@ -1515,6 +2058,12 @@
       </item>
       <item>
        <widget class="QLineEdit" name="lineEdit_16">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="maxLength">
          <number>32</number>
         </property>
@@ -1525,6 +2074,12 @@
       </item>
       <item>
        <widget class="QLineEdit" name="lineEdit_17">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="maxLength">
          <number>32</number>
         </property>
@@ -1535,6 +2090,12 @@
       </item>
       <item>
        <widget class="QLineEdit" name="lineEdit_18">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="maxLength">
          <number>32</number>
         </property>
@@ -1547,6 +2108,12 @@
        <layout class="QHBoxLayout" name="horizontalLayout_8">
         <item>
          <spacer name="horizontalSpacer_10">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -1560,6 +2127,12 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_2">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>取消</string>
           </property>
@@ -1570,6 +2143,12 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_3">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>确定</string>
           </property>
@@ -1580,6 +2159,12 @@
         </item>
         <item>
          <spacer name="horizontalSpacer_11">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -1595,6 +2180,12 @@
       </item>
       <item>
        <widget class="QLabel" name="label_31">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -1616,6 +2207,12 @@
        <height>540</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -1629,6 +2226,12 @@
        <height>540</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <widget class="QWidget" name="page">
       <widget class="QWidget" name="verticalLayoutWidget_6">
        <property name="geometry">
@@ -1638,6 +2241,12 @@
          <width>340</width>
          <height>400</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_7">
         <property name="spacing">
@@ -1651,6 +2260,12 @@
         </property>
         <item>
          <widget class="QLabel" name="label_33">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -1661,6 +2276,12 @@
         </item>
         <item>
          <widget class="QLabel" name="label_34">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>辰光融信 耗材写入工具</string>
           </property>
@@ -1671,6 +2292,12 @@
         </item>
         <item>
          <spacer name="verticalSpacer_7">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
@@ -1684,6 +2311,12 @@
         </item>
         <item>
          <widget class="QLabel" name="label_35">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>重置密码 身份验证</string>
           </property>
@@ -1694,6 +2327,12 @@
         </item>
         <item>
          <widget class="QLineEdit" name="lineEdit_19">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="maxLength">
            <number>32</number>
           </property>
@@ -1711,10 +2350,23 @@
            <number>8</number>
           </property>
           <item row="0" column="1">
-           <widget class="QDateEdit" name="dateEdit_2"/>
+           <widget class="QDateEdit" name="dateEdit_2">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+           </widget>
           </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_36">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>账户创建日期</string>
             </property>
@@ -1722,13 +2374,26 @@
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_37">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>最近使用日期</string>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDateEdit" name="dateEdit_3"/>
+           <widget class="QDateEdit" name="dateEdit_3">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -1736,6 +2401,12 @@
          <layout class="QHBoxLayout" name="horizontalLayout_9">
           <item>
            <spacer name="horizontalSpacer_12">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -1749,6 +2420,12 @@
           </item>
           <item>
            <widget class="QPushButton" name="pushButton_6">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>返回</string>
             </property>
@@ -1759,6 +2436,12 @@
           </item>
           <item>
            <widget class="QPushButton" name="pushButton_8">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>确认</string>
             </property>
@@ -1769,6 +2452,12 @@
           </item>
           <item>
            <spacer name="horizontalSpacer_13">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -1784,6 +2473,12 @@
         </item>
         <item>
          <widget class="QLabel" name="label_41">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string/>
           </property>

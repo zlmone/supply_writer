@@ -100,8 +100,8 @@ private slots:
 
     void on_pushButton_clicked();
     void on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason);
-    void on_radioButton_2_clicked();
-    void on_radioButton_clicked();
+//    void on_radioButton_2_clicked();
+//    void on_radioButton_clicked();
     void slotGetDBStatus(quint8 _odbc_status);
     void update_connect_fixture();
 
