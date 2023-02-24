@@ -18,8 +18,6 @@
 
 #include "sqlchipinfo.h"
 #include "supplywriter.h"
-#include "helpdialog.h"
-
 #include "ui_supplywriter.h"
 
 SupplyWriter* writer;
@@ -139,11 +137,14 @@ void SupplyWriter::clear_resetpwd_page1()
 //登录页面初始化
 void SupplyWriter::login_page_init()
 {
+    setWindowFlags(Qt::WindowMinimizeButtonHint |
+                   Qt::WindowMaximizeButtonHint |
+                   Qt::WindowCloseButtonHint);
 //    icon.addFile(QString::fromUtf8(":/images/cgprint.png"), QSize(), QIcon::Normal, QIcon::Off);
 //    this->setWindowIcon(icon);
 
 //    setFixedSize(this->width(), this->height());
-    this->setWindowFlags(Qt::FramelessWindowHint);
+//    this->setWindowFlags(Qt::FramelessWindowHint);
 
 //    current_path = QCoreApplication::applicationDirPath();
 //    qDebug() << current_path;
@@ -167,12 +168,13 @@ void SupplyWriter::login_page_init()
 
     ui->password->setEchoMode(QLineEdit::Password);
     ui->LoginButton->setDefault(true);
+    this->update_timestamp();
 }
 
 //耗材信息页面初始化
 void SupplyWriter::main_page_init()
 {
-    ui->dateEdit->setEnabled(false);
+//    ui->dateEdit->setEnabled(false);
 
     ui->lineEdit_2->setFocusPolicy(Qt::NoFocus);
     ui->lineEdit_6->setFocusPolicy(Qt::NoFocus);
@@ -182,7 +184,7 @@ void SupplyWriter::main_page_init()
     ui->lineEdit_13->setFocusPolicy(Qt::NoFocus);
 
     this->init_market_area();
-    ui->dateEdit->setDate(QDate::currentDate());
+//    ui->dateEdit->setDate(QDate::currentDate());
 
     this->setTabOrder(ui->lineEdit_14, ui->lineEdit);
     this->setTabOrder(ui->lineEdit, ui->lineEdit_4);
@@ -199,9 +201,17 @@ void SupplyWriter::main_page_init()
     ui->QuerySqlButton->setEnabled(false);
     ui->DeleteSqlButton->setEnabled(false);
 
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(update_connect_fixture()));
-    timer->start(3000);
+    timer[0] = new QTimer(this);
+    timer[1] = new QTimer(this);
+    timer[2] = new QTimer(this);
+
+    connect(timer[0], SIGNAL(timeout()), this, SLOT(update_connect_fixture()));
+    connect(timer[1], SIGNAL(timeout()), this, SLOT(scan_the_fixtures()));
+    connect(timer[2], SIGNAL(timeout()), this, SLOT(check_fixture_online()));
+
+    timer[0]->start(3000);
+    timer[1]->start(3000);
+    timer[2]->start(3000);
 }
 
 //创建用户页面初始化
@@ -393,10 +403,13 @@ SupplyWriter::~SupplyWriter()
     if (tcpSocket[1])
         delete tcpSocket[1];
 
-    if (trayIcon)
-        delete trayIcon;
+//    if (trayIcon)
+//        delete trayIcon;
 
-    delete timer;
+    delete timer[0];
+    delete timer[1];
+    delete timer[2];
+
     delete player;
     delete ui;
 }
@@ -728,11 +741,23 @@ void SupplyWriter::open_sql_server()
     if (db.open()) {
         ui->label_13->setText("<p style=\"color:green;font-weight:bold\">连接成功！</p>");
         odbc_status = _SUCCESS_STATUS;
+        if (ui->lineEdit_22->text().length())
+        {
+            ui->QuerySqlButton->setEnabled(true);
+            ui->DeleteSqlButton->setEnabled(true);
+        }
+        else
+        {
+            ui->QuerySqlButton->setEnabled(false);
+            ui->DeleteSqlButton->setEnabled(false);
+        }
         return;
     } else {
         ui->label_13->setText("<p style=\"color:red;font-weight:bold\">连接失败！</p>");
 //        qDebug()<<"error open database because"<<db.lastError().text();
         odbc_status = _FAILED_STATUS;
+        ui->QuerySqlButton->setEnabled(false);
+        ui->DeleteSqlButton->setEnabled(false);
         return;
     }
 }
@@ -742,7 +767,7 @@ bool SupplyWriter::Insert_SupplyInfo_Sql()
 {
     bool ret = _FAILED_STATUS;
 
-    open_sql_server();
+//    open_sql_server();
     if (odbc_status == _FAILED_STATUS)
     {
         return ret;
@@ -809,7 +834,7 @@ void SupplyWriter::on_QuerySqlButton_clicked()
 {
     int num = 0;
 
-    open_sql_server();
+//    open_sql_server();
     if (odbc_status == _FAILED_STATUS)
     {
         return;
@@ -818,7 +843,7 @@ void SupplyWriter::on_QuerySqlButton_clicked()
     struct cgprintech_supply_sqlinfo ChipInfo;
     QString sqlcmd = QString("select model_id,serial_no,marketing_area,year,month,day,manufacturer,trade_mark,"
                              "type,pages,dots,overflow_pages,overflow_percent,free_pages,operator from %1.%2 "
-                             "where serial_no='%3'").arg(DATABASE_NAME).arg(TABLE_NAME).arg(ui->lineEdit_3->text());
+                             "where serial_no='%3'").arg(DATABASE_NAME).arg(TABLE_NAME).arg(ui->lineEdit_22->text());
 //    qDebug() << sqlcmd;
     query = QSqlQuery(this->db);
     if (!query.exec(sqlcmd))
@@ -903,9 +928,9 @@ void SupplyWriter::fill_supplyinfo_data()
     Pack16(supply_info.beyond_pages, ui->lineEdit_11->text().toUInt());
     Pack16(supply_info.free_pages, ui->lineEdit_12->text().toUInt());
 
-    year = ui->dateEdit->date().year();
-    month = ui->dateEdit->date().month();
-    day = ui->dateEdit->date().day();
+//    year = ui->dateEdit->date().year();
+//    month = ui->dateEdit->date().month();
+//    day = ui->dateEdit->date().day();
     sprintf(date, "%04d%02d%02d", year, month, day);
     this->StringToHex(date, supply_info.product_date, &len);
 
@@ -915,7 +940,7 @@ void SupplyWriter::fill_supplyinfo_data()
 //粉盒耗材信息回读
 void SupplyWriter::on_ReadTonerInfo_clicked()
 {
-    check_server_status();
+//    check_server_status();
     if (this->server_status == _FAILED_STATUS)
         return;
 
@@ -927,7 +952,7 @@ void SupplyWriter::on_ReadTonerInfo_clicked()
 //鼓组件芯片信息回读
 void SupplyWriter::on_ReadDrumInfo_clicked()
 {
-    check_server_status();
+//    check_server_status();
     if (this->server_status == _FAILED_STATUS)
         return;
 
@@ -1093,38 +1118,154 @@ bool SupplyWriter::check_server_status()
     return server_status;
 }
 
-//关于按钮
-void SupplyWriter::on_AboutButton_clicked()
+void SupplyWriter::update_timestamp()
 {
-    QDate date = QDate::fromString("20221210", "yyyyMMdd");
+    QDate date = QDate::currentDate();
+    year = date.year();
+    month = date.month();
+    day = date.day();
 
-    QString info = QString("软件版本：v2.2\n"
-                           "编译时间：%1\n"
-                           "基于 Qt 5.14.2 开发 by youshun\n\n"
-                           "本软件 仅用于辰光融信写入耗材出厂信息，严禁外泄\n"
-                           "辰光融信技术有限公司 版权所有\n").arg(date.toString("yyyy-MM-dd"));
-
-    QMessageBox::about(this, tr("关于 耗材写入工具"), info);
+    QString datestring = QString("%1-%2-%3").arg(year).arg(month).arg(day);
+    ui->date_label->setText(datestring);
 }
 
-//关闭对话框
-void SupplyWriter::on_CloseButton_clicked()
+void SupplyWriter::udp_data_recv()
 {
-    this->accept();
+    BcInfoResp resp;
+    qint64 length;
+
+    while(udpSocket[0]->hasPendingDatagrams())
+    {
+        QByteArray datagram;
+        length = udpSocket[0]->pendingDatagramSize();
+
+        datagram.resize(udpSocket[0]->pendingDatagramSize());
+        udpSocket[0]->readDatagram(datagram.data(), datagram.size());
+        memcpy(&resp, datagram.data(), length);
+
+        if (resp.resp.cmd == OP_BROADCAST_UDP_RESP)
+        {
+            bool flag = false;
+            QString ipaddr = QString("%1").arg(resp.ipaddr);
+
+            if (ui->RecommendFixtures->count() == 0)
+            {
+                ui->RecommendFixtures->addItem(ipaddr);
+            }
+            else
+            {
+                for (quint8 jj = 0; jj < ui->RecommendFixtures->count(); jj++)
+                {
+                    if (ui->RecommendFixtures->item(jj)->text().compare(ipaddr, Qt::CaseSensitive) == 0)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+
+                if (flag == false)
+                    ui->RecommendFixtures->addItem(ipaddr);
+            }
+        }
+    }
 }
 
-//展示帮助信息
-void SupplyWriter::on_HelpButton_clicked()
+void SupplyWriter::scan_the_fixtures()
 {
-    HelpDialog* help = new HelpDialog();
-    emit sendThemeMode(this->theme_state);
-    help->show();
+//    if (is_done)
+//    {
+//        timer[3]->stop();
+//        return;
+//    }
+
+    //发送嗅探治具的广播报文，治具收到后回复自身IP地址
+    if (udpSocket[0] == NULL)
+    {
+        udpSocket[0] = new QUdpSocket(this);
+        connect(udpSocket[0], SIGNAL(readyRead()), this, SLOT(udp_data_recv()));
+        bool ret = udpSocket[0]->bind(BC_UDP_PORT);
+        if (!ret)
+            return;
+    }
+
+    MsgHdr hdr;
+    hdr.cmd = OP_BROADCAST_UDP_REQUEST;
+    hdr.len = 0;
+    hdr.i2c_addr = 0;
+
+    udpSocket[0]->writeDatagram((char*)&hdr, sizeof(MsgHdr), QHostAddress::Broadcast, BC_UDP_PORT);
+}
+
+void SupplyWriter::udp_hb_recv()
+{
+    RespInfo resp;
+    qint64 length;
+
+    while(udpSocket[1]->hasPendingDatagrams())
+    {
+        QByteArray datagram;
+        length = udpSocket[1]->pendingDatagramSize();
+
+        datagram.resize(udpSocket[1]->pendingDatagramSize());
+        udpSocket[1]->readDatagram(datagram.data(), datagram.size());
+        memcpy(&resp, datagram.data(), length);
+
+        if (resp.cmd == OP_HB_UDP_REQUEST)
+            udp_hb_status = true;
+    }
+}
+
+void SupplyWriter::send_udp_hb_pack(QString ipaddr)
+{
+    if (udpSocket[1] == NULL)
+    {
+        udpSocket[1] = new QUdpSocket(this);
+        connect(udpSocket[1], SIGNAL(readyRead()), this, SLOT(udp_hb_recv()));
+        bool ret = udpSocket[1]->bind(HB_UDP_PORT);
+        if (!ret)
+            return;
+    }
+
+    MsgHdr hdr;
+    hdr.cmd = OP_HB_UDP_REQUEST;
+    hdr.len = 0;
+    hdr.i2c_addr = 0;
+
+    udpSocket[1]->writeDatagram((char*)&hdr, sizeof(MsgHdr), QHostAddress(ipaddr), HB_UDP_PORT);
+}
+
+void SupplyWriter::check_fixture_online()
+{
+//    qDebug() << __func__ << ui->RecommendFixtures->count();
+    if (ui->RecommendFixtures->count() == 0)
+        return;
+
+    int jj = ui->RecommendFixtures->count() - 1;
+    do {
+        udp_hb_status = false;
+        send_udp_hb_pack(ui->RecommendFixtures->item(jj)->text());
+        Sleep(500);
+        if (udp_hb_status)
+        {
+//            qDebug() << jj << ui->RecommendFixtures->item(jj)->text() << "is online";
+        }
+        else
+        {
+//            qDebug() << jj << ui->RecommendFixtures->item(jj)->text() << "is offline";
+            ui->RecommendFixtures->takeItem(jj);
+        }
+
+        if (jj == 0)
+            break;
+
+        jj--;
+    } while(1);
 }
 
 //删除记录，根据序列号
 void SupplyWriter::on_DeleteSqlButton_clicked()
 {
-    open_sql_server();
+//    open_sql_server();
     if (odbc_status == _FAILED_STATUS)
     {
         ui->label_13->setText("<p style=\"color:red;font-weight:bold\">数据库连接失败！</p>");
@@ -1177,12 +1318,6 @@ void SupplyWriter::on_LoginButton_clicked()
     this->clear_main_page();
     ui->stackedWidget->setCurrentIndex(1);
 //    this->create_start_monitor();
-}
-
-//退出界面
-void SupplyWriter::on_ExitButton_clicked()
-{
-    this->accept();
 }
 
 //创建用户
@@ -1586,9 +1721,9 @@ THE_END:
                     return;
                 }
 
-                timer->stop();
+                timer[0]->stop();
                 write_supplyinfo2chip();
-                timer->start(3000);
+                timer[0]->start(3000);
             }
         }
     }
@@ -1711,7 +1846,7 @@ void SupplyWriter::Update_FixtureStatus()
         ui->label_45->setText("<p style=\"color:red;font-size:45px;font-weight:bold\">\?\?</p>");
     }
 }
-
+#if 0
 void SupplyWriter::on_pushButton_clicked()
 {
     //隐藏程序主窗口
@@ -1755,7 +1890,7 @@ void SupplyWriter::on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason rea
         break;
     }
 }
-
+#endif
 void SupplyWriter::play_mp3_sound(QString file)
 {
     player->setMedia(QMediaContent(QUrl::fromLocalFile(file)));
@@ -1789,14 +1924,23 @@ void SupplyWriter::slotGetDBStatus(quint8 _odbc_status)
     if (odbc_status == _FAILED_STATUS)
     {
         ui->label_13->setText(tr("<font style='color:red; font:bold;'>%1</font>").arg(QStringLiteral("连接失败！")));
+        ui->QuerySqlButton->setEnabled(false);
+        ui->DeleteSqlButton->setEnabled(false);
     }
     else if (odbc_status == _SUCCESS_STATUS)
     {
         ui->label_13->setText(tr("<font style='color:green; font:bold;'>%1</font>").arg(QStringLiteral("连接成功！")));
+        if (ui->lineEdit_22->text().length())
+        {
+            ui->QuerySqlButton->setEnabled(true);
+            ui->DeleteSqlButton->setEnabled(true);
+        }
     }
     else if (odbc_status == _INVALID_PARA)
     {
         ui->label_13->setText(tr("<font style='color:red; font:bold;'>%1</font>").arg(QStringLiteral("信息不正确！")));
+        ui->QuerySqlButton->setEnabled(false);
+        ui->DeleteSqlButton->setEnabled(false);
     }
 }
 
@@ -1813,40 +1957,7 @@ void SupplyWriter::update_connect_fixture()
 
     Update_FixtureStatus();
 }
-#if 0
-void SupplyWriter::on_radioButton_2_clicked()
-{
-//    qDebug() << "setting auto write mode" << working_mode;
-    ui->lineEdit_14->setFocus();
 
-    ui->QuerySqlButton->setEnabled(false);
-    ui->DeleteSqlButton->setEnabled(false);
-
-    if (working_mode == _AUTO_WRITE_MODE)
-        return;
-    else
-        working_mode = _AUTO_WRITE_MODE;
-}
-
-void SupplyWriter::on_radioButton_clicked()
-{
-//    qDebug() << "setting manual read mode" << working_mode;
-
-    ui->lineEdit_3->setEnabled(true);
-    ui->lineEdit_3->setFocus();
-
-    if (odbc_status == _SUCCESS_STATUS)
-    {
-        ui->QuerySqlButton->setEnabled(true);
-        ui->DeleteSqlButton->setEnabled(true);
-    }
-
-    if (working_mode == _MANUAL_READ_MODE)
-        return;
-    else
-        working_mode = _MANUAL_READ_MODE;
-}
-#endif
 int main(int argc, char **argv)
 {
     QApplication a(argc, argv);
@@ -1867,4 +1978,24 @@ int main(int argc, char **argv)
     w.show();
 
     return a.exec();
+}
+
+void SupplyWriter::on_RecommendFixtures_itemDoubleClicked(QListWidgetItem *item)
+{
+    ui->lineEdit_1->setText(item->text());
+}
+
+void SupplyWriter::on_lineEdit_22_textChanged(const QString &arg1)
+{
+    Q_UNUSED(arg1);
+    if (odbc_status == _SUCCESS_STATUS && ui->lineEdit_22->text().length())
+    {
+        ui->QuerySqlButton->setEnabled(true);
+        ui->DeleteSqlButton->setEnabled(true);
+    }
+    else
+    {
+        ui->QuerySqlButton->setEnabled(false);
+        ui->DeleteSqlButton->setEnabled(false);
+    }
 }

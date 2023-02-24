@@ -9,12 +9,12 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QMouseEvent>
-#include <QPalette>
+#include <QListWidgetItem>
 #include <QSettings>
 #include <QPaintEvent>
 #include <QImage>
 #include <QThread>
-#include <QSystemTrayIcon>
+#include <QUdpSocket>
 #include <QMediaPlayer>
 #include <QTimer>
 
@@ -27,6 +27,10 @@ namespace Ui {
 class SupplyWriter;
 }
 QT_END_NAMESPACE
+
+//监听的广播端口
+#define BC_UDP_PORT    8890
+#define HB_UDP_PORT    8891
 
 #define DATABASE_NAME   "cgprintech"
 #define TABLE_NAME      "supplyinfo"
@@ -58,16 +62,14 @@ public:
     void set_dialog_style();
     bool checkIpValid(int version, QString ip);
     int checkIPversion(QString IP);
+    void update_timestamp();
     void Sleep(int msec);
 
 private slots:
-    void on_AboutButton_clicked();
-    void on_CloseButton_clicked();
     void on_ReadTonerInfo_clicked();
     void on_ReadDrumInfo_clicked();
     void on_DeleteSqlButton_clicked();
     void on_QuerySqlButton_clicked();
-    void on_HelpButton_clicked();
 
     void slotConnected();
     void dataReceived();
@@ -77,10 +79,8 @@ private slots:
     void on_ResetPassword_clicked();
     void on_ModifyPassword_clicked();
     void on_LoginButton_clicked();
-    void on_ExitButton_clicked();
     void on_Return_clicked();
     void on_Confirm_clicked();
-
     void on_pushButton_2_clicked();
     void on_pushButton_3_clicked();
     void on_pushButton_6_clicked();
@@ -98,12 +98,14 @@ private slots:
     void on_lineEdit_4_textChanged(const QString &arg1);
     void on_lineEdit_5_textChanged(const QString &arg1);
 
-    void on_pushButton_clicked();
-    void on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason);
-//    void on_radioButton_2_clicked();
-//    void on_radioButton_clicked();
+    void scan_the_fixtures();
+    void check_fixture_online();
+    void udp_data_recv();
+    void udp_hb_recv();
     void slotGetDBStatus(quint8 _odbc_status);
     void update_connect_fixture();
+    void on_RecommendFixtures_itemDoubleClicked(QListWidgetItem *item);
+    void on_lineEdit_22_textChanged(const QString &arg1);
 
 signals:
     void sendChipInfo(struct cgprintech_supply_info_readback* info);
@@ -122,27 +124,25 @@ private:
     QPoint mouse_start_point;
     QPoint window_start_point;
     int theme_state = 0;
+    int year, month, day;
 
 private:
     Ui::SupplyWriter *ui;
     StateMonitor* worker = NULL;
-    QTimer* timer = NULL;
-    QSystemTrayIcon *trayIcon = NULL;
+    QTimer* timer[3] = {NULL};
+    bool udp_hb_status = false;
     QString login_user;
     QString resetpwd_username;
     QSettings setting;
     QPalette palette;
     QPixmap pixmap[5];
-    QIcon icon;
-    int year;
-    int month;
-    int day;
+//    QIcon icon;
 
     QMediaPlayer *player = NULL;
     bool working_mode = _AUTO_WRITE_MODE;  //默认采用自动写入模式
     quint8 odbc_status = _INVALID_PARA;    //odbc数据库连接
     quint8 server_status = _INVALID_PARA;  //治具连接
-
+    QUdpSocket* udpSocket[2] = {NULL};
     QTcpSocket *tcpSocket[2] = {NULL};
     QSqlDatabase db;
     QSqlQuery query;
@@ -156,7 +156,7 @@ private:
     void try_connect_db();
     QImage adjust_bright(int bright, const QImage& image);
     void adjust_bright_pixmap(int bright);
-    void check_connect_fixture();
+//    void check_connect_fixture();
     void write_supplyinfo2chip();
     void set_style_sheet(QString filename);
     void init_market_area();
@@ -169,6 +169,7 @@ private:
     unsigned int Unpack16(unsigned char* src);
     void hex_dump(const unsigned char *src, size_t length);
 
+    void send_udp_hb_pack(QString ipaddr);
     bool check_modelid_valid(QString modelid);
     bool check_serialno_valid(QString serialno);
     bool check_server_status();

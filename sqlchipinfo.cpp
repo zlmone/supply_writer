@@ -57,12 +57,12 @@ void SqlChipInfo::recvSqlInfo(struct cgprintech_supply_sqlinfo* ChipInfo)
     ui->label_15->setText(ChipInfo->marketing_area);
     ui->label_16->setText(ChipInfo->product_date);
     ui->label_17->setText(ChipInfo->pages);
-    ui->label_18->setText(ChipInfo->dots);
+//    ui->label_18->setText(ChipInfo->dots);
     ui->label_19->setText(ChipInfo->manufacturer);
     ui->label_20->setText(ChipInfo->trade_mark);
     ui->label_21->setText(ChipInfo->type);
     ui->label_22->setText(ChipInfo->overflow_pages);
-    ui->label_23->setText(ChipInfo->overflow_percent);
+//    ui->label_23->setText(ChipInfo->overflow_percent);
     ui->label_24->setText(ChipInfo->free_pages);
     ui->label_25->setText(ChipInfo->operator_id);
 

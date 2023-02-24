@@ -14,14 +14,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    helpdialog.cpp \
     readback.cpp \
     sqlchipinfo.cpp \
     statemonitor.cpp \
     supplywriter.cpp
 
 HEADERS += \
-    helpdialog.h \
     readback.h \
     sqlchipinfo.h \
     supplywriter.h \
@@ -29,7 +27,6 @@ HEADERS += \
     common.h
 
 FORMS += \
-    helpdialog.ui \
     readback.ui \
     sqlchipinfo.ui \
     supplywriter.ui

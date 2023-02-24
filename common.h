@@ -136,5 +136,11 @@ struct cgprintech_supply_info_readback
 } __attribute__((__packed__));
 #define SUPPLY_INFO_READBACK_LEN    sizeof(struct cgprintech_supply_info_readback)
 
+//治具回复的广播报文
+typedef struct bc_info_resp {
+    RespInfo resp;
+    char ipaddr[40];
+} __attribute__((__packed__)) BcInfoResp;
+
 
 #endif

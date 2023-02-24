@@ -142,19 +142,19 @@ void ReadBack::show_ChipInfo(struct cgprintech_supply_info_readback* ChipInfo)
     ui->label_9->setText(buff);
 
     sprintf(buff, "%u", Unpack32(ChipInfo->pages));
-    ui->label_5->setText(buff);
-    sprintf(buff, "%u", Unpack32(ChipInfo->dots));
-    ui->label_18->setText(buff);
-    sprintf(buff, "%u", Unpack16(ChipInfo->beyond_pages));
     ui->label_22->setText(buff);
-    sprintf(buff, "%u%%", Unpack16(ChipInfo->beyond_percent));
-    ui->label_29->setText(buff);
-    sprintf(buff, "%u", Unpack16(ChipInfo->free_pages));
+//    sprintf(buff, "%u", Unpack32(ChipInfo->dots));
+//    ui->label_18->setText(buff);
+    sprintf(buff, "%u", Unpack16(ChipInfo->beyond_pages));
     ui->label_30->setText(buff);
+//    sprintf(buff, "%u%%", Unpack16(ChipInfo->beyond_percent));
+//    ui->label_29->setText(buff);
+    sprintf(buff, "%u", Unpack16(ChipInfo->free_pages));
+    ui->label_5->setText(buff);
     sprintf(buff, "%u", Unpack32(ChipInfo->printed_pages));
     ui->label_10->setText(buff);
-    sprintf(buff, "%u", Unpack32(ChipInfo->printed_dots));
-    ui->label_32->setText(buff);
+//    sprintf(buff, "%u", Unpack32(ChipInfo->printed_dots));
+//    ui->label_32->setText(buff);
     sprintf(buff, "%u", Unpack16(ChipInfo->print_beyond_pages));
     ui->label_34->setText(buff);
     sprintf(buff, "%u", Unpack16(ChipInfo->print_free_pages));
