@@ -140,15 +140,6 @@ void SupplyWriter::login_page_init()
     setWindowFlags(Qt::WindowMinimizeButtonHint |
                    Qt::WindowMaximizeButtonHint |
                    Qt::WindowCloseButtonHint);
-//    icon.addFile(QString::fromUtf8(":/images/cgprint.png"), QSize(), QIcon::Normal, QIcon::Off);
-//    this->setWindowIcon(icon);
-
-//    setFixedSize(this->width(), this->height());
-//    this->setWindowFlags(Qt::FramelessWindowHint);
-
-//    current_path = QCoreApplication::applicationDirPath();
-//    qDebug() << current_path;
-//    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
 
     pixmap[1].load(":/images/title1.png");
     ui->title_label->setScaledContents(false);
@@ -174,8 +165,6 @@ void SupplyWriter::login_page_init()
 //耗材信息页面初始化
 void SupplyWriter::main_page_init()
 {
-//    ui->dateEdit->setEnabled(false);
-
     ui->lineEdit_2->setFocusPolicy(Qt::NoFocus);
     ui->lineEdit_6->setFocusPolicy(Qt::NoFocus);
     ui->lineEdit_7->setFocusPolicy(Qt::NoFocus);
@@ -184,7 +173,6 @@ void SupplyWriter::main_page_init()
     ui->lineEdit_13->setFocusPolicy(Qt::NoFocus);
 
     this->init_market_area();
-//    ui->dateEdit->setDate(QDate::currentDate());
 
     this->setTabOrder(ui->lineEdit_14, ui->lineEdit);
     this->setTabOrder(ui->lineEdit, ui->lineEdit_4);
@@ -928,9 +916,6 @@ void SupplyWriter::fill_supplyinfo_data()
     Pack16(supply_info.beyond_pages, ui->lineEdit_11->text().toUInt());
     Pack16(supply_info.free_pages, ui->lineEdit_12->text().toUInt());
 
-//    year = ui->dateEdit->date().year();
-//    month = ui->dateEdit->date().month();
-//    day = ui->dateEdit->date().day();
     sprintf(date, "%04d%02d%02d", year, month, day);
     this->StringToHex(date, supply_info.product_date, &len);
 
@@ -1172,12 +1157,6 @@ void SupplyWriter::udp_data_recv()
 
 void SupplyWriter::scan_the_fixtures()
 {
-//    if (is_done)
-//    {
-//        timer[3]->stop();
-//        return;
-//    }
-
     //发送嗅探治具的广播报文，治具收到后回复自身IP地址
     if (udpSocket[0] == NULL)
     {
@@ -1846,51 +1825,7 @@ void SupplyWriter::Update_FixtureStatus()
         ui->label_45->setText("<p style=\"color:red;font-size:45px;font-weight:bold\">\?\?</p>");
     }
 }
-#if 0
-void SupplyWriter::on_pushButton_clicked()
-{
-    //隐藏程序主窗口
-    this->hide();
 
-    //新建QSystemTrayIcon对象
-    if (trayIcon == NULL)
-    {
-        trayIcon = new QSystemTrayIcon(this);
-        connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-                this, SLOT(on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason)));
-
-        //新建托盘要显示的icon
-        QIcon icon = QIcon(":/images/stayicon.png");
-        //将icon设到QSystemTrayIcon对象中
-        trayIcon->setIcon(icon);
-
-        //当鼠标移动到托盘上的图标时，会显示此处设置的内容
-        trayIcon->setToolTip(QString("辰光融信 耗材写入工具"));
-    }
-
-    //在系统托盘显示此对象
-    trayIcon->show();
-}
-
-void SupplyWriter::on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason)
-{
-    switch(reason){
-    case QSystemTrayIcon::Trigger:
-        //单击托盘图标
-        break;
-
-    case QSystemTrayIcon::DoubleClick:
-        //双击托盘图标
-        //双击后显示主程序窗口
-        this->show();
-        trayIcon->hide();
-        break;
-
-    default:
-        break;
-    }
-}
-#endif
 void SupplyWriter::play_mp3_sound(QString file)
 {
     player->setMedia(QMediaContent(QUrl::fromLocalFile(file)));
