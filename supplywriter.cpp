@@ -60,7 +60,6 @@ void SupplyWriter::clear_main_page()
 
     ui->label_2->clear();
     ui->label_13->clear();
-//    ui->radioButton_2->setChecked(true);
 
     ui->label_44->setText(ui->username->text());
     ui->lineEdit_14->setFocus();
@@ -140,6 +139,15 @@ void SupplyWriter::login_page_init()
     setWindowFlags(Qt::WindowMinimizeButtonHint |
                    Qt::WindowMaximizeButtonHint |
                    Qt::WindowCloseButtonHint);
+//    icon.addFile(QString::fromUtf8(":/images/cgprint.png"), QSize(), QIcon::Normal, QIcon::Off);
+//    this->setWindowIcon(icon);
+
+//    setFixedSize(this->width(), this->height());
+//    this->setWindowFlags(Qt::FramelessWindowHint);
+
+//    current_path = QCoreApplication::applicationDirPath();
+//    qDebug() << current_path;
+//    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
 
     pixmap[1].load(":/images/title1.png");
     ui->title_label->setScaledContents(false);
@@ -179,7 +187,7 @@ void SupplyWriter::main_page_init()
     this->setTabOrder(ui->lineEdit_4, ui->lineEdit_5);
     this->setTabOrder(ui->lineEdit_5, ui->lineEdit_1);
 
-    ui->lineEdit_3->setEnabled(false);
+//    ui->lineEdit_3->setEnabled(false);
     ui->lineEdit_4->setEchoMode(QLineEdit::Password);
     db = QSqlDatabase::addDatabase("QODBC", "main");
     player = new QMediaPlayer;
@@ -610,7 +618,7 @@ void SupplyWriter::dataReceived()
                 ui->lineEdit_7->clear();
                 ui->lineEdit_11->clear();
                 ui->lineEdit_12->clear();
-                ui->lineEdit_3->setFocus();
+//                ui->lineEdit_3->setFocus();
             }
             else if (((RespInfo*)resp)->cmd == OP_READ_TONER_INFO ||
                      ((RespInfo*)resp)->cmd == OP_READ_DRUM_INFO)
@@ -1694,10 +1702,10 @@ THE_END:
             if ((ui->lineEdit_2->text().mid(0, 2).compare("DL", Qt::CaseSensitive) == 0 && ui->ReadDrumInfo->isEnabled()) ||
                 (ui->lineEdit_2->text().mid(0, 2).compare("TL", Qt::CaseSensitive) == 0 && ui->ReadTonerInfo->isEnabled()))
             {
-                if (this->Insert_SupplyInfo_Sql() == _FAILED_STATUS)
+                if (odbc_status == _SUCCESS_STATUS)
                 {
-                    qDebug() << "insert into database failed";
-                    return;
+                    if (this->Insert_SupplyInfo_Sql() == _FAILED_STATUS)
+                        qDebug() << "insert into database failed";
                 }
 
                 timer[0]->stop();
@@ -1802,23 +1810,6 @@ void SupplyWriter::on_lineEdit_5_textChanged(const QString &arg1)
 
 void SupplyWriter::Update_FixtureStatus()
 {
-    if (working_mode == _AUTO_WRITE_MODE)
-    {
-        if (server_status == _SUCCESS_STATUS && odbc_status == _SUCCESS_STATUS)
-        {
-            ui->lineEdit_3->setEnabled(true);
-            ui->lineEdit_3->setFocus();
-        }
-        else
-        {
-            ui->lineEdit_3->setEnabled(false);
-        }
-    }
-    else
-    {
-        ui->lineEdit_3->setEnabled(true);
-    }
-
     if (server_status == _FAILED_STATUS)
     {
         ui->label_2->setText("<p style=\"color:red;font-weight:bold\">设备离线！</p>");
@@ -1834,23 +1825,6 @@ void SupplyWriter::play_mp3_sound(QString file)
 
 void SupplyWriter::slotGetDBStatus(quint8 _odbc_status)
 {
-    if (working_mode == _AUTO_WRITE_MODE)
-    {
-        if (_odbc_status == _SUCCESS_STATUS && server_status == _SUCCESS_STATUS)
-        {
-            ui->lineEdit_3->setEnabled(true);
-            ui->lineEdit_3->setFocus();
-        }
-        else
-        {
-            ui->lineEdit_3->setEnabled(false);
-        }
-    }
-    else
-    {
-        ui->lineEdit_3->setEnabled(true);
-    }
-
     if (odbc_status == _odbc_status)
         return;
     else

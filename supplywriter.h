@@ -136,6 +136,7 @@ private:
     QSettings setting;
     QPalette palette;
     QPixmap pixmap[5];
+//    QIcon icon;
 
     QMediaPlayer *player = NULL;
     bool working_mode = _AUTO_WRITE_MODE;  //默认采用自动写入模式
@@ -155,6 +156,7 @@ private:
     void try_connect_db();
     QImage adjust_bright(int bright, const QImage& image);
     void adjust_bright_pixmap(int bright);
+//    void check_connect_fixture();
     void write_supplyinfo2chip();
     void set_style_sheet(QString filename);
     void init_market_area();
