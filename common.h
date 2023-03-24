@@ -139,11 +139,14 @@ struct cgprintech_supply_info_readback
 
 
 #define INET_ADDRSTRLEN   16
+#define INET6_ADDRSTRLEN  46
 
 //治具回复的广播报文
 typedef struct bc_info_resp {
     RespInfo resp;
     char ipaddr[INET_ADDRSTRLEN];
+    uint8_t ipv6_support;
+    char ip6addr[INET6_ADDRSTRLEN];
 } __attribute__((__packed__)) BcInfoResp;
 
 

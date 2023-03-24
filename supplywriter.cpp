@@ -668,7 +668,6 @@ void SupplyWriter::dataReceived()
 //            this->Sleep(3000);
         }
 
-        server_status = _INVALID_PARA;
         break;
     }
 }
@@ -1139,11 +1138,18 @@ void SupplyWriter::udp_data_recv()
         if (resp.resp.cmd == OP_BROADCAST_UDP_RESP)
         {
             bool flag = false;
-            QString ipaddr = QString("%1").arg(resp.ipaddr);
+            QString ipaddr;
+            QString ip6addr;
+
+            ipaddr = QString("%1").arg(resp.ipaddr);
+            if (resp.ipv6_support)
+                ip6addr = QString("%1").arg(resp.ip6addr);
 
             if (ui->RecommendFixtures->count() == 0)
             {
                 ui->RecommendFixtures->addItem(ipaddr);
+                if (resp.ipv6_support)
+                    ui->RecommendFixtures->addItem(ip6addr);
             }
             else
             {
@@ -1157,7 +1163,11 @@ void SupplyWriter::udp_data_recv()
                 }
 
                 if (flag == false)
+                {
                     ui->RecommendFixtures->addItem(ipaddr);
+                    if (resp.ipv6_support)
+                        ui->RecommendFixtures->addItem(ip6addr);
+                }
             }
         }
     }
@@ -1617,30 +1627,34 @@ void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
     bool ok_status = false;
 
     if (arg1.mid(0, 3).compare("CGL", Qt::CaseSensitive) == 0)
+    {
         ui->lineEdit_13->setText("I");
+        ui->lineEdit_12->setText("8");
+    }
     else if (arg1.mid(0, 2).compare("CG", Qt::CaseSensitive) == 0)
+    {
         ui->lineEdit_13->setText("M");
+        ui->lineEdit_12->setText("4");
+    }
     else
         ui->lineEdit_13->clear();
 
-    ui->lineEdit_12->setText("10");
-
     if (arg1.contains("L2100000107", Qt::CaseSensitive) ||
-        arg1.contains("0301000259", Qt::CaseSensitive))
+        arg1.contains("0304000002", Qt::CaseSensitive))
     {
         ui->lineEdit_2->setText("TL-341L");
         ok_status = true;
         goto THE_END;
     }
 
-    if (arg1.contains("0301000260", Qt::CaseSensitive))
+    if (arg1.contains("0304000003", Qt::CaseSensitive))
     {
         ui->lineEdit_2->setText("TL-341");
         ok_status = true;
         goto THE_END;
     }
 
-    if (arg1.contains("0301000261", Qt::CaseSensitive) == true)
+    if (arg1.contains("0304000004", Qt::CaseSensitive) == true)
     {
         ui->lineEdit_2->setText("TL-341H");
         ok_status = true;
@@ -1685,7 +1699,7 @@ void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
     }
 
     if (arg1.contains("L2100000136", Qt::CaseSensitive) ||
-        arg1.contains("0301000258", Qt::CaseSensitive))
+        arg1.contains("0301000001", Qt::CaseSensitive))
     {
         ui->lineEdit_2->setText("DL-341");
         ok_status = true;
