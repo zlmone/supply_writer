@@ -153,8 +153,8 @@ void SupplyWriter::login_page_init()
     ui->title_label->setScaledContents(false);
     ui->title_label->setPixmap(pixmap[1]);
 
-    pixmap[0].load(":/images/logo.png");
-    ui->logo_label->setScaledContents(false);
+    pixmap[0].load(":/images/trademark.png");
+    pixmap[0] = pixmap[0].scaled(pixmap[0].width()*0.12, pixmap[0].height()*0.12, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     ui->logo_label->setPixmap(pixmap[0]);
     ui->label_25->setPixmap(pixmap[0]);
 
