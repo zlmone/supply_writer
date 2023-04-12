@@ -25,6 +25,8 @@ enum {
     OP_WRITE_BULK_INFO,     //批量写入耗材信息
     OP_SEND_BULK_INFO,      //发送批量数据到治具
     OP_TRIGGER_OUT,         //抬起动作
+    OP_RETRY_AGAIN,         //重试
+
     RE_HEARTBEAT_SIGNAL,    //发送心跳包，维护长连接句柄有效性
 
     OP_BROADCAST_UDP_REQUEST = 99,  //来自上位机的广播嗅探报文，治具收到该报文回复本机IP地址
