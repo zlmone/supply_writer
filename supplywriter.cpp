@@ -329,7 +329,7 @@ void SupplyWriter::set_dialog_style()
     palette.setColor(QPalette::HighlightedText, Qt::white);
     this->setPalette(palette);
 }
-#if 0
+#if 1
 void SupplyWriter::paintEvent(QPaintEvent *event)
 {
     //设置窗口的透明度
@@ -343,7 +343,7 @@ void SupplyWriter::paintEvent(QPaintEvent *event)
     //旋转角度
     int watermark_inclination_angle = 30.0;
 
-    QString content = QString("CGPRINTECH\n%1\t%2").arg(ui->username->text()).arg(QDate::currentDate().toString("yyyy-MM-dd"));
+    QString content = QString("Cgprintech & Lanxum\n%1\t%2").arg(ui->username->text()).arg(QDate::currentDate().toString("yyyy-MM-dd"));
 
     //逆时针旋转
     qreal ang = -watermark_inclination_angle;

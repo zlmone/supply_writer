@@ -7,46 +7,12 @@
 
 #include "common.h"
 
-namespace Ui {
-class ReadBack;
-}
-#if 0
-static QString _type[] =
-{
-    "随机",
-    "贩卖"
-};
+namespace Ui { class ReadBack; }
 
-static QString supply_type[] =
-{
-    "I",    //随机
-    "M",    //贩卖
-};
-
-static QString Market_Area[] =
-{
-    "中国",
-    "日本",
-    "美国",
-    "俄罗斯",
-    "巴西",
-    "印度"
-};
-
-static QString marketing_area[] =
-{
-    "CN",
-    "JP",
-    "US",
-    "RU",
-    "BR",
-    "IN",
-};
-#endif
 static QString _trademark[] =
 {
+    "Lanxum",
     "Cgprintech",
-    "Lanxum"
 };
 
 class ReadBack : public QDialog

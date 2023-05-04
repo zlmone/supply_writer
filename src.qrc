@@ -1,6 +1,5 @@
 <RCC>
   <qresource prefix="/">
-    <file>images/stayicon.png</file>
     <file>images/title1.png</file>
     <file>images/title2.png</file>
     <file>images/title3.png</file>

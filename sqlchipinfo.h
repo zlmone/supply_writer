@@ -6,9 +6,7 @@
 
 #include "common.h"
 
-namespace Ui {
-class SqlChipInfo;
-}
+namespace Ui { class SqlChipInfo; }
 
 class SqlChipInfo : public QDialog
 {
