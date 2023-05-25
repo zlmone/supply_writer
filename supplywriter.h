@@ -26,6 +26,9 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class SupplyWriter; }
 QT_END_NAMESPACE
 
+//#define LANXUM
+#define NARI
+
 //监听的广播端口
 #define BC_UDP_PORT    8890
 #define HB_UDP_PORT    8891
@@ -47,16 +50,8 @@ public:
     SupplyWriter(QWidget *parent = nullptr);
     ~SupplyWriter();
     void main_page_init();
-    void login_page_init();
-    void newuser_page_init();
-    void renewpwd_page_init();
-    void resetpwd_page_init();
     void clear_main_page();
-    void clear_login_page();
-    void clear_newuser_page();
-    void clear_renewpwd_page();
-    void clear_resetpwd_page0();
-    void clear_resetpwd_page1();
+
     void set_dialog_style();
     bool checkIpValid(int version, QString ip);
     int checkIPversion(QString IP);
@@ -73,22 +68,10 @@ private slots:
     void dataReceived();
     void statusReceived();
 
-    void on_CreateUser_clicked();
-    void on_ResetPassword_clicked();
-    void on_ModifyPassword_clicked();
-    void on_LoginButton_clicked();
-    void on_Return_clicked();
-    void on_Confirm_clicked();
-    void on_pushButton_2_clicked();
-    void on_pushButton_3_clicked();
-    void on_pushButton_6_clicked();
-    void on_pushButton_8_clicked();
-    void on_pushButton_9_clicked();
-    void on_pushButton_10_clicked();
-
-    void on_checkBox_stateChanged(int state);
     void on_lineEdit_1_textChanged(const QString &arg1);
+#ifdef LANXUM
     void on_lineEdit_2_textChanged(const QString &arg1);
+#endif
     void on_lineEdit_3_textChanged(const QString &arg1);
     void slotUpdateWaterMark();
     void on_lineEdit_14_textChanged(const QString &arg1);
@@ -134,7 +117,6 @@ private:
     QSettings setting;
     QPalette palette;
     QPixmap pixmap[5];
-
     QMediaPlayer *player = NULL;
     bool working_mode = _AUTO_WRITE_MODE;  //默认采用自动写入模式
     quint8 odbc_status = _INVALID_PARA;    //odbc数据库连接
@@ -155,7 +137,6 @@ private:
     void adjust_bright_pixmap(int bright);
     void write_supplyinfo2chip();
     void set_style_sheet(QString filename);
-    void init_market_area();
     bool check_input_valid();
 
     int StringToHex(char *str, unsigned char *out, unsigned int *outlen);
@@ -169,7 +150,7 @@ private:
     bool check_modelid_valid(QString modelid);
     bool check_serialno_valid(QString serialno);
     bool check_server_status();
-    void fill_supplyinfo_data();
+    bool fill_supplyinfo_data();
     bool sendData(int cmd, void* data, int data_len);
     void print_chip_info(struct cgprintech_supply_info_readback* supply_info);
 };

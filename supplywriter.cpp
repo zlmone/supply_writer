@@ -22,27 +22,6 @@
 
 SupplyWriter* writer;
 
-void SupplyWriter::init_market_area()
-{
-    int kk;
-
-    for (kk = 0; kk < 2; kk++)
-    {
-        ui->comboBox_3->addItem(_trademark[kk]);
-        ui->comboBox_4->addItem(_trademark[kk]);
-    }
-}
-
-void SupplyWriter::clear_login_page()
-{
-    ui->username->clear();
-    ui->password->clear();
-    ui->label_21->clear();
-
-    ui->username->setFocus();
-    ui->LoginButton->setDefault(true);
-}
-
 void SupplyWriter::clear_main_page()
 {
     ui->lineEdit->clear();
@@ -61,7 +40,7 @@ void SupplyWriter::clear_main_page()
     ui->label_2->clear();
     ui->label_13->clear();
 
-    ui->label_44->setText(ui->username->text());
+//    ui->label_44->setText(ui->username->text());
     ui->lineEdit_14->setFocus();
     ui->ReadDrumInfo->setEnabled(false);
     ui->ReadTonerInfo->setEnabled(false);
@@ -78,98 +57,6 @@ void SupplyWriter::clear_main_page()
         worker->start(QThread::NormalPriority);
 }
 
-void SupplyWriter::clear_newuser_page()
-{
-    ui->lineEdit_8->clear();
-    ui->lineEdit_9->clear();
-    ui->lineEdit_10->clear();
-
-    ui->label_26->clear();
-
-    ui->lineEdit_8->setFocus();
-    ui->Confirm->setEnabled(true);
-    ui->Return->setEnabled(true);
-    ui->Confirm->setDefault(true);
-}
-
-void SupplyWriter::clear_renewpwd_page()
-{
-    ui->lineEdit_15->clear();
-    ui->lineEdit_16->clear();
-    ui->lineEdit_17->clear();
-    ui->lineEdit_18->clear();
-
-    ui->label_31->clear();
-
-    ui->lineEdit_15->setFocus();
-    ui->pushButton_2->setEnabled(true);
-    ui->pushButton_3->setEnabled(true);
-    ui->pushButton_3->setDefault(true);
-}
-
-void SupplyWriter::clear_resetpwd_page0()
-{
-    ui->lineEdit_19->clear();
-
-    ui->label_41->clear();
-
-    ui->dateEdit_2->setDate(QDate::currentDate());
-    ui->dateEdit_3->setDate(QDate::currentDate());
-
-    ui->lineEdit_19->setFocus();
-    ui->pushButton_8->setDefault(true);
-}
-
-void SupplyWriter::clear_resetpwd_page1()
-{
-    ui->lineEdit_20->clear();
-    ui->lineEdit_21->clear();
-
-    ui->label_40->clear();
-
-    ui->lineEdit_20->setFocus();
-    ui->pushButton_9->setEnabled(true);
-    ui->pushButton_10->setEnabled(true);
-    ui->pushButton_10->setDefault(true);
-}
-
-//登录页面初始化
-void SupplyWriter::login_page_init()
-{
-    setWindowFlags(Qt::WindowMinimizeButtonHint |
-                   Qt::WindowMaximizeButtonHint |
-                   Qt::WindowCloseButtonHint);
-//    icon.addFile(QString::fromUtf8(":/images/cgprint.png"), QSize(), QIcon::Normal, QIcon::Off);
-//    this->setWindowIcon(icon);
-
-//    setFixedSize(this->width(), this->height());
-//    this->setWindowFlags(Qt::FramelessWindowHint);
-
-//    current_path = QCoreApplication::applicationDirPath();
-//    qDebug() << current_path;
-//    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
-
-    pixmap[1].load(":/images/title1.png");
-    ui->title_label->setScaledContents(false);
-    ui->title_label->setPixmap(pixmap[1]);
-
-    pixmap[0].load(":/images/trademark.png");
-    pixmap[0] = pixmap[0].scaled(pixmap[0].width()*0.12, pixmap[0].height()*0.12, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    ui->logo_label->setPixmap(pixmap[0]);
-    ui->label_25->setPixmap(pixmap[0]);
-
-    QFont font1("Microsoft YaHei", 13, 80);
-    ui->label_18->setFont(font1);
-    QFont font2("Microsoft YaHei", 15, 70);
-    ui->label_17->setFont(font2);
-    QFont font3("Microsoft YaHei", 11, 65);
-    ui->label_20->setFont(font3);
-
-    ui->password->setEchoMode(QLineEdit::Password);
-    ui->LoginButton->setDefault(true);
-    this->update_timestamp();
-}
-
 //耗材信息页面初始化
 void SupplyWriter::main_page_init()
 {
@@ -180,14 +67,11 @@ void SupplyWriter::main_page_init()
     ui->lineEdit_12->setFocusPolicy(Qt::NoFocus);
     ui->lineEdit_13->setFocusPolicy(Qt::NoFocus);
 
-    this->init_market_area();
-
     this->setTabOrder(ui->lineEdit_14, ui->lineEdit);
     this->setTabOrder(ui->lineEdit, ui->lineEdit_4);
     this->setTabOrder(ui->lineEdit_4, ui->lineEdit_5);
     this->setTabOrder(ui->lineEdit_5, ui->lineEdit_1);
 
-//    ui->lineEdit_3->setEnabled(false);
     ui->lineEdit_4->setEchoMode(QLineEdit::Password);
     db = QSqlDatabase::addDatabase("QODBC", "main");
     player = new QMediaPlayer;
@@ -208,60 +92,7 @@ void SupplyWriter::main_page_init()
     timer[0]->start(3000);
     timer[1]->start(3000);
     timer[2]->start(3000);
-}
-
-//创建用户页面初始化
-void SupplyWriter::newuser_page_init()
-{
-    pixmap[2].load(":/images/title2.png");
-    ui->label_24->setPixmap(pixmap[2]);
-
-    QFont font1("Microsoft YaHei", 15, 70);
-    ui->label_22->setFont(font1);
-    QFont font2("Microsoft YaHei", 11, 60);
-    ui->label_23->setFont(font2);
-
-    ui->lineEdit_9->setEchoMode(QLineEdit::Password);
-    ui->lineEdit_10->setEchoMode(QLineEdit::Password);
-}
-
-//修改密码页面初始化
-void SupplyWriter::renewpwd_page_init()
-{
-    pixmap[4].load(":/images/title4.png");
-    ui->label_27->setPixmap(pixmap[4]);
-    ui->label_28->setPixmap(pixmap[0]);
-
-    QFont font1("Microsoft YaHei", 15, 70);
-    ui->label_30->setFont(font1);
-    ui->label_39->setFont(font1);
-    QFont font2("Microsoft YaHei", 11, 60);
-    ui->label_29->setFont(font2);
-    ui->label_38->setFont(font2);
-
-    ui->lineEdit_16->setEchoMode(QLineEdit::Password);
-    ui->lineEdit_17->setEchoMode(QLineEdit::Password);
-    ui->lineEdit_18->setEchoMode(QLineEdit::Password);
-}
-
-//重置密码页面初始化
-void SupplyWriter::resetpwd_page_init()
-{
-    pixmap[3].load(":/images/title3.png");
-    ui->label_32->setPixmap(pixmap[3]);
-
-    ui->label_33->setPixmap(pixmap[0]);
-    ui->label_43->setPixmap(pixmap[0]);
-
-    QFont font1("Microsoft YaHei", 15, 70);
-    ui->label_35->setFont(font1);
-    ui->label_39->setFont(font1);
-    QFont font2("Microsoft YaHei", 11, 60);
-    ui->label_34->setFont(font2);
-    ui->label_38->setFont(font2);
-
-    ui->lineEdit_20->setEchoMode(QLineEdit::Password);
-    ui->lineEdit_21->setEchoMode(QLineEdit::Password);
+    update_timestamp();
 }
 
 void SupplyWriter::set_style_sheet(QString filename)
@@ -302,12 +133,11 @@ SupplyWriter::SupplyWriter(QWidget *parent)
     ui->setupUi(this);
 
     set_style_sheet("light.qss");
+    setWindowFlags(Qt::WindowMinimizeButtonHint |
+                   Qt::WindowMaximizeButtonHint |
+                   Qt::WindowCloseButtonHint);
 
-    this->login_page_init();
     this->main_page_init();
-    this->newuser_page_init();
-    this->renewpwd_page_init();
-    this->resetpwd_page_init();
 }
 
 // NOT USED
@@ -329,7 +159,7 @@ void SupplyWriter::set_dialog_style()
     palette.setColor(QPalette::HighlightedText, Qt::white);
     this->setPalette(palette);
 }
-#if 1
+#if 0
 void SupplyWriter::paintEvent(QPaintEvent *event)
 {
     //设置窗口的透明度
@@ -398,9 +228,6 @@ SupplyWriter::~SupplyWriter()
          delete tcpSocket[0];
     if (tcpSocket[1])
         delete tcpSocket[1];
-
-//    if (trayIcon)
-//        delete trayIcon;
 
     delete timer[0];
     delete timer[1];
@@ -534,11 +361,11 @@ bool SupplyWriter::check_input_valid()
     if (ui->lineEdit_2->text().length() == 0 ||
         ui->lineEdit_3->text().length() == 0 ||
         ui->lineEdit_13->text().length() == 0)
-        return 0;
-
+        return false;
+#ifdef LANXUM
     if (check_modelid_valid(ui->lineEdit_2->text()) == 0)
         return false;
-
+#endif
     if (check_serialno_valid(ui->lineEdit_3->text()) == 0)
         return false;
 
@@ -618,25 +445,32 @@ void SupplyWriter::dataReceived()
                 ui->lineEdit_7->clear();
                 ui->lineEdit_11->clear();
                 ui->lineEdit_12->clear();
-//                ui->lineEdit_3->setFocus();
+                ui->lineEdit_13->clear();
+                ui->lineEdit_2->clear();
+                ui->lineEdit_6->clear();
+                ui->lineEdit_23->clear();
+                ui->lineEdit_24->clear();
             }
             else if (((RespInfo*)resp)->cmd == OP_READ_TONER_INFO ||
                      ((RespInfo*)resp)->cmd == OP_READ_DRUM_INFO)
             {
                 if (((RespInfo*)resp)->cmd == OP_READ_TONER_INFO)
+                {
                     ui->label_2->setText("<p style=\"color:green;font-weight:bold\">粉盒 读取成功！</p>");
+                }
                 else if (((RespInfo*)resp)->cmd == OP_READ_DRUM_INFO)
+                {
                     ui->label_2->setText("<p style=\"color:green;font-weight:bold\">鼓组件 读取成功！</p>");
+                }
 
                 ui->label_45->setText("<p style=\"color:green;font-size:45px;font-weight:bold\">√√</p>");
                 //展示读取到的信息
 //                this->print_chip_info((struct cgprintech_supply_info_readback*)(resp + sizeof(RespInfo)));
 
                 ReadBack *readback = new ReadBack();
-
+                readback->setWindowModality(Qt::ApplicationModal);
                 emit sendChipInfo((struct cgprintech_supply_info_readback*)(resp + sizeof(RespInfo)));
                 emit sendThemeMode(this->theme_state);
-
                 readback->show();
             }
 //            this->Sleep(3000);
@@ -695,11 +529,24 @@ bool SupplyWriter::sendData(int cmd, void* data, int data_len)
     ((MsgHdr*)writeinfo)->len = data_len;
     if (data)
     {
-        if (strncasecmp(((struct cgprintech_supply_info*)data)->model_id, "TL", 2) == 0)
+#ifdef LANXUM
+        if (QString(((struct cgprintech_supply_info*)data)->model_id).mid(0,2).compare("TL") == 0)
             ((MsgHdr*)writeinfo)->i2c_addr = _TONER_CHIP_ADDR;
-        else if (strncasecmp(((struct cgprintech_supply_info*)data)->model_id, "DL", 2) == 0)
+        else if (QString(((struct cgprintech_supply_info*)data)->model_id).mid(0,2).compare("DL") == 0)
             ((MsgHdr*)writeinfo)->i2c_addr = _DRUM_CHIP_ADDR;
-
+#endif
+#ifdef NARI
+        if (QString(((struct cgprintech_supply_info*)data)->model_id).mid(3,2).compare("TL") == 0)
+        {
+//            qDebug() << "toner";
+            ((MsgHdr*)writeinfo)->i2c_addr = _TONER_CHIP_ADDR;
+        }
+        else if (QString(((struct cgprintech_supply_info*)data)->model_id).mid(3,2).compare("DL") == 0)
+        {
+//            qDebug() << "drum";
+            ((MsgHdr*)writeinfo)->i2c_addr = _DRUM_CHIP_ADDR;
+        }
+#endif
         memcpy(writeinfo + sizeof(MsgHdr), data, data_len);
 //        this->hex_dump((unsigned char*)&writeinfo, sizeof(writeinfo));
     }
@@ -866,7 +713,7 @@ void SupplyWriter::on_QuerySqlButton_clicked()
             memcpy(ChipInfo.overflow_percent, query.value(12).toString().toLatin1().data(), 4);
             memcpy(ChipInfo.free_pages, query.value(13).toString().toLatin1().data(), 4);
             ChipInfo.operator_id = query.value(14).toString();
-            qDebug() << query.value(14).toString();
+//            qDebug() << query.value(14).toString();
         }
     }
 
@@ -897,27 +744,30 @@ void SupplyWriter::on_QuerySqlButton_clicked()
 //写入耗材
 void SupplyWriter::write_supplyinfo2chip()
 {
-    this->fill_supplyinfo_data();
+    if (!fill_supplyinfo_data())
+        return;
     this->sendData(OP_WRITE_INFO, &supply_info, CGPRINTECH_SUPPLY_INFO_LEN);
 }
 
-void SupplyWriter::fill_supplyinfo_data()
+bool SupplyWriter::fill_supplyinfo_data()
 {
     unsigned int len;
     char date[8] = {0};
 
     memset(&supply_info, 0, CGPRINTECH_SUPPLY_INFO_LEN);
+
     if (check_input_valid() == 0)
     {
-        return;
+        return false;
     }
 
-    memcpy(&supply_info.model_id, ui->lineEdit_2->text().toLatin1().data(), ui->lineEdit_2->text().length());
-    memcpy(&supply_info.serial_no, ui->lineEdit_3->text().toLatin1().data(), ui->lineEdit_3->text().length());
-    memcpy(&supply_info.manufacturer, ui->comboBox_3->currentText().toLatin1().data(), ui->comboBox_3->currentText().length());
-    memcpy(&supply_info.trade_mark, ui->comboBox_4->currentText().toLatin1().data(), ui->comboBox_4->currentText().length());
-    memcpy(&supply_info.marketing_area, ui->lineEdit_7->text().toLatin1().data(), 2);
-    memcpy(&supply_info.type, ui->lineEdit_13->text().toLatin1().data(), 1);
+//    qDebug() << ui->lineEdit_3->text();
+    memcpy(supply_info.model_id, ui->lineEdit_2->text().toLatin1().data(), ui->lineEdit_2->text().length());
+    memcpy(supply_info.serial_no, ui->lineEdit_3->text().toLatin1().data(), ui->lineEdit_3->text().length());
+    memcpy(supply_info.manufacturer, ui->lineEdit_23->text().toLatin1().data(), ui->lineEdit_23->text().length());
+    memcpy(supply_info.trade_mark, ui->lineEdit_24->text().toLatin1().data(), ui->lineEdit_24->text().length());
+    memcpy(supply_info.marketing_area, ui->lineEdit_7->text().toLatin1().data(), 2);
+    memcpy(supply_info.type, ui->lineEdit_13->text().toLatin1().data(), 1);
 
     Pack32(supply_info.pages, ui->lineEdit_6->text().toUInt());
     Pack16(supply_info.beyond_pages, ui->lineEdit_11->text().toUInt());
@@ -925,7 +775,8 @@ void SupplyWriter::fill_supplyinfo_data()
 
     sprintf(date, "%04d%02d%02d", year, month, day);
     this->StringToHex(date, supply_info.product_date, &len);
-
+//    qDebug() << date;
+    return true;
 //    this->hex_dump((unsigned char*)&supply_info, sizeof(struct cgprintech_supply_info));
 }
 
@@ -955,19 +806,26 @@ void SupplyWriter::on_ReadDrumInfo_clicked()
 
 bool SupplyWriter::check_modelid_valid(QString modelid)
 {
-    QRegExp rx3("^[TD]L-34[01][UHL]?$");
+    QRegExp rx3("^[TD]L-34[01]B?[UHL]?$");
     if (!rx3.exactMatch(modelid))
     {
         return false;
     }
+
     return true;
 }
 
 bool SupplyWriter::check_serialno_valid(QString serialno)
 {
+#ifdef LANXUM
     QRegExp rx4("^CGL?[0-9]{4}000[0-9]{3}CGRX[ABCDFGHJKLMNPQRSTWXYZ][1-9A-C][1-9A-V][0-9]{4}$");
+#endif
+#ifdef NARI
+    QRegExp rx4("^R[34]05[0-9][1-9A-C][0-9]{2}[0-9]{4}$");
+#endif
     if (!rx4.exactMatch(serialno))
     {
+//        qDebug() << __func__ << __LINE__;
         return false;
     }
     return true;
@@ -1280,294 +1138,7 @@ void SupplyWriter::on_DeleteSqlButton_clicked()
         ui->label_13->setText("<p style=\"color:red;font-weight:bold\">删除数据库记录失败！</p>");
 }
 
-//登录进入耗材信息界面，更新最近使用日期
-void SupplyWriter::on_LoginButton_clicked()
-{
-    if (ui->username->text().length() == 0 ||
-        ui->password->text().length() == 0)
-    {
-        ui->label_21->setText("<p style=\"color:red;font-weight:bold\">用户名或密码不能为空！</p>");
-        return;
-    }
-
-    QString strmd5_username = QCryptographicHash::hash(ui->username->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
-    QString strmd5_password = QCryptographicHash::hash(ui->password->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
-
-    setting.beginGroup(strmd5_username);
-    if (setting.value("name").toString().compare(strmd5_username, Qt::CaseInsensitive) != 0)
-    {
-        ui->label_21->setText("<p style=\"color:red;font-weight:bold\">该用户不存在！</p>");
-        setting.endGroup();
-        return;
-    }
-    if (setting.value("pwd").toString().compare(strmd5_password, Qt::CaseInsensitive) != 0)
-    {
-        ui->label_21->setText("<p style=\"color:red;font-weight:bold\">密码不正确！</p>");
-        setting.endGroup();
-        return;
-    }
-    //更新最近使用日期
-    QString strmd5_recently = QCryptographicHash::hash(QDate::currentDate().toString("yyyy/M/d").toLocal8Bit(), QCryptographicHash::Md5).toHex();
-    setting.setValue("recent", strmd5_recently);
-    login_user = ui->username->text();
-    setting.endGroup();
-
-    this->clear_main_page();
-    ui->stackedWidget->setCurrentIndex(1);
-//    this->create_start_monitor();
-}
-
-//创建用户
-void SupplyWriter::on_CreateUser_clicked()
-{
-    ui->username->clear();
-    ui->stackedWidget->setCurrentIndex(2);
-    this->clear_newuser_page();
-}
-
-//进入重置密码页面
-void SupplyWriter::on_ResetPassword_clicked()
-{
-    ui->username->clear();
-    ui->stackedWidget->setCurrentIndex(4);
-    ui->stackedWidget_2->setCurrentIndex(0);
-    this->clear_resetpwd_page0();
-}
-
-//修改密码
-void SupplyWriter::on_ModifyPassword_clicked()
-{
-    ui->username->clear();
-    ui->stackedWidget->setCurrentIndex(3);
-    this->clear_renewpwd_page();
-}
-
-//取消注册，返回登录页面
-void SupplyWriter::on_Return_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(0);
-    this->clear_login_page();
-}
-
-//确认注册新用户
-//比对两次密码是否一致，将用户名、密码、注册日期及最近使用日期的哈希值写入注册表
-//返回登录页面
-void SupplyWriter::on_Confirm_clicked()
-{
-    if (ui->lineEdit_8->text().length() == 0 ||
-        ui->lineEdit_9->text().length() == 0 ||
-        ui->lineEdit_10->text().length() == 0)
-    {
-        ui->label_26->setText("<p style=\"color:red;font-weight:bold\">用户名或密码不能为空！</p>");
-        return;
-    }
-    if (ui->lineEdit_9->text().compare(ui->lineEdit_10->text(), Qt::CaseSensitive) != 0)
-    {
-        ui->label_26->setText("<p style=\"color:red;font-weight:bold\">输入密码不一致！</p>");
-        return;
-    }
-    QString strmd5_username = QCryptographicHash::hash(ui->lineEdit_8->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
-    QString strmd5_password = QCryptographicHash::hash(ui->lineEdit_9->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
-    QString strmd5_register = QCryptographicHash::hash(QDate::currentDate().toString("yyyy/M/d").toLocal8Bit(), QCryptographicHash::Md5).toHex();
-    QString strmd5_recently = QCryptographicHash::hash(QDate::currentDate().toString("yyyy/M/d").toLocal8Bit(), QCryptographicHash::Md5).toHex();
-
-    setting.beginGroup(strmd5_username);
-    if (setting.value("name").toString().compare(strmd5_username, Qt::CaseInsensitive) == 0)
-    {
-        ui->label_26->setText("<p style=\"color:red;font-weight:bold\">该用户已存在，不能重复创建！</p>");
-        setting.endGroup();
-        return;
-    }
-    setting.setValue("name", strmd5_username);
-    setting.setValue("pwd", strmd5_password);
-    setting.setValue("origin", strmd5_register);
-    setting.setValue("recent", strmd5_recently);
-    setting.endGroup();
-
-    ui->label_26->setText("<p style=\"color:green;font-weight:bold\">注册成功，将在 3 秒后返回登录页面</p>");
-    ui->Confirm->setDisabled(true);
-    ui->Return->setDisabled(true);
-    this->Sleep(3000);
-    ui->stackedWidget->setCurrentIndex(0);
-    this->clear_login_page();
-}
-
-//取消修改密码
-void SupplyWriter::on_pushButton_2_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(0);
-    this->clear_login_page();
-}
-
-//确定修改密码
-void SupplyWriter::on_pushButton_3_clicked()
-{
-    if (ui->lineEdit_15->text().length() == 0 ||
-        ui->lineEdit_16->text().length() == 0 ||
-        ui->lineEdit_17->text().length() == 0 ||
-        ui->lineEdit_18->text().length() == 0)
-    {
-        ui->label_31->setText("<p style=\"color:red;font-weight:bold\">输入信息不能为空！</p>");
-        return;
-    }
-
-    if (ui->lineEdit_17->text().compare(ui->lineEdit_18->text(), Qt::CaseSensitive) != 0)
-    {
-        ui->label_31->setText("<p style=\"color:red;font-weight:bold\">密码不一致</p>");
-        return;
-    }
-
-    QString strmd5_username = QCryptographicHash::hash(ui->lineEdit_15->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
-    QString strmd5_password = QCryptographicHash::hash(ui->lineEdit_16->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
-    QString strmd5_newpwd = QCryptographicHash::hash(ui->lineEdit_17->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
-
-    setting.beginGroup(strmd5_username);
-    if (setting.value("name").toString().compare(strmd5_username, Qt::CaseInsensitive) != 0)
-    {
-        ui->label_31->setText("<p style=\"color:red;font-weight:bold\">该用户不存在！</p>");
-        setting.endGroup();
-        return;
-    }
-
-    if (setting.value("pwd").toString().compare(strmd5_password, Qt::CaseInsensitive) != 0)
-    {
-        ui->label_31->setText("<p style=\"color:red;font-weight:bold\">原密码不正确！</p>");
-        setting.endGroup();
-        return;
-    }
-
-    setting.setValue("pwd", strmd5_newpwd);
-    setting.endGroup();
-
-    ui->label_31->setText("<p style=\"color:green;font-weight:bold\">密码修改成功，将在 3 秒后返回登录页面</p>");
-    ui->pushButton_2->setDisabled(true);
-    ui->pushButton_3->setDisabled(true);
-    this->Sleep(3000);
-    ui->stackedWidget->setCurrentIndex(0);
-    this->clear_login_page();
-}
-
-//返回登录页面
-void SupplyWriter::on_pushButton_6_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(0);
-    this->clear_login_page();
-}
-
-//用户名及注册时间、最近使用时间验证正确后，进入密码重置页面
-void SupplyWriter::on_pushButton_8_clicked()
-{
-    if (ui->lineEdit_19->text().length() == 0)
-    {
-        ui->label_41->setText("<p style=\"color:red;font-weight:bold\">用户名不能为空！</p>");
-        return;
-    }
-
-    resetpwd_username = QCryptographicHash::hash(ui->lineEdit_19->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
-
-    setting.beginGroup(resetpwd_username);
-    if (setting.value("name").toString().compare(resetpwd_username, Qt::CaseInsensitive) != 0)
-    {
-        ui->label_41->setText("<p style=\"color:red;font-weight:bold\">该用户不存在！</p>");
-        setting.endGroup();
-        return;
-    }
-
-    QString strmd5_register = QCryptographicHash::hash(ui->dateEdit_2->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
-    QString strmd5_recently = QCryptographicHash::hash(ui->dateEdit_3->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
-
-    if (setting.value("origin").toString().compare(strmd5_register, Qt::CaseInsensitive) != 0)
-    {
-        ui->label_41->setText("<p style=\"color:red;font-weight:bold\">账户注册日期不正确，验证失败！</p>");
-        setting.endGroup();
-        return;
-    }
-
-    if (setting.value("recent").toString().compare(strmd5_recently, Qt::CaseInsensitive) != 0)
-    {
-        ui->label_41->setText("<p style=\"color:red;font-weight:bold\">账户最近使用日期不正确，验证失败！</p>");
-        setting.endGroup();
-        return;
-    }
-    setting.endGroup();
-
-    ui->stackedWidget_2->setCurrentIndex(1);
-    this->clear_resetpwd_page1();
-}
-
-//取消重置密码
-void SupplyWriter::on_pushButton_9_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(0);
-    this->clear_login_page();
-}
-
-//确定重置密码
-void SupplyWriter::on_pushButton_10_clicked()
-{
-    if (ui->lineEdit_20->text().length() == 0 ||
-        ui->lineEdit_21->text().length() == 0)
-    {
-        ui->label_40->setText("<p style=\"color:red;font-weight:bold\">密码不能为空！</p>");
-        return;
-    }
-
-    if (ui->lineEdit_20->text().compare(ui->lineEdit_21->text(), Qt::CaseSensitive) != 0)
-    {
-        ui->label_40->setText("<p style=\"color:red;font-weight:bold\">输入密码不一致！</p>");
-        return;
-    }
-
-    QString strmd5_password = QCryptographicHash::hash(ui->lineEdit_20->text().toLocal8Bit(), QCryptographicHash::Md5).toHex();
-    setting.beginGroup(resetpwd_username);
-    setting.setValue("pwd", strmd5_password);
-    setting.endGroup();
-
-    ui->label_40->setText("<p style=\"color:green;font-weight:bold\">密码重置成功，将在 3 秒后返回登录页面</p>");
-    ui->pushButton_9->setDisabled(true);
-    ui->pushButton_10->setDisabled(true);
-
-    this->Sleep(3000);
-    ui->stackedWidget->setCurrentIndex(0);
-    this->clear_login_page();
-}
-
-void SupplyWriter::adjust_bright_pixmap(int bright)
-{
-    QImage image[4];
-    QImage new_image[4];
-
-    image[0] = pixmap[1].toImage();
-    image[1] = pixmap[2].toImage();
-    image[2] = pixmap[3].toImage();
-    image[3] = pixmap[4].toImage();
-
-    new_image[0] = adjust_bright(bright, image[0]);
-    new_image[1] = adjust_bright(bright, image[1]);
-    new_image[2] = adjust_bright(bright, image[2]);
-    new_image[3] = adjust_bright(bright, image[3]);
-
-    ui->title_label->setPixmap(QPixmap::fromImage(new_image[0]));
-    ui->label_24->setPixmap(QPixmap::fromImage(new_image[1]));
-    ui->label_32->setPixmap(QPixmap::fromImage(new_image[2]));
-    ui->label_27->setPixmap(QPixmap::fromImage(new_image[3]));
-}
-
-void SupplyWriter::on_checkBox_stateChanged(int state)
-{
-    this->theme_state = state;
-    if (state == 2)
-    {
-        this->set_style_sheet("dark.qss");
-        adjust_bright_pixmap(-80);
-    }
-    else if (state == 0)
-    {
-        this->set_style_sheet("light.qss");
-        adjust_bright_pixmap(0);
-    }
-}
-
+#ifdef LANXUM
 void SupplyWriter::on_lineEdit_2_textChanged(const QString &arg1)
 {
     if (arg1.length() < 6)
@@ -1581,10 +1152,32 @@ void SupplyWriter::on_lineEdit_2_textChanged(const QString &arg1)
     QRegExp rxt0("^TL-34[01]{1}$");
     QRegExp rxt2("^TL-34[01]{1}H$");
     QRegExp rxt3("^TL-340U$");
+    QRegExp rxt31("^TL-341BU$");
     QRegExp rxd0("^DL-34[01]{1}$");
+    QRegExp rxd01("^DL-341BU$");
+
+    if (rxt31.exactMatch(arg1))
+    {
+        ui->lineEdit_23->setText("NARI");
+        ui->lineEdit_24->setText("RETURN");
+        ui->lineEdit_6->setText("15000");
+        ui->lineEdit_11->setText("45");
+        return;
+    }
+
+    if (rxd01.exactMatch(arg1))
+    {
+        ui->lineEdit_23->setText("NARI");
+        ui->lineEdit_24->setText("RETURN");
+        ui->lineEdit_6->setText("30000");
+        ui->lineEdit_11->setText("0");
+        return;
+    }
 
     if (rxt1.exactMatch(arg1))
     {
+        ui->lineEdit_23->setText("Lanxum");
+        ui->lineEdit_24->setText("Lanxum");
         ui->lineEdit_6->setText("1500");
         ui->lineEdit_11->setText("45");
         return;
@@ -1592,6 +1185,8 @@ void SupplyWriter::on_lineEdit_2_textChanged(const QString &arg1)
 
     if (rxt0.exactMatch(arg1))
     {
+        ui->lineEdit_23->setText("Lanxum");
+        ui->lineEdit_24->setText("Lanxum");
         ui->lineEdit_6->setText("3000");
         ui->lineEdit_11->setText("90");
         return;
@@ -1599,6 +1194,8 @@ void SupplyWriter::on_lineEdit_2_textChanged(const QString &arg1)
 
     if (rxt2.exactMatch(arg1))
     {
+        ui->lineEdit_23->setText("Lanxum");
+        ui->lineEdit_24->setText("Lanxum");
         ui->lineEdit_6->setText("5500");
         ui->lineEdit_11->setText("165");
         return;
@@ -1606,6 +1203,8 @@ void SupplyWriter::on_lineEdit_2_textChanged(const QString &arg1)
 
     if (rxt3.exactMatch(arg1))
     {
+        ui->lineEdit_23->setText("Lanxum");
+        ui->lineEdit_24->setText("Lanxum");
         ui->lineEdit_6->setText("15000");
         ui->lineEdit_11->setText("450");
         return;
@@ -1613,6 +1212,8 @@ void SupplyWriter::on_lineEdit_2_textChanged(const QString &arg1)
 
     if (rxd0.exactMatch(arg1))
     {
+        ui->lineEdit_23->setText("Lanxum");
+        ui->lineEdit_24->setText("Lanxum");
         ui->lineEdit_6->setText("30000");
         ui->lineEdit_11->setText("0");
         return;
@@ -1626,18 +1227,35 @@ void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
 {
     bool ok_status = false;
 
+    ui->lineEdit_7->setText("CN");
+    ui->lineEdit_12->setText("8");
+
     if (arg1.mid(0, 3).compare("CGL", Qt::CaseSensitive) == 0)
     {
         ui->lineEdit_13->setText("I");
-        ui->lineEdit_12->setText("8");
     }
     else if (arg1.mid(0, 2).compare("CG", Qt::CaseSensitive) == 0)
     {
         ui->lineEdit_13->setText("M");
-        ui->lineEdit_12->setText("4");
     }
     else
+    {
         ui->lineEdit_13->clear();
+    }
+
+    if (arg1.contains("L2200000107", Qt::CaseSensitive))
+    {
+        ui->lineEdit_2->setText("TL-341BU");
+        ok_status = true;
+        goto THE_END;
+    }
+
+    if (arg1.contains("L2200000136", Qt::CaseSensitive))
+    {
+        ui->lineEdit_2->setText("DL-341BU");
+        ok_status = true;
+        goto THE_END;
+    }
 
     if (arg1.contains("L2100000107", Qt::CaseSensitive) ||
         arg1.contains("0304000002", Qt::CaseSensitive))
@@ -1710,9 +1328,9 @@ THE_END:
     if (ok_status)
     {
         if (ui->lineEdit_1->text().length() &&
-            check_serialno_valid(ui->lineEdit_3->text()) &&
-            working_mode == _AUTO_WRITE_MODE)
+            check_serialno_valid(ui->lineEdit_3->text()))
         {
+//            qDebug() << __func__ << __LINE__;
             if ((ui->lineEdit_2->text().mid(0, 2).compare("DL", Qt::CaseSensitive) == 0 && ui->ReadDrumInfo->isEnabled()) ||
                 (ui->lineEdit_2->text().mid(0, 2).compare("TL", Qt::CaseSensitive) == 0 && ui->ReadTonerInfo->isEnabled()))
             {
@@ -1722,6 +1340,7 @@ THE_END:
                         qDebug() << "insert into database failed";
                 }
 
+//                qDebug() << __func__ << __LINE__;
                 timer[0]->stop();
                 write_supplyinfo2chip();
                 timer[0]->start(3000);
@@ -1733,6 +1352,51 @@ THE_END:
         ui->lineEdit_2->setText("");
     }
 }
+#endif
+
+#ifdef NARI
+void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
+{
+    if (ui->lineEdit_3->text().length() < 8)
+        return;
+
+    if (arg1.mid(0, 2).compare("R3", Qt::CaseSensitive) == 0)
+    {
+        ui->lineEdit_2->setText("RT-TL01L");
+        ui->lineEdit_6->setText("1500");
+    }
+    else if (arg1.mid(0, 2).compare("R4", Qt::CaseSensitive) == 0)
+    {
+        ui->lineEdit_2->setText("RT-DL01");
+        ui->lineEdit_6->setText("30000");
+    }
+
+    ui->lineEdit_11->setText("45");
+    ui->lineEdit_13->setText("I");
+    ui->lineEdit_12->setText("8");
+    ui->lineEdit_23->setText("NARI");
+    ui->lineEdit_24->setText("RETURN");
+    ui->lineEdit_7->setText("CN");
+
+    if (ui->lineEdit_1->text().length() &&
+        check_serialno_valid(ui->lineEdit_3->text()))
+    {
+        if ((ui->lineEdit_2->text().mid(3, 2).compare("DL", Qt::CaseSensitive) == 0) ||
+            (ui->lineEdit_2->text().mid(3, 2).compare("TL", Qt::CaseSensitive) == 0))
+        {
+            if (odbc_status == _SUCCESS_STATUS)
+            {
+                if (this->Insert_SupplyInfo_Sql() == _FAILED_STATUS)
+                    qDebug() << "insert into database failed";
+            }
+
+            timer[0]->stop();
+            write_supplyinfo2chip();
+            timer[0]->start(3000);
+        }
+    }
+}
+#endif
 
 //治具IP地址修改时，检测是否能够连接到治具
 void SupplyWriter::on_lineEdit_1_textChanged(const QString &arg1)
@@ -1894,7 +1558,7 @@ int main(int argc, char **argv)
     QSettings setting;
     setting.setValue("desc", "supply writer user info");
 
-    qputenv("QT_SCALE_FACTOR", "1.5");
+//    qputenv("QT_SCALE_FACTOR", "1.5");
 
     SupplyWriter w;
     writer = &w;
