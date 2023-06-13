@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>耗材信息写入工具</string>
+   <string/>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -213,7 +213,7 @@
               <number>15</number>
              </property>
              <property name="readOnly">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="placeholderText">
               <string/>
@@ -384,6 +384,9 @@
                <pointsize>10</pointsize>
               </font>
              </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="1" column="3">
@@ -393,6 +396,9 @@
                <family>微软雅黑</family>
                <pointsize>10</pointsize>
               </font>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
              </property>
             </widget>
            </item>

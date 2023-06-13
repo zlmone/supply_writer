@@ -26,9 +26,6 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class SupplyWriter; }
 QT_END_NAMESPACE
 
-//#define LANXUM
-#define NARI
-
 //监听的广播端口
 #define BC_UDP_PORT    8890
 #define HB_UDP_PORT    8891
@@ -69,11 +66,9 @@ private slots:
     void statusReceived();
 
     void on_lineEdit_1_textChanged(const QString &arg1);
-#ifdef LANXUM
     void on_lineEdit_2_textChanged(const QString &arg1);
-#endif
     void on_lineEdit_3_textChanged(const QString &arg1);
-    void slotUpdateWaterMark();
+//    void slotUpdateWaterMark();
     void on_lineEdit_14_textChanged(const QString &arg1);
     void on_lineEdit_textChanged(const QString &arg1);
     void on_lineEdit_4_textChanged(const QString &arg1);

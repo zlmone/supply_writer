@@ -7,11 +7,28 @@ CONFIG += c++11
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
+QMAKE_CXXFLAGS += -Wno-unused-parameter
 
-# You can also make your code fail to compile if it uses deprecated APIs.
-# In order to do so, uncomment the following line.
-# You can also select to disable deprecated APIs only up to a certain version of Qt.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+#可执行文件存放目录
+DESTDIR = $$PWD/../output/
+
+DEFINES += VERSION=\\\"4.0\\\"
+
+#以下为相应的版本信息，分为立思辰版本，南瑞蓝鸟版本，版本中必须取其一
+#立思辰
+#DEFINES += LANXUM
+#南瑞，蓝鸟项目
+DEFINES += NARI
+
+if(contains(DEFINES, LANXUM)) {
+    TARGET = supply_writer1_lanxum
+    RC_ICONS = images/cgprint.ico
+}
+
+if(contains(DEFINES, NARI)) {
+    TARGET = supply_writer1_nari
+    RC_ICONS = images/nari.ico
+}
 
 SOURCES += \
     readback.cpp \
@@ -36,7 +53,4 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-RESOURCES += \
-    src.qrc
-
-RC_ICONS = images/cgprint.ico
+RESOURCES += src.qrc

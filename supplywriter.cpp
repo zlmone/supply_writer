@@ -60,18 +60,18 @@ void SupplyWriter::clear_main_page()
 //耗材信息页面初始化
 void SupplyWriter::main_page_init()
 {
-    ui->lineEdit_2->setFocusPolicy(Qt::NoFocus);
-    ui->lineEdit_6->setFocusPolicy(Qt::NoFocus);
-    ui->lineEdit_7->setFocusPolicy(Qt::NoFocus);
-    ui->lineEdit_11->setFocusPolicy(Qt::NoFocus);
-    ui->lineEdit_12->setFocusPolicy(Qt::NoFocus);
-    ui->lineEdit_13->setFocusPolicy(Qt::NoFocus);
-
     this->setTabOrder(ui->lineEdit_14, ui->lineEdit);
     this->setTabOrder(ui->lineEdit, ui->lineEdit_4);
     this->setTabOrder(ui->lineEdit_4, ui->lineEdit_5);
     this->setTabOrder(ui->lineEdit_5, ui->lineEdit_1);
 
+#ifdef LANXUM
+    setWindowTitle("耗材信息写入工具 立思辰");
+    ui->lineEdit_2->setReadOnly(true);
+#endif
+#ifdef NARI
+    setWindowTitle("耗材信息写入工具 南瑞");
+#endif
     ui->lineEdit_4->setEchoMode(QLineEdit::Password);
     db = QSqlDatabase::addDatabase("QODBC", "main");
     player = new QMediaPlayer;
@@ -211,10 +211,10 @@ void SupplyWriter::paintEvent(QPaintEvent *event)
 }
 #endif
 //定时更新绘画事件槽函数
-void SupplyWriter::slotUpdateWaterMark()
-{
-    this->repaint();
-}
+//void SupplyWriter::slotUpdateWaterMark()
+//{
+//    this->repaint();
+//}
 
 SupplyWriter::~SupplyWriter()
 {
@@ -856,7 +856,8 @@ bool SupplyWriter::checkIpValid(int version, QString ip)
                     "((25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.){3}"
                     "(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)$|^([\\da-fA-F]{1,4}:){4}:"
                     "((25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.){3}"
-                    "(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)$|^([\\da-fA-F]{1,4}:){7}[\\da-fA-F]{1,4}$|^:((:[\\da-fA-F]{1,4}){1,6}|:)$|^[\\da-fA-F]{1,4}:"
+                    "(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)$|^([\\da-fA-F]{1,4}:){7}[\\da-fA-F]{1,4}$"
+                    "|^:((:[\\da-fA-F]{1,4}){1,6}|:)$|^[\\da-fA-F]{1,4}:"
                     "((:[\\da-fA-F]{1,4}){1,5}|:)$|^([\\da-fA-F]{1,4}:){2}"
                     "((:[\\da-fA-F]{1,4}){1,4}|:)$|^([\\da-fA-F]{1,4}:){3}"
                     "((:[\\da-fA-F]{1,4}){1,3}|:)$|^([\\da-fA-F]{1,4}:){4}"
@@ -1152,27 +1153,7 @@ void SupplyWriter::on_lineEdit_2_textChanged(const QString &arg1)
     QRegExp rxt0("^TL-34[01]{1}$");
     QRegExp rxt2("^TL-34[01]{1}H$");
     QRegExp rxt3("^TL-340U$");
-    QRegExp rxt31("^TL-341BU$");
     QRegExp rxd0("^DL-34[01]{1}$");
-    QRegExp rxd01("^DL-341BU$");
-
-    if (rxt31.exactMatch(arg1))
-    {
-        ui->lineEdit_23->setText("NARI");
-        ui->lineEdit_24->setText("RETURN");
-        ui->lineEdit_6->setText("15000");
-        ui->lineEdit_11->setText("45");
-        return;
-    }
-
-    if (rxd01.exactMatch(arg1))
-    {
-        ui->lineEdit_23->setText("NARI");
-        ui->lineEdit_24->setText("RETURN");
-        ui->lineEdit_6->setText("30000");
-        ui->lineEdit_11->setText("0");
-        return;
-    }
 
     if (rxt1.exactMatch(arg1))
     {
@@ -1265,7 +1246,8 @@ void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
         goto THE_END;
     }
 
-    if (arg1.contains("0304000003", Qt::CaseSensitive))
+    if (arg1.contains("0304000003", Qt::CaseSensitive) ||
+        arg1.contains("0301000260", Qt::CaseSensitive))
     {
         ui->lineEdit_2->setText("TL-341");
         ok_status = true;
@@ -1362,16 +1344,17 @@ void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
 
     if (arg1.mid(0, 2).compare("R3", Qt::CaseSensitive) == 0)
     {
-        ui->lineEdit_2->setText("RT-TL01L");
-        ui->lineEdit_6->setText("1500");
+        ui->lineEdit_2->setText("RT-TL01");
+        ui->lineEdit_6->setText("3000");
+        ui->lineEdit_11->setText("90");
     }
     else if (arg1.mid(0, 2).compare("R4", Qt::CaseSensitive) == 0)
     {
         ui->lineEdit_2->setText("RT-DL01");
         ui->lineEdit_6->setText("30000");
+        ui->lineEdit_11->setText("900");
     }
 
-    ui->lineEdit_11->setText("45");
     ui->lineEdit_13->setText("I");
     ui->lineEdit_12->setText("8");
     ui->lineEdit_23->setText("NARI");
@@ -1394,6 +1377,37 @@ void SupplyWriter::on_lineEdit_3_textChanged(const QString &arg1)
             write_supplyinfo2chip();
             timer[0]->start(3000);
         }
+    }
+}
+
+void SupplyWriter::on_lineEdit_2_textChanged(const QString &arg1)
+{
+    Q_UNUSED(arg1);
+
+    if (ui->lineEdit_2->text().compare("RT-TL01L", Qt::CaseSensitive) == 0)
+    {
+        ui->lineEdit_6->setText("1500");
+        ui->lineEdit_11->setText("45");
+    }
+    else if (ui->lineEdit_2->text().compare("RT-TL01H", Qt::CaseSensitive) == 0)
+    {
+        ui->lineEdit_6->setText("5500");
+        ui->lineEdit_11->setText("165");
+    }
+    else if (ui->lineEdit_2->text().compare("RT-TL01U", Qt::CaseSensitive) == 0)
+    {
+        ui->lineEdit_6->setText("15000");
+        ui->lineEdit_11->setText("450");
+    }
+    else if (ui->lineEdit_2->text().compare("RT-TL01", Qt::CaseSensitive) == 0)
+    {
+        ui->lineEdit_6->setText("3000");
+        ui->lineEdit_11->setText("90");
+    }
+    else if (ui->lineEdit_2->text().compare("RT-DL01", Qt::CaseSensitive) == 0)
+    {
+        ui->lineEdit_6->setText("30000");
+        ui->lineEdit_11->setText("900");
     }
 }
 #endif
